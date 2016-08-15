@@ -6,7 +6,7 @@
     android:id="@+id/activity_navigation"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.github.willjgriff.skeleton.NavigationActivity">
+    tools:context="com.github.willjgriff.skeleton.navigation.NavigationActivity">
 
     <TextView
         android:layout_width="wrap_content"
@@ -15,6 +15,6 @@
         app:layout_constraintBottom_toBottomOf="@+id/activity_navigation"
         app:layout_constraintLeft_toLeftOf="@+id/activity_navigation"
         app:layout_constraintRight_toRightOf="@+id/activity_navigation"
-        app:layout_constraintTop_toTopOf="@+id/activity_navigation"/>
+        app:layout_constraintTop_toTopOf="@+id/activity_navigation" />
 
 </android.support.constraint.ConstraintLayout>
