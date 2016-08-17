@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/xsmall"
+    android:background="?attr/colorPrimary"
+    android:gravity="bottom">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/Text.Headline"
+        android:textColor="@color/white"
+        android:paddingTop="@dimen/large"
+        android:text="@string/app_name"/>
+
+</LinearLayout>
