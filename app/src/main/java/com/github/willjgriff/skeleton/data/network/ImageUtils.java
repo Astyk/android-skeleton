@@ -1,7 +1,6 @@
-package com.github.willjgriff.skeleton.network;
+package com.github.willjgriff.skeleton.data.network;
 
 import android.support.annotation.DrawableRes;
-import android.support.v7.app.NotificationCompat;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -21,8 +20,10 @@ public class ImageUtils {
 
 		private String mImageUri;
 		private ImageView mImageView;
-		@DrawableRes private int mPlaceholder;
-		@DrawableRes private int mErrorImage;
+		@DrawableRes
+		private int mPlaceholder;
+		@DrawableRes
+		private int mErrorImage;
 
 		public Builder(String imageUri, ImageView imageView) {
 			mImageUri = imageUri;

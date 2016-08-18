@@ -1,4 +1,4 @@
-package com.github.willjgriff.skeleton.navigation;
+package com.github.willjgriff.skeleton.ui.navigation;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -14,8 +14,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.github.willjgriff.skeleton.R;
-import com.github.willjgriff.skeleton.land.LandFragment;
-import com.github.willjgriff.skeleton.settings.SettingsFragment;
+import com.github.willjgriff.skeleton.ui.land.LandFragment;
+import com.github.willjgriff.skeleton.ui.settings.SettingsFragment;
 
 public class NavigationActivity extends AppCompatActivity {
 

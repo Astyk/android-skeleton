@@ -7,8 +7,10 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
-        <activity android:name=".navigation.NavigationActivity" >
+        android:theme="@style/AppTheme"
+        android:name="com.github.willjgriff.skeleton.SkeletonApplication">
+
+        <activity android:name=".ui.navigation.NavigationActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
