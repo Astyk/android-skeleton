@@ -16,7 +16,7 @@ public class Questions extends RealmObject {
 	private int id;
 
 	@SerializedName("items")
-	private RealmList<Question> stackOverflowQuestions;
+	private RealmList<Question> stackOverflowQuestions = new RealmList<>();
 
 	public RealmList<Question> getStackOverflowQuestions() {
 		return stackOverflowQuestions;

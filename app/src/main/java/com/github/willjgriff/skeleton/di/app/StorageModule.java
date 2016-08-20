@@ -1,4 +1,4 @@
-package com.github.willjgriff.skeleton.di.modules;
+package com.github.willjgriff.skeleton.di.app;
 
 import javax.inject.Singleton;
 
@@ -12,8 +12,9 @@ import io.realm.Realm;
 @Module
 public class StorageModule {
 
+	// No @Singleton annotation as the DataManager will close the Realm instance
+	// once it's done with it. Requiring a new one to be created for other DataManager's.
 	@Provides
-	@Singleton
 	Realm providesRealm() {
 		return Realm.getDefaultInstance();
 	}

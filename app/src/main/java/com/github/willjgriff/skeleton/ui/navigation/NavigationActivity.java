@@ -12,16 +12,17 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.github.willjgriff.skeleton.R;
-import com.github.willjgriff.skeleton.ui.land.LandFragment;
-import com.github.willjgriff.skeleton.ui.settings.SettingsFragment;
 
-public class NavigationActivity extends AppCompatActivity {
+public class NavigationActivity extends AppCompatActivity implements NavigationToolbarListener {
 
 	private DrawerLayout mDrawerLayout;
 	private ActionBarDrawerToggle mDrawerToggle;
 	private NavigationView mNavigationView;
+	private ProgressBar mProgressBar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,63 +34,12 @@ public class NavigationActivity extends AppCompatActivity {
 
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.activity_navigation_drawer);
 		setNavigationToggle(mDrawerLayout);
-	}
 
-	private void setupNavigationView() {
-		mNavigationView = (NavigationView) findViewById(R.id.activity_navigation_nav_view);
-		mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-			@Override
-			public boolean onNavigationItemSelected(MenuItem item) {
-				switchNavigationItem(item);
-				return false;
-			}
+		mProgressBar = (ProgressBar) findViewById(R.id.activity_navigation_toolbar_progress_bar);
 
-		});
-	}
-
-	private void setupToolbar() {
-		Toolbar toolbar = (Toolbar) findViewById(R.id.activity_navigation_toolbar);
-		setSupportActionBar(toolbar);
-		getSupportActionBar().setHomeButtonEnabled(true);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-	}
-
-	private void setNavigationToggle(DrawerLayout drawerLayout) {
-		mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
-			R.string.activity_navigation_open, R.string.activity_navigation_close);
-		mDrawerToggle.setDrawerIndicatorEnabled(true);
-		drawerLayout.addDrawerListener(mDrawerToggle);
-	}
-
-	private void switchNavigationItem(MenuItem item) {
-		Fragment fragment;
-		switch (item.getItemId()) {
-			case R.id.navigation_first_fragment:
-				fragment = new LandFragment();
-				break;
-			case R.id.navigation_settings:
-				fragment = new SettingsFragment();
-				break;
-			default:
-				fragment = new LandFragment();
+		if (savedInstanceState == null) {
+			switchToFragment(NavigationFragment.LAND);
 		}
-
-		switchToFragment(fragment);
-		refreshLayout(item);
-	}
-
-	private void refreshLayout(MenuItem item) {
-		item.setChecked(true);
-		getSupportActionBar().setTitle(item.getTitle());
-		mDrawerLayout.closeDrawers();
-	}
-
-	private void switchToFragment(Fragment fragment) {
-		FragmentManager fragmentManager = getSupportFragmentManager();
-		fragmentManager.beginTransaction()
-			.replace(R.id.activity_navigation_container, fragment)
-			.addToBackStack(fragment.getClass().getName())
-			.commit();
 	}
 
 	@Override
@@ -104,6 +54,72 @@ public class NavigationActivity extends AppCompatActivity {
 		mDrawerToggle.onConfigurationChanged(newConfig);
 	}
 
+	private void setupToolbar() {
+		Toolbar toolbar = (Toolbar) findViewById(R.id.activity_navigation_toolbar);
+		setSupportActionBar(toolbar);
+		getSupportActionBar().setHomeButtonEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+	}
+
+	private void setupNavigationView() {
+		mNavigationView = (NavigationView) findViewById(R.id.activity_navigation_nav_view);
+		mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+			@Override
+			public boolean onNavigationItemSelected(MenuItem item) {
+				switchNavigationItem(item);
+				return false;
+			}
+
+		});
+	}
+
+	private void setNavigationToggle(DrawerLayout drawerLayout) {
+		mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
+			R.string.activity_navigation_open, R.string.activity_navigation_close);
+		mDrawerToggle.setDrawerIndicatorEnabled(true);
+		drawerLayout.addDrawerListener(mDrawerToggle);
+	}
+
+	private void switchNavigationItem(MenuItem item) {
+		NavigationFragment navigationFragment;
+		item.setChecked(true);
+		switch (item.getItemId()) {
+			case R.id.navigation_first_fragment:
+				navigationFragment = NavigationFragment.LAND;
+				break;
+			case R.id.navigation_settings:
+				navigationFragment = NavigationFragment.SETTINGS;
+				break;
+			default:
+				navigationFragment = NavigationFragment.LAND;
+		}
+
+		switchToFragment(navigationFragment);
+		mDrawerLayout.closeDrawers();
+	}
+
+	private void switchToFragment(NavigationFragment navigationFragment) {
+		FragmentManager fragmentManager = getSupportFragmentManager();
+
+		if (isDifferentFragment(navigationFragment)) {
+			fragmentManager.beginTransaction()
+				.replace(R.id.activity_navigation_container,
+					Fragment.instantiate(this, navigationFragment.getFragmentClass().getName()),
+					navigationFragment.toString())
+				.addToBackStack(navigationFragment.getClass().getName())
+				.commit();
+			getSupportActionBar().setTitle(navigationFragment.getNavigationTitle());
+		}
+	}
+
+	private boolean isDifferentFragment(NavigationFragment navigationFragment) {
+		Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.activity_navigation_container);
+		if (currentFragment != null) {
+			return !currentFragment.getTag().equals(navigationFragment.toString());
+		}
+		return true;
+	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (mDrawerToggle.onOptionsItemSelected(item)) {
@@ -114,5 +130,15 @@ public class NavigationActivity extends AppCompatActivity {
 		}
 
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void showNetworkLoadingView() {
+		mProgressBar.setVisibility(View.VISIBLE);
+	}
+
+	@Override
+	public void hideNetworkLoadingView() {
+		mProgressBar.setVisibility(View.GONE);
 	}
 }

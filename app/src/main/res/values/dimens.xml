@@ -13,6 +13,7 @@
     <!-- Default screen margin should be 16dp according to Android template-->
     <dimen name="xsmall">16dp</dimen>
     <dimen name="small">24dp</dimen>
+    <dimen name="smedium">36dp</dimen>
     <dimen name="medium">48dp</dimen>
     <dimen name="large">56dp</dimen>
     <dimen name="xlarge">64dp</dimen>

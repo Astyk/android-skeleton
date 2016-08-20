@@ -5,7 +5,7 @@
     <!--navigation drawer-->
     <string name="activity_navigation_open">Open navigation drawer</string>
     <string name="activity_navigation_close">Close navigation drawer</string>
-    <string name="navigation_first_fragment">Landing</string>
+    <string name="navigation_land">Landing</string>
     <string name="navigation_settings">Settings</string>
 
 </resources>

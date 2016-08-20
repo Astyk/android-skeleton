@@ -1,4 +1,4 @@
-package com.github.willjgriff.skeleton.di;
+package com.github.willjgriff.skeleton.di.questions;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

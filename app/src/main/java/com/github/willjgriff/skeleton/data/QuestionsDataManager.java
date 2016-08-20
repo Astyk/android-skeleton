@@ -59,9 +59,6 @@ public class QuestionsDataManager {
 			mSoQuestionsNetworkCallerAndUpdater.close();
 			mSoQuestionsNetworkCallerAndUpdater = null;
 		}
-		if (mRealm != null) {
-			mRealm.close();
-			mRealm = null;
-		}
+		mRealm.close();
 	}
 }

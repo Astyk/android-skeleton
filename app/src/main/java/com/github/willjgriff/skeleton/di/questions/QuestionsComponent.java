@@ -1,7 +1,7 @@
-package com.github.willjgriff.skeleton.di.components;
+package com.github.willjgriff.skeleton.di.questions;
 
-import com.github.willjgriff.skeleton.di.QuestionsScope;
-import com.github.willjgriff.skeleton.di.modules.QuestionsModule;
+import com.github.willjgriff.skeleton.data.QuestionsDataManager;
+import com.github.willjgriff.skeleton.di.app.AppComponent;
 import com.github.willjgriff.skeleton.ui.land.LandFragment;
 
 import dagger.Component;
@@ -13,6 +13,6 @@ import dagger.Component;
 @Component(modules = QuestionsModule.class, dependencies = AppComponent.class)
 public interface QuestionsComponent {
 
-	void inject(LandFragment fragment);
+	QuestionsDataManager providesQuestionsDataManager();
 
 }

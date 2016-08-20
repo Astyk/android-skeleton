@@ -5,4 +5,5 @@ package com.github.willjgriff.skeleton.mvp;
  */
 
 public interface BaseView {
+
 }
