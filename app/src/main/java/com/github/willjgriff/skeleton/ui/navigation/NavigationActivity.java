@@ -16,6 +16,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.github.willjgriff.skeleton.R;
+import com.github.willjgriff.skeleton.ui.land.di.LandComponent;
+import com.github.willjgriff.skeleton.ui.land.di.LandInjector;
 
 public class NavigationActivity extends AppCompatActivity implements NavigationToolbarListener {
 
@@ -98,6 +100,11 @@ public class NavigationActivity extends AppCompatActivity implements NavigationT
 		mDrawerLayout.closeDrawers();
 	}
 
+	// TODO: Update with all new components and ivalidate properly
+	private void invalidateComponents() {
+		LandInjector.INSTANCE.invalidate();
+	}
+
 	private void switchToFragment(NavigationFragment navigationFragment) {
 		FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -109,6 +116,8 @@ public class NavigationActivity extends AppCompatActivity implements NavigationT
 				.addToBackStack(navigationFragment.getClass().getName())
 				.commit();
 			getSupportActionBar().setTitle(navigationFragment.getNavigationTitle());
+
+			invalidateComponents();
 		}
 	}
 

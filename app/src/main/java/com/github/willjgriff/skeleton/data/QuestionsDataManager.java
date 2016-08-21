@@ -1,5 +1,7 @@
 package com.github.willjgriff.skeleton.data;
 
+import android.support.annotation.NonNull;
+
 import com.github.willjgriff.skeleton.data.NetworkCallerAndUpdater.NewDataListener;
 import com.github.willjgriff.skeleton.data.models.Questions;
 import com.github.willjgriff.skeleton.data.network.services.QuestionsService;
@@ -24,7 +26,7 @@ public class QuestionsDataManager {
 	private QuestionsService mQuestionsService;
 	private NetworkCallerAndUpdater<Questions> mSoQuestionsNetworkCallerAndUpdater;
 
-	public QuestionsDataManager(QuestionsService questionsService, Realm realm) {
+	public QuestionsDataManager(@NonNull QuestionsService questionsService, @NonNull Realm realm) {
 		mQuestionsService = questionsService;
 		mRealm = realm;
 	}

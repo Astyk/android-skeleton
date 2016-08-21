@@ -1,65 +1,78 @@
 package com.github.willjgriff.skeleton.data;
 
+import android.support.annotation.NonNull;
+
 import com.github.willjgriff.skeleton.data.storage.updaters.RealmUpdater;
 
 import io.realm.RealmModel;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import rx.Observable;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by Will on 14/08/2016.
  */
 public class NetworkCallerAndUpdater<RETURNTYPE extends RealmModel> {
 
-	private Call<RETURNTYPE> mRetrofitCall;
+	private Observable<RETURNTYPE> mRetrofitObservable;
 	private NewDataListener<RETURNTYPE> mNewDataListener;
 	private RealmUpdater<RETURNTYPE> mRealmUpdater;
+	private Subscription mSubscription;
 
-	public NetworkCallerAndUpdater(Call<RETURNTYPE> networkCall, NewDataListener<RETURNTYPE> newDataListener, RealmUpdater<RETURNTYPE> realmUpdater) {
-		mRetrofitCall = networkCall;
+	public NetworkCallerAndUpdater(@NonNull Observable<RETURNTYPE> networkCall, @NonNull NewDataListener<RETURNTYPE> newDataListener, @NonNull RealmUpdater<RETURNTYPE> realmUpdater) {
+		mRetrofitObservable = networkCall;
 		mNewDataListener = newDataListener;
 		mRealmUpdater = realmUpdater;
 	}
 
 	public void fetchAndUpdateData() {
-		mRetrofitCall.enqueue(new Callback<RETURNTYPE>() {
-			@Override
-			public void onResponse(Call<RETURNTYPE> call, Response<RETURNTYPE> response) {
-				RETURNTYPE returnData = response.body();
-				notifyListenerWithNewData(returnData);
-				updateRealmWithNewData(returnData);
-			}
 
-			@Override
-			public void onFailure(Call<RETURNTYPE> call, Throwable t) {
-				notifyListenerRequestFailed(t);
-			}
-		});
-	}
+		mSubscription = mRetrofitObservable
+			// Maybe cache is useful for saving during orientation changes?
+			.cache()
+			.subscribeOn(Schedulers.io())
+			.observeOn(AndroidSchedulers.mainThread())
+			.subscribe(new Subscriber<RETURNTYPE>() {
+				@Override
+				public void onCompleted() {
 
-	private void notifyListenerWithNewData(RETURNTYPE returnData) {
-		mNewDataListener.dataUpdated(returnData);
-	}
+				}
 
-	private void updateRealmWithNewData(RETURNTYPE returnData) {
-		mRealmUpdater.update(returnData);
+				@Override
+				public void onError(Throwable e) {
+					notifyListenerRequestFailed(e);
+				}
+
+				@Override
+				public void onNext(RETURNTYPE returnData) {
+					notifyListenerWithNewData(returnData);
+					updateRealmWithNewData(returnData);
+				}
+			});
 	}
 
 	private void notifyListenerRequestFailed(Throwable t) {
 		mNewDataListener.requestFailed(t);
 	}
 
+	private void notifyListenerWithNewData(RETURNTYPE returnData) {
+		mNewDataListener.newData(returnData);
+	}
+
+	private void updateRealmWithNewData(RETURNTYPE returnData) {
+		mRealmUpdater.update(returnData);
+	}
+
 	public void close() {
 		mRealmUpdater.close();
-		if (mRetrofitCall != null) {
-			mRetrofitCall.cancel();
-			mRetrofitCall = null;
-		}
+		mSubscription.unsubscribe();
 	}
 
 	public interface NewDataListener<RETURNTYPE> {
-		void dataUpdated(RETURNTYPE returnData);
+
+		void newData(RETURNTYPE returnData);
 
 		void requestFailed(Throwable t);
 	}

@@ -13,8 +13,9 @@
 
     <ProgressBar
         android:id="@+id/activity_navigation_toolbar_progress_bar"
-        android:layout_width="@dimen/smedium"
-        android:layout_height="@dimen/smedium"
+        android:layout_width="@dimen/medium"
+        android:layout_height="@dimen/medium"
+        android:paddingRight="@dimen/xsmall"
         android:layout_gravity="end"/>
 
 </android.support.v7.widget.Toolbar>

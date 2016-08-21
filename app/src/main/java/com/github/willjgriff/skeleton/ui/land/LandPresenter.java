@@ -13,8 +13,8 @@ import javax.inject.Inject;
 @LandScope
 public class LandPresenter implements LandContract.Presenter {
 
-	QuestionsDataManager mQuestionsDataManager;
-	LandContract.View mView;
+	private QuestionsDataManager mQuestionsDataManager;
+	private LandContract.View mView;
 
 	@Inject
 	LandPresenter(QuestionsDataManager questionsDataManager, LandContract.View view) {
@@ -22,12 +22,14 @@ public class LandPresenter implements LandContract.Presenter {
 		mView = view;
 	}
 
+	// TODO: Restructure so we don't redo the network request on orientation change.
+	// Maybe retrofit and daggers caching deals with this anyway, investigate.
 	@Override
 	public void start() {
 		mView.showNetworkLoadingView();
 		final Questions questions = mQuestionsDataManager.getStackOverflowQuestions(new NetworkCallerAndUpdater.NewDataListener<Questions>() {
 			@Override
-			public void dataUpdated(Questions returnData) {
+			public void newData(Questions returnData) {
 				mView.setQuestions(returnData.getStackOverflowQuestions());
 				mView.hideNetworkLoadingView();
 			}

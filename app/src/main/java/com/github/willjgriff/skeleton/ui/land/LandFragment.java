@@ -14,6 +14,7 @@ import com.github.willjgriff.skeleton.R;
 import com.github.willjgriff.skeleton.data.models.Question;
 import com.github.willjgriff.skeleton.di.questions.QuestionsInjector;
 import com.github.willjgriff.skeleton.ui.land.di.DaggerLandComponent;
+import com.github.willjgriff.skeleton.ui.land.di.LandInjector;
 import com.github.willjgriff.skeleton.ui.land.di.LandModule;
 import com.github.willjgriff.skeleton.ui.navigation.NavigationToolbarListener;
 
@@ -37,11 +38,7 @@ public class LandFragment extends Fragment implements LandContract.View {
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		DaggerLandComponent.builder()
-			.questionsComponent(QuestionsInjector.INSTANCE.getComponent())
-			.landModule(new LandModule(this))
-			.build()
-			.inject(this);
+		LandInjector.INSTANCE.getComponent(this).inject(this);
 	}
 
 	@Override

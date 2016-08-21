@@ -6,6 +6,7 @@ import com.github.willjgriff.skeleton.data.network.ApiRes;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
+import rx.Observable;
 
 /**
  * Created by Will on 18/08/2016.
@@ -13,5 +14,5 @@ import retrofit2.http.Query;
 public interface QuestionsService {
 
 	@GET(ApiRes.Questions.URI)
-	Call<Questions> loadQuestions(@Query(ApiRes.Questions.QUERY_TAGGED) String tags);
+	Observable<Questions> loadQuestions(@Query(ApiRes.Questions.QUERY_TAGGED) String tags);
 }
