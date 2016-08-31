@@ -3,6 +3,7 @@ package com.github.willjgriff.skeleton.ui.navigation;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,8 +17,6 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.github.willjgriff.skeleton.R;
-import com.github.willjgriff.skeleton.ui.land.di.LandComponent;
-import com.github.willjgriff.skeleton.ui.land.di.LandInjector;
 
 public class NavigationActivity extends AppCompatActivity implements NavigationToolbarListener {
 
@@ -98,11 +97,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationT
 
 		switchToFragment(navigationFragment);
 		mDrawerLayout.closeDrawers();
-	}
 
-	// TODO: Update with all new components and ivalidate properly
-	private void invalidateComponents() {
-		LandInjector.INSTANCE.invalidate();
 	}
 
 	private void switchToFragment(NavigationFragment navigationFragment) {
@@ -113,11 +108,8 @@ public class NavigationActivity extends AppCompatActivity implements NavigationT
 				.replace(R.id.activity_navigation_container,
 					Fragment.instantiate(this, navigationFragment.getFragmentClass().getName()),
 					navigationFragment.toString())
-				.addToBackStack(navigationFragment.getClass().getName())
 				.commit();
 			getSupportActionBar().setTitle(navigationFragment.getNavigationTitle());
-
-			invalidateComponents();
 		}
 	}
 
@@ -150,4 +142,10 @@ public class NavigationActivity extends AppCompatActivity implements NavigationT
 	public void hideNetworkLoadingView() {
 		mProgressBar.setVisibility(View.GONE);
 	}
+
+	@Override
+	public void setToolbarTitle(@StringRes int toolbarTitle) {
+		getSupportActionBar().setTitle(toolbarTitle);
+	}
+
 }

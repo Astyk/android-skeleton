@@ -1,8 +1,6 @@
 package com.github.willjgriff.skeleton.ui.land.di;
 
-import com.github.willjgriff.skeleton.data.QuestionsDataManager;
-import com.github.willjgriff.skeleton.ui.land.LandContract;
-import com.github.willjgriff.skeleton.ui.land.LandPresenter;
+import com.github.willjgriff.skeleton.ui.land.LandView;
 
 import dagger.Module;
 import dagger.Provides;
@@ -13,21 +11,14 @@ import dagger.Provides;
 @Module
 public class LandModule {
 
-	private final LandContract.View mLandView;
+	private final LandView mLandView;
 
-	public LandModule(LandContract.View landView) {
+	public LandModule(LandView landView) {
 		mLandView = landView;
 	}
 
 	@Provides
-	LandContract.View providesLandView() {
+	LandView providesLandView() {
 		return mLandView;
 	}
-
-	// We could do this instead of putting @Inject on the Constructor of the Presenter.
-//	@Provides
-//	@LandScope
-//	LandContract.Presenter providesLandPresenter(QuestionsDataManager questionsDataManager) {
-//		return new LandPresenter(questionsDataManager, mLandView);
-//	}
 }

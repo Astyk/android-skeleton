@@ -10,7 +10,7 @@ public enum QuestionsInjector {
 
 	INSTANCE;
 
-	// We create a new instance every time as we require a new Realm object.
+	// We create a new instance every time as we need a new Realm Object
 	public QuestionsComponent getComponent() {
 		return DaggerQuestionsComponent.builder()
 			.appComponent(AppInjector.INSTANCE.getComponent())

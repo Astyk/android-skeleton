@@ -14,14 +14,14 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Will on 14/08/2016.
  */
-public class NetworkCallerAndUpdater<RETURNTYPE extends RealmModel> {
+public class NetworkFetcher<RETURNTYPE extends RealmModel> {
 
 	private Observable<RETURNTYPE> mRetrofitObservable;
 	private NewDataListener<RETURNTYPE> mNewDataListener;
 	private RealmUpdater<RETURNTYPE> mRealmUpdater;
 	private Subscription mSubscription;
 
-	public NetworkCallerAndUpdater(@NonNull Observable<RETURNTYPE> networkCall, @NonNull NewDataListener<RETURNTYPE> newDataListener, @NonNull RealmUpdater<RETURNTYPE> realmUpdater) {
+	public NetworkFetcher(@NonNull Observable<RETURNTYPE> networkCall, @NonNull NewDataListener<RETURNTYPE> newDataListener, @NonNull RealmUpdater<RETURNTYPE> realmUpdater) {
 		mRetrofitObservable = networkCall;
 		mNewDataListener = newDataListener;
 		mRealmUpdater = realmUpdater;
@@ -30,8 +30,6 @@ public class NetworkCallerAndUpdater<RETURNTYPE extends RealmModel> {
 	public void fetchAndUpdateData() {
 
 		mSubscription = mRetrofitObservable
-			// Maybe cache is useful for saving during orientation changes?
-			.cache()
 			.subscribeOn(Schedulers.io())
 			.observeOn(AndroidSchedulers.mainThread())
 			.subscribe(new Subscriber<RETURNTYPE>() {
@@ -65,8 +63,8 @@ public class NetworkCallerAndUpdater<RETURNTYPE extends RealmModel> {
 		mRealmUpdater.update(returnData);
 	}
 
-	public void close() {
-		mRealmUpdater.close();
+	public void cancelRequests() {
+		mRealmUpdater.cancelUpdate();
 		mSubscription.unsubscribe();
 	}
 

@@ -1,6 +1,5 @@
 package com.github.willjgriff.skeleton.ui.land;
 
-import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,11 +8,9 @@ import android.widget.TextView;
 
 import com.github.willjgriff.skeleton.R;
 import com.github.willjgriff.skeleton.data.models.Question;
-import com.github.willjgriff.skeleton.data.models.Questions;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.Inflater;
 
 /**
  * Created by Will on 19/08/2016.
@@ -23,14 +20,13 @@ public class QuestionsAdapter extends RecyclerView.Adapter<QuestionsAdapter.Ques
 
 	List<Question> mQuestions;
 
-	public void setQuestions(List<Question> questions) {
-		mQuestions.clear();
-		mQuestions.addAll(questions);
-		notifyItemRangeChanged(0, questions.size());
-	}
-
 	public QuestionsAdapter() {
 		mQuestions = new ArrayList<>();
+	}
+
+	public void setQuestions(List<Question> questions) {
+		mQuestions = questions;
+		notifyItemRangeChanged(0, questions.size());
 	}
 
 	@Override

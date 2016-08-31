@@ -28,7 +28,7 @@ public abstract class RealmUpdater<UPDATETYPE extends RealmModel> {
 		});
 	}
 
-	public void close() {
+	public void cancelUpdate() {
 		if (mRealmAsyncTask != null) {
 			mRealmAsyncTask.cancel();
 			mRealmAsyncTask = null;

@@ -2,7 +2,7 @@ package com.github.willjgriff.skeleton.data;
 
 import android.support.annotation.NonNull;
 
-import com.github.willjgriff.skeleton.data.NetworkCallerAndUpdater.NewDataListener;
+import com.github.willjgriff.skeleton.data.NetworkFetcher.NewDataListener;
 import com.github.willjgriff.skeleton.data.models.Questions;
 import com.github.willjgriff.skeleton.data.network.services.QuestionsService;
 import com.github.willjgriff.skeleton.data.storage.fetchers.AllRealmFetcher;
@@ -24,7 +24,7 @@ public class QuestionsDataManager {
 
 	private Realm mRealm;
 	private QuestionsService mQuestionsService;
-	private NetworkCallerAndUpdater<Questions> mSoQuestionsNetworkCallerAndUpdater;
+	private NetworkFetcher<Questions> mSoQuestionsNetworkFetcher;
 
 	public QuestionsDataManager(@NonNull QuestionsService questionsService, @NonNull Realm realm) {
 		mQuestionsService = questionsService;
@@ -42,9 +42,9 @@ public class QuestionsDataManager {
 		RealmFetcher<Questions> realmFetcher = new AllRealmFetcher<>(Questions.class);
 		RealmUpdater<Questions> realmUpdater = new ReplaceRealmUpdater<>(mRealm, realmFetcher);
 
-		mSoQuestionsNetworkCallerAndUpdater = new NetworkCallerAndUpdater<>(
+		mSoQuestionsNetworkFetcher = new NetworkFetcher<>(
 			mQuestionsService.loadQuestions("android"), soQuestionsListener, realmUpdater);
-		mSoQuestionsNetworkCallerAndUpdater.fetchAndUpdateData();
+		mSoQuestionsNetworkFetcher.fetchAndUpdateData();
 
 		// TODO: We should use the same realm fetch method when updating the realm as when we display realm
 		// data to the user. Try to find a way of forcing the use of the same realmFetcher for both purposes
@@ -56,11 +56,14 @@ public class QuestionsDataManager {
 		}
 	}
 
-	public void close() {
-		if (mSoQuestionsNetworkCallerAndUpdater != null) {
-			mSoQuestionsNetworkCallerAndUpdater.close();
-			mSoQuestionsNetworkCallerAndUpdater = null;
+	public void cancelRequests() {
+		if (mSoQuestionsNetworkFetcher != null) {
+			mSoQuestionsNetworkFetcher.cancelRequests();
+			mSoQuestionsNetworkFetcher = null;
 		}
+	}
+
+	public void closeRealm() {
 		mRealm.close();
 	}
 }

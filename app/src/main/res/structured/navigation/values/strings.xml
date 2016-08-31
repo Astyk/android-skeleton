@@ -8,4 +8,7 @@
     <string name="navigation_land">Landing</string>
     <string name="navigation_settings">Settings</string>
 
+    <!--landing fragment-->
+    <string name="fragment_land_error_string">Error Loading Content</string>
+
 </resources>
