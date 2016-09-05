@@ -45,7 +45,8 @@ public class LandFragment extends Fragment implements LandView {
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		LandInjector.INSTANCE.getComponent(this).inject(this);
+		LandInjector.INSTANCE.getComponent().inject(this);
+		setRetainInstance(true);
 	}
 
 	@Nullable
@@ -64,26 +65,31 @@ public class LandFragment extends Fragment implements LandView {
 	}
 
 	@Override
-	public void onResume() {
-		super.onResume();
-		mPresenter.loadData();
+	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		mPresenter.bindView(this);
 	}
 
 	@Override
-	public void onPause() {
-		mPresenter.cancelLoad();
-		super.onPause();
+	public void onDestroyView() {
+		mPresenter.unbindView();
+		super.onDestroyView();
 	}
 
 	@Override
 	public void onDestroy() {
-		mPresenter.closeDatabase();
+		mPresenter.cancelLoading();
 		super.onDestroy();
 	}
 
 	@Override
 	public void setQuestions(List<Question> questions) {
 		mQuestionsAdapter.setQuestions(questions);
+	}
+
+	@Override
+	public void showInitialLoading() {
+		mProgressBar.setVisibility(View.VISIBLE);
 	}
 
 	@Override
@@ -95,11 +101,6 @@ public class LandFragment extends Fragment implements LandView {
 	public void hideLoading() {
 		mToolbarListener.hideNetworkLoadingView();
 		mProgressBar.setVisibility(View.INVISIBLE);
-	}
-
-	@Override
-	public void showInitialLoading() {
-		mProgressBar.setVisibility(View.VISIBLE);
 	}
 
 	@Override

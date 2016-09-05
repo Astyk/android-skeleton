@@ -2,7 +2,6 @@ package com.github.willjgriff.skeleton.data;
 
 import android.support.annotation.NonNull;
 
-import com.github.willjgriff.skeleton.data.NetworkFetcher.NewDataListener;
 import com.github.willjgriff.skeleton.data.models.Questions;
 import com.github.willjgriff.skeleton.data.network.services.QuestionsService;
 import com.github.willjgriff.skeleton.data.storage.fetchers.AllRealmFetcher;
@@ -11,7 +10,12 @@ import com.github.willjgriff.skeleton.data.storage.updaters.RealmUpdater;
 import com.github.willjgriff.skeleton.data.storage.updaters.ReplaceRealmUpdater;
 
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
+import rx.Observable;
+import rx.Subscription;
+import rx.functions.Action1;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by Will on 13/08/2016.
@@ -22,33 +26,23 @@ import io.realm.RealmResults;
  */
 public class QuestionsDataManager {
 
-	private Realm mRealm;
 	private QuestionsService mQuestionsService;
-	private NetworkFetcher<Questions> mSoQuestionsNetworkFetcher;
+	private NetworkFetchAndUpdate<Questions> mSoQuestionsNetworkFetchAndUpdate;
+	private RealmFetcher<Questions> mQuestionsRealmFetcher;
+	private Subscription mQuestionsUpdateSubscription;
+	private PublishSubject<Questions> mQuestionsPublishSubject;
 
-	public QuestionsDataManager(@NonNull QuestionsService questionsService, @NonNull Realm realm) {
+	public QuestionsDataManager(@NonNull QuestionsService questionsService) {
 		mQuestionsService = questionsService;
-		mRealm = realm;
+		mQuestionsRealmFetcher = new AllRealmFetcher<>(Questions.class);
+		mQuestionsPublishSubject = PublishSubject.create();
 	}
 
-	/**
-	 * Returns the currently stored data, if it is present, null otherwise, and sets
-	 * a listener that is called when new data from the network is retrieved.
-	 *
-	 * @param soQuestionsListener called when new data is retrieved
-	 * @return currently saved data if present, null otherwise
-	 */
-	public Questions getStackOverflowQuestions(NewDataListener<Questions> soQuestionsListener) {
-		RealmFetcher<Questions> realmFetcher = new AllRealmFetcher<>(Questions.class);
-		RealmUpdater<Questions> realmUpdater = new ReplaceRealmUpdater<>(mRealm, realmFetcher);
+	public Questions getStoredQuestions(Realm realm, RealmChangeListener<RealmResults<Questions>> realmChangeListener) {
+		RealmResults<Questions> savedSoQuestions = mQuestionsRealmFetcher.fetch(realm);
 
-		mSoQuestionsNetworkFetcher = new NetworkFetcher<>(
-			mQuestionsService.loadQuestions("android"), soQuestionsListener, realmUpdater);
-		mSoQuestionsNetworkFetcher.fetchAndUpdateData();
+		savedSoQuestions.addChangeListener(realmChangeListener);
 
-		// TODO: We should use the same realm fetch method when updating the realm as when we display realm
-		// data to the user. Try to find a way of forcing the use of the same realmFetcher for both purposes
-		RealmResults<Questions> savedSoQuestions = realmFetcher.fetch(mRealm);
 		if (savedSoQuestions.size() >= 1) {
 			return savedSoQuestions.get(0);
 		} else {
@@ -56,14 +50,30 @@ public class QuestionsDataManager {
 		}
 	}
 
-	public void cancelRequests() {
-		if (mSoQuestionsNetworkFetcher != null) {
-			mSoQuestionsNetworkFetcher.cancelRequests();
-			mSoQuestionsNetworkFetcher = null;
+	public Observable<Questions> getQuestionsUpdateObservable() {
+		return mQuestionsPublishSubject.asObservable();
+	}
+
+	public void updateQuestionsFromNetwork(Realm realm) {
+		if (mQuestionsUpdateSubscription == null || mQuestionsUpdateSubscription.isUnsubscribed()) {
+
+			RealmUpdater<Questions> realmUpdater = new ReplaceRealmUpdater<>(realm, mQuestionsRealmFetcher);
+			mSoQuestionsNetworkFetchAndUpdate = new NetworkFetchAndUpdate<>(realm,
+				mQuestionsService.getQuestions("android"), realmUpdater);
+
+			mQuestionsUpdateSubscription = mSoQuestionsNetworkFetchAndUpdate.fetchAndUpdateData().subscribe(new Action1<Questions>() {
+				@Override
+				public void call(Questions questions) {
+					mQuestionsPublishSubject.onNext(questions);
+				}
+			});
 		}
 	}
 
-	public void closeRealm() {
-		mRealm.close();
+	public void cancelUpdate() {
+		if (mQuestionsUpdateSubscription != null && !mQuestionsUpdateSubscription.isUnsubscribed()) {
+			mQuestionsUpdateSubscription.unsubscribe();
+		}
+		mSoQuestionsNetworkFetchAndUpdate.cancelRequests();
 	}
 }

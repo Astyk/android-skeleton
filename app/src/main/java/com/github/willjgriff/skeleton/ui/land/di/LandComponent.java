@@ -9,7 +9,7 @@ import dagger.Component;
  * Created by Will on 19/08/2016.
  */
 @LandScope
-@Component(dependencies = QuestionsComponent.class, modules = LandModule.class)
+@Component(dependencies = QuestionsComponent.class)
 public interface LandComponent {
 
 	void inject(LandFragment fragment);

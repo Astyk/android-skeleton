@@ -14,5 +14,6 @@ import rx.Observable;
 public interface QuestionsService {
 
 	@GET(ApiRes.Questions.URI)
-	Observable<Questions> loadQuestions(@Query(ApiRes.Questions.QUERY_TAGGED) String tags);
+	Observable<Questions> getQuestions(@Query(ApiRes.Questions.QUERY_TAGGED) String tags);
+
 }

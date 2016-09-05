@@ -16,8 +16,8 @@ public class QuestionsModule {
 
 	@Provides
 	@QuestionsScope
-	QuestionsDataManager providesQuestionsDataManager(QuestionsService questionsService, Realm realm) {
-		return new QuestionsDataManager(questionsService, realm);
+	QuestionsDataManager providesQuestionsDataManager(QuestionsService questionsService) {
+		return new QuestionsDataManager(questionsService);
 	}
 
 }

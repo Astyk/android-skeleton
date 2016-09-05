@@ -12,11 +12,11 @@ public interface LandView extends BaseView {
 
 	void setQuestions(List<Question> questions);
 
+	void showInitialLoading();
+
 	void showNetworkLoading();
 
 	void hideLoading();
-
-	void showInitialLoading();
 
 	void showError();
 }
