@@ -10,10 +10,10 @@ import java.lang.ref.WeakReference;
 import javax.inject.Inject;
 
 import io.realm.Realm;
-import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import rx.Subscriber;
 import rx.Subscription;
+import rx.functions.Action1;
 
 /**
  * Created by Will on 19/08/2016.
@@ -23,7 +23,8 @@ public class LandPresenter implements BasePresenter<LandView> {
 
 	private QuestionsDataManager mQuestionsDataManager;
 	private WeakReference<LandView> mLandView;
-	private Subscription mQuestionsUpdateSubscription;
+	private Subscription mQuestionsCacheSubscription;
+	private Subscription mQuestionsNetworkSubscription;
 	private Realm mRealm;
 
 	@Inject
@@ -36,12 +37,47 @@ public class LandPresenter implements BasePresenter<LandView> {
 	public void bindView(LandView view) {
 		mLandView = new WeakReference<>(view);
 
-		if (mQuestionsUpdateSubscription == null || mQuestionsUpdateSubscription.isUnsubscribed()) {
+		// TODO: Only load the data once
+		if (mQuestionsCacheSubscription == null || mQuestionsCacheSubscription.isUnsubscribed()) {
 			getView().showNetworkLoading();
 			fetchQuestions();
 		}
 
-		mQuestionsDataManager.updateQuestionsFromNetwork(mRealm);
+		if (mQuestionsNetworkSubscription == null || mQuestionsNetworkSubscription.isUnsubscribed()) {
+			mQuestionsNetworkSubscription = mQuestionsDataManager.updateQuestionsFromNetwork(mRealm).subscribe(new Subscriber<Questions>() {
+				@Override
+				public void onCompleted() {
+
+				}
+
+				@Override
+				public void onError(Throwable e) {
+					getView().showError();
+					getView().hideNetworkLoading();
+				}
+
+				@Override
+				public void onNext(Questions questions) {
+					getView().hideNetworkLoading();
+				}
+			});
+		}
+	}
+
+	@Override
+	public void unbindView() {
+		if (mQuestionsCacheSubscription != null && !mQuestionsCacheSubscription.isUnsubscribed()) {
+			mQuestionsCacheSubscription.unsubscribe();
+		}
+		if (mQuestionsNetworkSubscription != null && !mQuestionsNetworkSubscription.isUnsubscribed()) {
+			mQuestionsNetworkSubscription.unsubscribe();
+		}
+	}
+
+	@Override
+	public void cancelLoading() {
+		mQuestionsDataManager.cancelUpdate();
+		mRealm.close();
 	}
 
 	private LandView getView() {
@@ -49,51 +85,16 @@ public class LandPresenter implements BasePresenter<LandView> {
 	}
 
 	private void fetchQuestions() {
-		mQuestionsUpdateSubscription = mQuestionsDataManager.getQuestionsUpdateObservable().subscribe(new Subscriber<Questions>() {
-			@Override
-			public void onCompleted() {
-			}
-
-			@Override
-			public void onError(Throwable e) {
-				getView().showError();
-			}
-
-			@Override
-			public void onNext(Questions questions) {
-				getView().setQuestions(questions.getStackOverflowQuestions());
-				getView().hideLoading();
-			}
-		});
-
-		Questions questions = mQuestionsDataManager.getStoredQuestions(mRealm, new RealmChangeListener<RealmResults<Questions>>() {
-			@Override
-			public void onChange(RealmResults<Questions> element) {
-//				getView().setQuestions(element.get(0).getStackOverflowQuestions());
-//				getView().hideLoading();
-			}
-		});
-
-		if (questions != null) {
-			getView().setQuestions(questions.getStackOverflowQuestions());
-		} else {
-			getView().showInitialLoading();
-		}
-	}
-
-	@Override
-	public void unbindView() {
-		if (mQuestionsUpdateSubscription != null && !mQuestionsUpdateSubscription.isUnsubscribed()) {
-			mQuestionsUpdateSubscription.unsubscribe();
-		}
-	}
-
-	@Override
-	public void cancelLoading() {
-		if (mQuestionsUpdateSubscription != null) {
-			mQuestionsUpdateSubscription.unsubscribe();
-		}
-		mQuestionsDataManager.cancelUpdate();
-		mRealm.close();
+		// TODO: Add other random endpoints
+		getView().showNetworkLoading();
+		getView().showInitialLoading();
+		mQuestionsCacheSubscription = mQuestionsDataManager.getRealmQuestionsObservable(mRealm)
+			.subscribe(new Action1<RealmResults<Questions>>() {
+				@Override
+				public void call(RealmResults<Questions> questionses) {
+					getView().setQuestions(questionses.get(0).getStackOverflowQuestions());
+					getView().hideInitialLoading();
+				}
+			});
 	}
 }

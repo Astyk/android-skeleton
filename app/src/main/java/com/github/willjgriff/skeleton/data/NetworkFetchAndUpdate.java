@@ -1,10 +1,7 @@
 package com.github.willjgriff.skeleton.data;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
-import com.github.willjgriff.skeleton.data.models.Questions;
-import com.github.willjgriff.skeleton.data.network.ObservableBuilder;
 import com.github.willjgriff.skeleton.data.storage.updaters.RealmUpdater;
 
 import io.realm.Realm;
@@ -21,12 +18,10 @@ public class NetworkFetchAndUpdate<RETURNTYPE extends RealmModel> {
 
 	private Observable<RETURNTYPE> mRetrofitObservable;
 	private RealmUpdater<RETURNTYPE> mRealmUpdater;
-	private Realm mRealm;
 
-	public NetworkFetchAndUpdate(Realm realm, @NonNull Observable<RETURNTYPE> networkCall, @NonNull RealmUpdater<RETURNTYPE> realmUpdater) {
+	public NetworkFetchAndUpdate(@NonNull Observable<RETURNTYPE> networkCall, @NonNull RealmUpdater<RETURNTYPE> realmUpdater) {
 		mRetrofitObservable = networkCall;
 		mRealmUpdater = realmUpdater;
-		mRealm = realm;
 	}
 
 	public Observable<RETURNTYPE> fetchAndUpdateData() {
@@ -37,16 +32,6 @@ public class NetworkFetchAndUpdate<RETURNTYPE extends RealmModel> {
 			.doOnNext(new Action1<RETURNTYPE>() {
 				@Override
 				public void call(RETURNTYPE returnData) {
-
-					// TODO: Updating Realm here doesn't notify change listener. Find out why.
-					// Note this is still on the MainThread. Maybe re-initialise the Realm.
-//					mRealm.executeTransactionAsync(new Realm.Transaction() {
-//						@Override
-//						public void execute(Realm realm) {
-//							realm.copyToRealmOrUpdate(new Questions());
-//						}
-//					});
-
 					updateRealmWithNewData(returnData);
 				}
 			});

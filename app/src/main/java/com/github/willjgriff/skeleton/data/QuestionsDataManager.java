@@ -10,12 +10,11 @@ import com.github.willjgriff.skeleton.data.storage.updaters.RealmUpdater;
 import com.github.willjgriff.skeleton.data.storage.updaters.ReplaceRealmUpdater;
 
 import io.realm.Realm;
-import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import rx.Observable;
 import rx.Subscription;
-import rx.functions.Action1;
-import rx.subjects.PublishSubject;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 
 /**
  * Created by Will on 13/08/2016.
@@ -29,51 +28,41 @@ public class QuestionsDataManager {
 	private QuestionsService mQuestionsService;
 	private NetworkFetchAndUpdate<Questions> mSoQuestionsNetworkFetchAndUpdate;
 	private RealmFetcher<Questions> mQuestionsRealmFetcher;
-	private Subscription mQuestionsUpdateSubscription;
-	private PublishSubject<Questions> mQuestionsPublishSubject;
 
 	public QuestionsDataManager(@NonNull QuestionsService questionsService) {
 		mQuestionsService = questionsService;
 		mQuestionsRealmFetcher = new AllRealmFetcher<>(Questions.class);
-		mQuestionsPublishSubject = PublishSubject.create();
 	}
 
-	public Questions getStoredQuestions(Realm realm, RealmChangeListener<RealmResults<Questions>> realmChangeListener) {
-		RealmResults<Questions> savedSoQuestions = mQuestionsRealmFetcher.fetch(realm);
+	public Observable<Questions> updateQuestionsFromNetwork(Realm realm) {
+		RealmUpdater<Questions> realmUpdater = new ReplaceRealmUpdater<>(realm, mQuestionsRealmFetcher);
+		mSoQuestionsNetworkFetchAndUpdate = new NetworkFetchAndUpdate<>(
+			mQuestionsService.getQuestions("android"), realmUpdater);
 
-		savedSoQuestions.addChangeListener(realmChangeListener);
-
-		if (savedSoQuestions.size() >= 1) {
-			return savedSoQuestions.get(0);
-		} else {
-			return null;
-		}
+		return mSoQuestionsNetworkFetchAndUpdate.fetchAndUpdateData();
 	}
 
-	public Observable<Questions> getQuestionsUpdateObservable() {
-		return mQuestionsPublishSubject.asObservable();
-	}
-
-	public void updateQuestionsFromNetwork(Realm realm) {
-		if (mQuestionsUpdateSubscription == null || mQuestionsUpdateSubscription.isUnsubscribed()) {
-
-			RealmUpdater<Questions> realmUpdater = new ReplaceRealmUpdater<>(realm, mQuestionsRealmFetcher);
-			mSoQuestionsNetworkFetchAndUpdate = new NetworkFetchAndUpdate<>(realm,
-				mQuestionsService.getQuestions("android"), realmUpdater);
-
-			mQuestionsUpdateSubscription = mSoQuestionsNetworkFetchAndUpdate.fetchAndUpdateData().subscribe(new Action1<Questions>() {
+	public Observable<RealmResults<Questions>> getRealmQuestionsObservable(Realm realm) {
+		return realm.where(Questions.class)
+			.findAllAsync()
+			.asObservable()
+			.filter(new Func1<RealmResults<Questions>, Boolean>() {
 				@Override
-				public void call(Questions questions) {
-					mQuestionsPublishSubject.onNext(questions);
+				public Boolean call(RealmResults<Questions> questionses) {
+					return questionses.isLoaded();
 				}
-			});
-		}
+			})
+			.filter(new Func1<RealmResults<Questions>, Boolean>() {
+				@Override
+				public Boolean call(RealmResults<Questions> questionses) {
+					return questionses.isValid();
+				}
+			})
+			.subscribeOn(AndroidSchedulers.mainThread())
+			.observeOn(AndroidSchedulers.mainThread());
 	}
 
 	public void cancelUpdate() {
-		if (mQuestionsUpdateSubscription != null && !mQuestionsUpdateSubscription.isUnsubscribed()) {
-			mQuestionsUpdateSubscription.unsubscribe();
-		}
 		mSoQuestionsNetworkFetchAndUpdate.cancelRequests();
 	}
 }

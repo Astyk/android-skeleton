@@ -14,9 +14,11 @@ public interface LandView extends BaseView {
 
 	void showInitialLoading();
 
+	void hideInitialLoading();
+
 	void showNetworkLoading();
 
-	void hideLoading();
+	void hideNetworkLoading();
 
 	void showError();
 }

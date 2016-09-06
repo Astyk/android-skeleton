@@ -93,14 +93,18 @@ public class LandFragment extends Fragment implements LandView {
 	}
 
 	@Override
+	public void hideInitialLoading() {
+		mProgressBar.setVisibility(View.INVISIBLE);
+	}
+
+	@Override
 	public void showNetworkLoading() {
 		mToolbarListener.showNetworkLoadingView();
 	}
 
 	@Override
-	public void hideLoading() {
+	public void hideNetworkLoading() {
 		mToolbarListener.hideNetworkLoadingView();
-		mProgressBar.setVisibility(View.INVISIBLE);
 	}
 
 	@Override
