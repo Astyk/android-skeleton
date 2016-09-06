@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.github.willjgriff.skeleton.R;
+import com.github.willjgriff.skeleton.data.models.Person;
 import com.github.willjgriff.skeleton.data.models.Question;
 
 import java.util.ArrayList;
@@ -18,15 +19,15 @@ import java.util.List;
 
 public class QuestionsAdapter extends RecyclerView.Adapter<QuestionsAdapter.QuestionsItemViewHolder> {
 
-	List<Question> mQuestions;
+	List<Person> mPeople;
 
 	public QuestionsAdapter() {
-		mQuestions = new ArrayList<>();
+		mPeople = new ArrayList<>();
 	}
 
-	public void setQuestions(List<Question> questions) {
-		mQuestions = questions;
-		notifyItemRangeChanged(0, questions.size());
+	public void setQuestions(List<Person> people) {
+		mPeople = people;
+		notifyItemRangeChanged(0, people.size());
 	}
 
 	@Override
@@ -39,12 +40,12 @@ public class QuestionsAdapter extends RecyclerView.Adapter<QuestionsAdapter.Ques
 
 	@Override
 	public void onBindViewHolder(QuestionsItemViewHolder holder, int position) {
-		holder.bindData(mQuestions.get(position));
+		holder.bindData(mPeople.get(position));
 	}
 
 	@Override
 	public int getItemCount() {
-		return mQuestions.size();
+		return mPeople.size();
 	}
 
 	public class QuestionsItemViewHolder extends RecyclerView.ViewHolder {
@@ -56,8 +57,8 @@ public class QuestionsAdapter extends RecyclerView.Adapter<QuestionsAdapter.Ques
 			mTextView = (TextView) itemView.findViewById(R.id.view_questions_item_title);
 		}
 
-		public void bindData(Question question) {
-			mTextView.setText(question.getTitle());
+		public void bindData(Person person) {
+			mTextView.setText(person.getEmail());
 		}
 	}
 }

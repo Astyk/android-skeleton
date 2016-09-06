@@ -2,7 +2,7 @@ package com.github.willjgriff.skeleton.di.app;
 
 import com.github.willjgriff.skeleton.data.network.ApiRes;
 import com.github.willjgriff.skeleton.data.network.services.QuestionsService;
-import com.github.willjgriff.skeleton.di.questions.QuestionsScope;
+import com.github.willjgriff.skeleton.data.network.services.RandomPeopleService;
 
 import javax.inject.Singleton;
 
@@ -29,7 +29,7 @@ public class NetworkModule {
 	@Singleton
 	Retrofit providesRetrofit(GsonConverterFactory gsonConverterFactory) {
 		return new Retrofit.Builder()
-			.baseUrl(ApiRes.Base.STACKOVERFLOW)
+			.baseUrl(ApiRes.Base.RANDOM)
 			.addConverterFactory(gsonConverterFactory)
 			.addCallAdapterFactory(RxJavaCallAdapterFactory.create())
 			.build();
@@ -39,6 +39,12 @@ public class NetworkModule {
 	@Singleton
 	QuestionsService providesQuestionsService(Retrofit retrofit) {
 		return retrofit.create(QuestionsService.class);
+	}
+
+	@Provides
+	@Singleton
+	RandomPeopleService providesRandomPeopleService(Retrofit retrofit) {
+		return retrofit.create(RandomPeopleService.class);
 	}
 
 }

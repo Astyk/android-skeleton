@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.github.willjgriff.skeleton.R;
-import com.github.willjgriff.skeleton.data.models.Question;
+import com.github.willjgriff.skeleton.data.models.Person;
 import com.github.willjgriff.skeleton.ui.land.di.LandInjector;
 import com.github.willjgriff.skeleton.ui.navigation.NavigationFragment;
 import com.github.willjgriff.skeleton.ui.navigation.NavigationToolbarListener;
@@ -29,7 +29,7 @@ import javax.inject.Inject;
 public class LandFragment extends Fragment implements LandView {
 
 	@Inject
-	LandPresenter mPresenter;
+	LandPresenter2 mPresenter;
 
 	private RecyclerView mQuestions;
 	private QuestionsAdapter mQuestionsAdapter;
@@ -83,7 +83,7 @@ public class LandFragment extends Fragment implements LandView {
 	}
 
 	@Override
-	public void setQuestions(List<Question> questions) {
+	public void setPeople(List<Person> questions) {
 		mQuestionsAdapter.setQuestions(questions);
 	}
 

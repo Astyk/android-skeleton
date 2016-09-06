@@ -1,5 +1,6 @@
 package com.github.willjgriff.skeleton.ui.land;
 
+import com.github.willjgriff.skeleton.data.models.Person;
 import com.github.willjgriff.skeleton.data.models.Question;
 import com.github.willjgriff.skeleton.mvp.BaseView;
 
@@ -10,7 +11,7 @@ import java.util.List;
  */
 public interface LandView extends BaseView {
 
-	void setQuestions(List<Question> questions);
+	void setPeople(List<Person> questions);
 
 	void showInitialLoading();
 

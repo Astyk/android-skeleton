@@ -1,7 +1,7 @@
 package com.github.willjgriff.skeleton.ui.land;
 
-import com.github.willjgriff.skeleton.data.QuestionsDataManager;
-import com.github.willjgriff.skeleton.data.models.Questions;
+import com.github.willjgriff.skeleton.data.RandomPeopleDataManager;
+import com.github.willjgriff.skeleton.data.models.People;
 import com.github.willjgriff.skeleton.mvp.BasePresenter;
 import com.github.willjgriff.skeleton.ui.land.di.LandScope;
 
@@ -10,8 +10,6 @@ import java.lang.ref.WeakReference;
 import javax.inject.Inject;
 
 import io.realm.Realm;
-import io.realm.RealmChangeListener;
-import io.realm.RealmResults;
 import rx.Subscriber;
 import rx.Subscription;
 
@@ -19,16 +17,16 @@ import rx.Subscription;
  * Created by Will on 19/08/2016.
  */
 @LandScope
-public class LandPresenter implements BasePresenter<LandView> {
+public class LandPresenter2 implements BasePresenter<LandView> {
 
-	private QuestionsDataManager mQuestionsDataManager;
+	private RandomPeopleDataManager mRandomPeopleDataManager;
 	private WeakReference<LandView> mLandView;
 	private Subscription mQuestionsUpdateSubscription;
 	private Realm mRealm;
 
 	@Inject
-	LandPresenter(QuestionsDataManager questionsDataManager) {
-		mQuestionsDataManager = questionsDataManager;
+	LandPresenter2(RandomPeopleDataManager randomPeopleDataManager) {
+		mRandomPeopleDataManager = randomPeopleDataManager;
 		mRealm = Realm.getDefaultInstance();
 	}
 
@@ -41,7 +39,7 @@ public class LandPresenter implements BasePresenter<LandView> {
 			fetchQuestions();
 		}
 
-		mQuestionsDataManager.updateQuestionsFromNetwork(mRealm);
+		mRandomPeopleDataManager.updateRandomersFromNetwork(mRealm);
 	}
 
 	private LandView getView() {
@@ -49,33 +47,29 @@ public class LandPresenter implements BasePresenter<LandView> {
 	}
 
 	private void fetchQuestions() {
-		mQuestionsUpdateSubscription = mQuestionsDataManager.getQuestionsUpdateObservable().subscribe(new Subscriber<Questions>() {
+		mQuestionsUpdateSubscription = mRandomPeopleDataManager.getRandomersUpdateObservable().subscribe(new Subscriber<People>() {
 			@Override
 			public void onCompleted() {
+
 			}
 
 			@Override
 			public void onError(Throwable e) {
 				getView().showError();
+				getView().hideLoading();
 			}
 
 			@Override
-			public void onNext(Questions questions) {
-//				getView().setPeople(questions.getStackOverflowQuestions());
-//				getView().hideLoading();
+			public void onNext(People people) {
+				getView().setPeople(people.getPeople());
+				getView().hideLoading();
 			}
 		});
 
-		Questions questions = mQuestionsDataManager.getStoredQuestions(mRealm, new RealmChangeListener<RealmResults<Questions>>() {
-			@Override
-			public void onChange(RealmResults<Questions> element) {
-//				getView().setQuestions(element.get(0).getStackOverflowQuestions());
-//				getView().hideLoading();
-			}
-		});
+		People people = mRandomPeopleDataManager.getStoredRandomers(mRealm);
 
-		if (questions != null) {
-//			getView().setPeople(questions.getStackOverflowQuestions());
+		if (people != null) {
+			getView().setPeople(people.getPeople());
 		} else {
 			getView().showInitialLoading();
 		}
@@ -90,10 +84,7 @@ public class LandPresenter implements BasePresenter<LandView> {
 
 	@Override
 	public void cancelLoading() {
-		if (mQuestionsUpdateSubscription != null) {
-			mQuestionsUpdateSubscription.unsubscribe();
-		}
-		mQuestionsDataManager.cancelUpdate();
+		mRandomPeopleDataManager.cancelUpdate();
 		mRealm.close();
 	}
 }
