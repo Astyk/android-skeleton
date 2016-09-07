@@ -1,4 +1,4 @@
-package com.github.willjgriff.skeleton.di.questions;
+package com.github.willjgriff.skeleton.di.api;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -10,6 +10,6 @@ import javax.inject.Scope;
  */
 @Scope
 @Retention(RetentionPolicy.RUNTIME)
-public @interface QuestionsScope {
+public @interface FragmentScope {
 }
 

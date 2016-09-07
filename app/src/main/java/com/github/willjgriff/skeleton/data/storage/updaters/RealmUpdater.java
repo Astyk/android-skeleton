@@ -22,14 +22,6 @@ public abstract class RealmUpdater<UPDATETYPE extends RealmModel> {
 	}
 
 	public void update(final UPDATETYPE updatedData) {
-//		mRealm.executeTransaction(new Realm.Transaction() {
-//			@Override
-//			public void execute(Realm realm) {
-//				updateRealm(realm, updatedData);
-//				Log.i("REALM", "Current thread inside Async: " + Thread.currentThread().toString());
-//			}
-//		});
-
 		mRealmAsyncTask = mRealm.executeTransactionAsync(new Realm.Transaction() {
 			@Override
 			public void execute(Realm realm) {

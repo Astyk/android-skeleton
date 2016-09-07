@@ -22,6 +22,8 @@ public class ReplaceRealmUpdater<UPDATETYPE extends RealmModel> extends RealmUpd
 
 	@Override
 	public void updateRealm(Realm realm, UPDATETYPE updatedData) {
+		// TODO: Find or add uniquely identifieing data on models to delete them AFTER we have update the Realm
+		// I think deleting stuff before updating the Realm causes an IllegalStateException
 		mRealmFetcher.fetch(realm).deleteAllFromRealm();
 		realm.copyToRealmOrUpdate(updatedData);
 	}
