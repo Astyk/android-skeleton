@@ -29,7 +29,7 @@ import javax.inject.Inject;
 public class LandFragment extends Fragment implements LandView {
 
 	@Inject
-	LandPresenter mPresenter;
+	LandPresenter2 mPresenter;
 
 	private RecyclerView mQuestions;
 	private QuestionsAdapter mQuestionsAdapter;

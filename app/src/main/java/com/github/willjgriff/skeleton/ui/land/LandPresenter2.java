@@ -19,7 +19,7 @@ import rx.functions.Action1;
  * Created by Will on 19/08/2016.
  */
 @LandScope
-public class LandPresenter implements BasePresenter<LandView> {
+public class LandPresenter2 implements BasePresenter<LandView> {
 
 	private QuestionsDataManager mQuestionsDataManager;
 	private WeakReference<LandView> mLandView;
@@ -28,7 +28,7 @@ public class LandPresenter implements BasePresenter<LandView> {
 	private Realm mRealm;
 
 	@Inject
-	LandPresenter(QuestionsDataManager questionsDataManager) {
+	LandPresenter2(QuestionsDataManager questionsDataManager) {
 		mQuestionsDataManager = questionsDataManager;
 		// TODO: Inject into DataManager or here
 		mRealm = Realm.getDefaultInstance();
