@@ -12,7 +12,6 @@ import com.github.willjgriff.skeleton.data.storage.updaters.ReplaceRealmUpdater;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import rx.Observable;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 

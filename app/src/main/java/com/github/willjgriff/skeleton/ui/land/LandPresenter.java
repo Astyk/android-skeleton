@@ -30,6 +30,7 @@ public class LandPresenter implements BasePresenter<LandView> {
 	@Inject
 	LandPresenter(QuestionsDataManager questionsDataManager) {
 		mQuestionsDataManager = questionsDataManager;
+		// TODO: Inject into DataManager
 		mRealm = Realm.getDefaultInstance();
 	}
 
@@ -39,28 +40,11 @@ public class LandPresenter implements BasePresenter<LandView> {
 
 		// TODO: Only load the data once
 		if (mQuestionsCacheSubscription == null || mQuestionsCacheSubscription.isUnsubscribed()) {
-			getView().showNetworkLoading();
-			fetchQuestions();
+			loadCachedQuestions();
 		}
 
 		if (mQuestionsNetworkSubscription == null || mQuestionsNetworkSubscription.isUnsubscribed()) {
-			mQuestionsNetworkSubscription = mQuestionsDataManager.updateQuestionsFromNetwork(mRealm).subscribe(new Subscriber<Questions>() {
-				@Override
-				public void onCompleted() {
-
-				}
-
-				@Override
-				public void onError(Throwable e) {
-					getView().showError();
-					getView().hideNetworkLoading();
-				}
-
-				@Override
-				public void onNext(Questions questions) {
-					getView().hideNetworkLoading();
-				}
-			});
+			loadNetworkQuestions();
 		}
 	}
 
@@ -80,21 +64,41 @@ public class LandPresenter implements BasePresenter<LandView> {
 		mRealm.close();
 	}
 
-	private LandView getView() {
-		return mLandView.get();
-	}
-
-	private void fetchQuestions() {
-		// TODO: Add other random endpoints
-		getView().showNetworkLoading();
+	private void loadCachedQuestions() {
 		getView().showInitialLoading();
 		mQuestionsCacheSubscription = mQuestionsDataManager.getRealmQuestionsObservable(mRealm)
 			.subscribe(new Action1<RealmResults<Questions>>() {
 				@Override
 				public void call(RealmResults<Questions> questionses) {
 					getView().setQuestions(questionses.get(0).getStackOverflowQuestions());
+					// TODO: Add this to some sort of doOnFirst filter.
 					getView().hideInitialLoading();
 				}
 			});
+	}
+
+	private void loadNetworkQuestions() {
+		getView().showNetworkLoading();
+		mQuestionsNetworkSubscription = mQuestionsDataManager.updateQuestionsFromNetwork(mRealm).subscribe(new Subscriber<Questions>() {
+			@Override
+			public void onCompleted() {
+
+			}
+
+			@Override
+			public void onError(Throwable e) {
+				getView().showError();
+				getView().hideNetworkLoading();
+			}
+
+			@Override
+			public void onNext(Questions questions) {
+				getView().hideNetworkLoading();
+			}
+		});
+	}
+
+	private LandView getView() {
+		return mLandView.get();
 	}
 }
