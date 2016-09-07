@@ -22,6 +22,7 @@ import rx.functions.Func1;
  * Functions will return current data available from the Realm and accept a listener
  * that will be called when new results have been successfully fetched.
  */
+// TODO: Move stuff into local folders. eg this into Land folder.
 public class QuestionsDataManager {
 
 	private QuestionsService mQuestionsService;
