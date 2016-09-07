@@ -23,9 +23,9 @@ import rx.subjects.PublishSubject;
 public class RandomPeopleDataManager {
 
 	private RandomPeopleService mRandomPeopleService;
-	private NetworkFetchAndUpdate<People> mSoRandomersNetworkFetchAndUpdate;
+	private NetworkFetchAndUpdate<People> mPeopleNetworkFetchAndUpdate;
 	private RealmFetcher<People> mRandomersRealmFetcher;
-	private Subscription mRandomersUpdateSubscription;
+	private Subscription mPeopleUpdateSubscription;
 	private PublishSubject<People> mRandomersPublishSubject;
 
 	public RandomPeopleDataManager(@NonNull RandomPeopleService peopleService) {
@@ -44,17 +44,19 @@ public class RandomPeopleDataManager {
 		}
 	}
 
-	public Observable<People> getRandomersUpdateObservable() {
+	public Observable<People> getPeopleObservable() {
 		return mRandomersPublishSubject.asObservable();
 	}
 
 	public void updateRandomersFromNetwork(Realm realm) {
-		if (mRandomersUpdateSubscription == null || mRandomersUpdateSubscription.isUnsubscribed()) {
-			RealmUpdater<People> realmUpdater = new ReplaceRealmUpdater<>(realm, mRandomersRealmFetcher);
-			mSoRandomersNetworkFetchAndUpdate = new NetworkFetchAndUpdate<>(realm,
-				mRandomPeopleService.getPeople("100"), realmUpdater);
+		if (mPeopleUpdateSubscription == null || mPeopleUpdateSubscription.isUnsubscribed()) {
 
-			mRandomersUpdateSubscription = mSoRandomersNetworkFetchAndUpdate.fetchAndUpdateData().subscribe(new Action1<People>() {
+
+			RealmUpdater<People> realmUpdater = new ReplaceRealmUpdater<>(realm, mRandomersRealmFetcher);
+			mPeopleNetworkFetchAndUpdate = new NetworkFetchAndUpdate<>(realm,
+				mRandomPeopleService.getPeople("40"), realmUpdater);
+
+			mPeopleUpdateSubscription = mPeopleNetworkFetchAndUpdate.fetchAndUpdateData().subscribe(new Action1<People>() {
 				@Override
 				public void call(People people) {
 					mRandomersPublishSubject.onNext(people);
@@ -64,10 +66,10 @@ public class RandomPeopleDataManager {
 	}
 
 	public void cancelUpdate() {
-		if (mRandomersUpdateSubscription != null && !mRandomersUpdateSubscription.isUnsubscribed()) {
-			mRandomersUpdateSubscription.unsubscribe();
+		if (mPeopleUpdateSubscription != null && !mPeopleUpdateSubscription.isUnsubscribed()) {
+			mPeopleUpdateSubscription.unsubscribe();
 		}
-		mSoRandomersNetworkFetchAndUpdate.cancelRequests();
+		mPeopleNetworkFetchAndUpdate.cancelRequests();
 	}
 
 }

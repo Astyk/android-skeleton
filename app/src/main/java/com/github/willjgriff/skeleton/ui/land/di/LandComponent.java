@@ -1,6 +1,6 @@
 package com.github.willjgriff.skeleton.ui.land.di;
 
-import com.github.willjgriff.skeleton.di.questions.ApiComponent;
+import com.github.willjgriff.skeleton.di.api.ApiComponent;
 import com.github.willjgriff.skeleton.ui.land.LandFragment;
 
 import dagger.Component;

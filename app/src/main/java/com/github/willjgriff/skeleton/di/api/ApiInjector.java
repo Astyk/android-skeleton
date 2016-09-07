@@ -1,4 +1,4 @@
-package com.github.willjgriff.skeleton.di.questions;
+package com.github.willjgriff.skeleton.di.api;
 
 import com.github.willjgriff.skeleton.di.app.AppInjector;
 

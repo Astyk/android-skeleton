@@ -1,8 +1,6 @@
-package com.github.willjgriff.skeleton.di.questions;
+package com.github.willjgriff.skeleton.di.api;
 
-import com.github.willjgriff.skeleton.data.QuestionsDataManager;
 import com.github.willjgriff.skeleton.data.RandomPeopleDataManager;
-import com.github.willjgriff.skeleton.data.network.services.QuestionsService;
 import com.github.willjgriff.skeleton.data.network.services.RandomPeopleService;
 
 import dagger.Module;
@@ -13,12 +11,6 @@ import dagger.Provides;
  */
 @Module
 public class ApiModule {
-
-	@Provides
-	@FragmentScope
-	QuestionsDataManager providesQuestionsDataManager(QuestionsService questionsService) {
-		return new QuestionsDataManager(questionsService);
-	}
 
 	@Provides
 	@FragmentScope

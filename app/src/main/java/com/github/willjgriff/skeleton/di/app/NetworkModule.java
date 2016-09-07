@@ -1,7 +1,6 @@
 package com.github.willjgriff.skeleton.di.app;
 
 import com.github.willjgriff.skeleton.data.network.ApiRes;
-import com.github.willjgriff.skeleton.data.network.services.QuestionsService;
 import com.github.willjgriff.skeleton.data.network.services.RandomPeopleService;
 
 import javax.inject.Singleton;
@@ -33,12 +32,6 @@ public class NetworkModule {
 			.addConverterFactory(gsonConverterFactory)
 			.addCallAdapterFactory(RxJavaCallAdapterFactory.create())
 			.build();
-	}
-
-	@Provides
-	@Singleton
-	QuestionsService providesQuestionsService(Retrofit retrofit) {
-		return retrofit.create(QuestionsService.class);
 	}
 
 	@Provides

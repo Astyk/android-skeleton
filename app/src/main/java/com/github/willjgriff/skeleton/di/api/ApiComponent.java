@@ -1,9 +1,7 @@
-package com.github.willjgriff.skeleton.di.questions;
+package com.github.willjgriff.skeleton.di.api;
 
-import com.github.willjgriff.skeleton.data.QuestionsDataManager;
 import com.github.willjgriff.skeleton.data.RandomPeopleDataManager;
 import com.github.willjgriff.skeleton.di.app.AppComponent;
-import com.github.willjgriff.skeleton.ui.settings.SettingsFragment;
 
 import dagger.Component;
 
@@ -14,6 +12,6 @@ import dagger.Component;
 @Component(modules = ApiModule.class, dependencies = AppComponent.class)
 public interface ApiComponent {
 
-	RandomPeopleDataManager providesQuestionsDataManager();
+	RandomPeopleDataManager providesRandomersDataManager();
 
 }

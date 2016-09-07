@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 import com.github.willjgriff.skeleton.R;
 import com.github.willjgriff.skeleton.data.models.Person;
-import com.github.willjgriff.skeleton.data.models.Question;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,29 +16,29 @@ import java.util.List;
  * Created by Will on 19/08/2016.
  */
 
-public class QuestionsAdapter extends RecyclerView.Adapter<QuestionsAdapter.QuestionsItemViewHolder> {
+public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.PeopleItemViewHolder> {
 
 	List<Person> mPeople;
 
-	public QuestionsAdapter() {
+	public PeopleAdapter() {
 		mPeople = new ArrayList<>();
 	}
 
-	public void setQuestions(List<Person> people) {
+	public void setPeople(List<Person> people) {
 		mPeople = people;
 		notifyItemRangeChanged(0, people.size());
 	}
 
 	@Override
-	public QuestionsItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+	public PeopleItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View itemView = LayoutInflater
 			.from(parent.getContext())
-			.inflate(R.layout.view_questions_item, parent, false);
-		return new QuestionsItemViewHolder(itemView);
+			.inflate(R.layout.view_people_item, parent, false);
+		return new PeopleItemViewHolder(itemView);
 	}
 
 	@Override
-	public void onBindViewHolder(QuestionsItemViewHolder holder, int position) {
+	public void onBindViewHolder(PeopleItemViewHolder holder, int position) {
 		holder.bindData(mPeople.get(position));
 	}
 
@@ -48,13 +47,13 @@ public class QuestionsAdapter extends RecyclerView.Adapter<QuestionsAdapter.Ques
 		return mPeople.size();
 	}
 
-	public class QuestionsItemViewHolder extends RecyclerView.ViewHolder {
+	public class PeopleItemViewHolder extends RecyclerView.ViewHolder {
 
 		TextView mTextView;
 
-		public QuestionsItemViewHolder(View itemView) {
+		public PeopleItemViewHolder(View itemView) {
 			super(itemView);
-			mTextView = (TextView) itemView.findViewById(R.id.view_questions_item_title);
+			mTextView = (TextView) itemView.findViewById(R.id.view_people_item_email);
 		}
 
 		public void bindData(Person person) {

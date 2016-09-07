@@ -1,6 +1,5 @@
 package com.github.willjgriff.skeleton.di.app;
 
-import com.github.willjgriff.skeleton.data.network.services.QuestionsService;
 import com.github.willjgriff.skeleton.data.network.services.RandomPeopleService;
 
 import javax.inject.Singleton;
@@ -16,8 +15,6 @@ import io.realm.Realm;
 public interface AppComponent {
 
 	Realm providesRealm();
-
-	QuestionsService providesQuestionsService();
 
 	RandomPeopleService providesRandomPeopleService();
 }

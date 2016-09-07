@@ -29,10 +29,10 @@ import javax.inject.Inject;
 public class LandFragment extends Fragment implements LandView {
 
 	@Inject
-	LandPresenter2 mPresenter;
+	LandPresenter mPresenter;
 
-	private RecyclerView mQuestions;
-	private QuestionsAdapter mQuestionsAdapter;
+	private RecyclerView mPeople;
+	private PeopleAdapter mPeopleAdapter;
 	private NavigationToolbarListener mToolbarListener;
 	private ProgressBar mProgressBar;
 
@@ -54,10 +54,10 @@ public class LandFragment extends Fragment implements LandView {
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_land, container, false);
 
-		mQuestions = (RecyclerView) view.findViewById(R.id.fragment_land_questions);
-		mQuestionsAdapter = new QuestionsAdapter();
-		mQuestions.setAdapter(mQuestionsAdapter);
-		mQuestions.setLayoutManager(new LinearLayoutManager(getContext()));
+		mPeople = (RecyclerView) view.findViewById(R.id.fragment_land_people);
+		mPeopleAdapter = new PeopleAdapter();
+		mPeople.setAdapter(mPeopleAdapter);
+		mPeople.setLayoutManager(new LinearLayoutManager(getContext()));
 		mToolbarListener.setToolbarTitle(NavigationFragment.LAND.getNavigationTitle());
 		mProgressBar = (ProgressBar) view.findViewById(R.id.fragment_land_progress_bar);
 
@@ -83,8 +83,8 @@ public class LandFragment extends Fragment implements LandView {
 	}
 
 	@Override
-	public void setPeople(List<Person> questions) {
-		mQuestionsAdapter.setQuestions(questions);
+	public void setPeople(List<Person> people) {
+		mPeopleAdapter.setPeople(people);
 	}
 
 	@Override
