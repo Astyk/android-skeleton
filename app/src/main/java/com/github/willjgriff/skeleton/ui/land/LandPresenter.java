@@ -30,7 +30,7 @@ public class LandPresenter implements BasePresenter<LandView> {
 	@Inject
 	LandPresenter(QuestionsDataManager questionsDataManager) {
 		mQuestionsDataManager = questionsDataManager;
-		// TODO: Inject into DataManager
+		// TODO: Inject into DataManager or here
 		mRealm = Realm.getDefaultInstance();
 	}
 
@@ -67,11 +67,21 @@ public class LandPresenter implements BasePresenter<LandView> {
 	private void loadCachedQuestions() {
 		getView().showInitialLoading();
 		mQuestionsCacheSubscription = mQuestionsDataManager.getRealmQuestionsObservable(mRealm)
-			.subscribe(new Action1<RealmResults<Questions>>() {
+			.subscribe(new Subscriber<RealmResults<Questions>>() {
 				@Override
-				public void call(RealmResults<Questions> questionses) {
+				public void onCompleted() {
+
+				}
+
+				@Override
+				public void onError(Throwable e) {
+
+				}
+
+				@Override
+				public void onNext(RealmResults<Questions> questionses) {
 					getView().setQuestions(questionses.get(0).getStackOverflowQuestions());
-					// TODO: Add this to some sort of doOnFirst filter.
+					// TODO: Add this to some sort of doOnFirst filter for hiding the initial loading.
 					getView().hideInitialLoading();
 				}
 			});

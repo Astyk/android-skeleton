@@ -26,7 +26,10 @@ public class NetworkFetchAndUpdate<RETURNTYPE extends RealmModel> {
 
 	public Observable<RETURNTYPE> fetchAndUpdateData() {
 
+		// Cache ensures if we unsubscribe before data fetch completes, when resubscribing
+		// we don't execute the network request again, eg on orientation change.
 		return mRetrofitObservable
+			.cache()
 			.subscribeOn(Schedulers.io())
 			.observeOn(AndroidSchedulers.mainThread())
 			.doOnNext(new Action1<RETURNTYPE>() {
