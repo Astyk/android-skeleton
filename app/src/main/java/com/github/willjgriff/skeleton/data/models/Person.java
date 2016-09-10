@@ -7,7 +7,6 @@ import io.realm.RealmObject;
 /**
  * Created by Will on 06/09/2016.
  */
-
 public class Person extends RealmObject {
 
 	@SerializedName("email")

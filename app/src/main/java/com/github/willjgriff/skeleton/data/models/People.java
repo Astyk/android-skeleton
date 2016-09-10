@@ -9,7 +9,7 @@ import io.realm.annotations.PrimaryKey;
 /**
  * Created by Will on 06/09/2016.
  */
-
+// TODO: Work out how to store and get a list of data from Realm instead of storing it in this object
 public class People extends RealmObject {
 
 	@PrimaryKey

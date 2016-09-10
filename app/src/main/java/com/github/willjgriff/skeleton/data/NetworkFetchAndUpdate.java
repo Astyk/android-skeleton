@@ -2,6 +2,7 @@ package com.github.willjgriff.skeleton.data;
 
 import android.support.annotation.NonNull;
 
+import com.github.willjgriff.skeleton.data.models.ErrorHolder;
 import com.github.willjgriff.skeleton.data.storage.updaters.RealmUpdater;
 
 import io.realm.Realm;
@@ -9,6 +10,7 @@ import io.realm.RealmModel;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -24,28 +26,36 @@ public class NetworkFetchAndUpdate<RETURNTYPE extends RealmModel> {
 		mRealmUpdater = realmUpdater;
 	}
 
-	public Observable<RETURNTYPE> fetchAndUpdateData() {
+	public Observable<ErrorHolder<RETURNTYPE>> fetchAndUpdateData() {
 
-		// Cache ensures if we unsubscribe before data fetch completes, when resubscribing
-		// we don't execute the network request again, eg on orientation change.
 		return mRetrofitObservable
-			.cache()
 			.subscribeOn(Schedulers.io())
 			.observeOn(AndroidSchedulers.mainThread())
 			.doOnNext(new Action1<RETURNTYPE>() {
 				@Override
 				public void call(RETURNTYPE returnData) {
-					updateRealmWithNewData(returnData);
+					mRealmUpdater.update(returnData);
+				}
+			})
+			.map(new Func1<RETURNTYPE, ErrorHolder<RETURNTYPE>>() {
+				@Override
+				public ErrorHolder<RETURNTYPE> call(RETURNTYPE data) {
+					ErrorHolder<RETURNTYPE> errorHolder = new ErrorHolder<RETURNTYPE>();
+					errorHolder.setData(data);
+					return errorHolder;
+				}
+			})
+			.onErrorReturn(new Func1<Throwable, ErrorHolder<RETURNTYPE>>() {
+				@Override
+				public ErrorHolder<RETURNTYPE> call(Throwable throwable) {
+					ErrorHolder<RETURNTYPE> errorHolder = new ErrorHolder<RETURNTYPE>();
+					errorHolder.setError(throwable);
+					return errorHolder;
 				}
 			});
 	}
 
-	private void updateRealmWithNewData(RETURNTYPE returnData) {
-		mRealmUpdater.update(returnData);
-	}
-
-	// TODO: Where should this be called from?
-	public void cancelRequests() {
+	public void cancelUpdate() {
 		mRealmUpdater.cancelUpdate();
 	}
 }

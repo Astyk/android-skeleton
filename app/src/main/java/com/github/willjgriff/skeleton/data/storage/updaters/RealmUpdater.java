@@ -10,7 +10,6 @@ import io.realm.RealmModel;
  * Created by Will on 14/08/2016.
  * <p>
  * Encapsulates basic realm transaction functionality.
- * Abstracting this behaviour might be overkill. We'll see when we come to use it.
  */
 public abstract class RealmUpdater<UPDATETYPE extends RealmModel> {
 

@@ -11,4 +11,6 @@ import io.realm.RealmResults;
 public interface RealmFetcher<RETURNTYPE extends RealmModel> {
 
 	RealmResults<RETURNTYPE> fetch(Realm realm);
+
+	RealmResults<RETURNTYPE> fetchAsync(Realm realm);
 }

@@ -5,6 +5,7 @@ import com.github.willjgriff.skeleton.data.network.services.RandomPeopleService;
 
 import dagger.Module;
 import dagger.Provides;
+import io.realm.Realm;
 
 /**
  * Created by Will on 18/08/2016.
@@ -14,8 +15,8 @@ public class ApiModule {
 
 	@Provides
 	@FragmentScope
-	PeopleDataManager providesRandomPeopleDataManager(RandomPeopleService peopleService) {
-		return new PeopleDataManager(peopleService);
+	PeopleDataManager providesRandomPeopleDataManager(Realm realm, RandomPeopleService peopleService) {
+		return new PeopleDataManager(realm, peopleService);
 	}
 
 }

@@ -20,4 +20,9 @@ public class AllRealmFetcher<RETURNTYPE extends RealmModel> implements RealmFetc
 	public RealmResults<RETURNTYPE> fetch(Realm realm) {
 		return realm.where(mReturnClass).findAll();
 	}
+
+	@Override
+	public RealmResults<RETURNTYPE> fetchAsync(Realm realm) {
+		return realm.where(mReturnClass).findAllAsync();
+	}
 }
