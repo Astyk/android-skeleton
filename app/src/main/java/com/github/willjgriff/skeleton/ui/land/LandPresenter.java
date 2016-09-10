@@ -10,11 +10,8 @@ import java.lang.ref.WeakReference;
 
 import javax.inject.Inject;
 
-import io.realm.Realm;
-import rx.Subscriber;
 import rx.Subscription;
 import rx.functions.Action1;
-import rx.functions.Func1;
 
 /**
  * Created by Will on 19/08/2016.

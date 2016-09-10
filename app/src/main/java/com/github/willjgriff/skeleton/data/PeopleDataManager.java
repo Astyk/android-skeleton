@@ -11,17 +11,15 @@ import com.github.willjgriff.skeleton.data.storage.updaters.RealmUpdater;
 import com.github.willjgriff.skeleton.data.storage.updaters.ReplaceRealmUpdater;
 
 import io.realm.Realm;
-import io.realm.RealmResults;
 import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.subjects.PublishSubject;
 
 /**
  * Created by Will on 06/09/2016.
  */
-
+// TODO: Abstract this so we can have individual data loaders that a single data manager looks after.
 public class PeopleDataManager {
 
 	private Realm mRealm;
@@ -34,7 +32,7 @@ public class PeopleDataManager {
 	public PeopleDataManager(@NonNull Realm realm, @NonNull RandomPeopleService peopleService) {
 		mRealm = realm;
 		mPeopleService = peopleService;
-		mPeopleRealmFetcher = new AllRealmFetcher<>(People.class);
+		mPeopleRealmFetcher = new AllRealmFetcher<>(People.class, realm);
 		mPeoplePublishSubject = PublishSubject.create();
 	}
 
@@ -57,43 +55,7 @@ public class PeopleDataManager {
 	}
 
 	private Observable<ErrorHolder<People>> getPeopleFromCache() {
-		return mPeopleRealmFetcher.fetchAsync(mRealm)
-			.asObservable()
-			.filter(new Func1<RealmResults<People>, Boolean>() {
-				@Override
-				public Boolean call(RealmResults<People> people) {
-					return people.isLoaded();
-				}
-			})
-			.filter(new Func1<RealmResults<People>, Boolean>() {
-				@Override
-				public Boolean call(RealmResults<People> people) {
-					return people.isValid();
-				}
-			})
-			.first()
-			.map(new Func1<RealmResults<People>, People>() {
-				@Override
-				public People call(RealmResults<People> people) {
-					return people.get(0);
-				}
-			})
-			.map(new Func1<People, ErrorHolder<People>>() {
-				@Override
-				public ErrorHolder<People> call(People people) {
-					ErrorHolder<People> errorHolder = new ErrorHolder<>();
-					errorHolder.setData(people);
-					return errorHolder;
-				}
-			})
-			.onErrorReturn(new Func1<Throwable, ErrorHolder<People>>() {
-				@Override
-				public ErrorHolder<People> call(Throwable throwable) {
-					ErrorHolder<People> errorHolder = new ErrorHolder<>();
-					errorHolder.setError(throwable);
-					return errorHolder;
-				}
-			});
+		return mPeopleRealmFetcher.fetchObservable();
 	}
 
 	private Observable<ErrorHolder<People>> getPeopleFromNetwork() {
