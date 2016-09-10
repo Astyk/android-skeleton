@@ -16,6 +16,7 @@ import rx.functions.Action1;
 /**
  * Created by Will on 19/08/2016.
  */
+// TODO: Abstract the View - Presenter binding behaviour into a base class
 @LandScope
 public class LandPresenter implements BasePresenter<LandView> {
 

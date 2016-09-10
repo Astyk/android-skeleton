@@ -20,6 +20,7 @@ import rx.subjects.PublishSubject;
  * Created by Will on 06/09/2016.
  */
 // TODO: Abstract this so we can have individual data loaders that a single data manager looks after.
+// Only once we're happy with the setup
 public class PeopleDataManager {
 
 	private Realm mRealm;

@@ -25,7 +25,7 @@ import javax.inject.Inject;
 /**
  * Created by Will on 17/08/2016.
  */
-
+// TODO: Abstract the View - Presenter binding behaviour into a base class
 public class LandFragment extends Fragment implements LandView {
 
 	@Inject
