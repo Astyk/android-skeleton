@@ -1,4 +1,4 @@
-package com.github.willjgriff.skeleton.data.models;
+package com.github.willjgriff.skeleton.data.models.helpers;
 
 /**
  * Created by Will on 10/09/2016.

@@ -1,7 +1,6 @@
 package com.github.willjgriff.skeleton.ui.land;
 
-import com.github.willjgriff.skeleton.data.PeopleDataManager;
-import com.github.willjgriff.skeleton.data.models.ErrorHolder;
+import com.github.willjgriff.skeleton.data.models.helpers.ErrorHolder;
 import com.github.willjgriff.skeleton.data.models.Person;
 import com.github.willjgriff.skeleton.mvp.BasePresenter;
 import com.github.willjgriff.skeleton.ui.land.di.LandScope;

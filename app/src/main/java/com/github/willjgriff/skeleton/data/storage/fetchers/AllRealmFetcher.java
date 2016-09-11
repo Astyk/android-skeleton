@@ -1,8 +1,8 @@
 package com.github.willjgriff.skeleton.data.storage.fetchers;
 
-import com.github.willjgriff.skeleton.data.models.ErrorHolder;
+import com.github.willjgriff.skeleton.data.models.helpers.ErrorHolder;
+import com.github.willjgriff.skeleton.data.models.helpers.Timestamp;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
@@ -32,17 +32,18 @@ public class AllRealmFetcher<RETURNTYPE extends RealmModel> extends RealmFetcher
 	}
 
 	@Override
-	public RealmResults<RETURNTYPE> fetch() {
-		return select().findAll();
+	public RealmResults<RETURNTYPE> fetchCurrentData() {
+		return select().lessThan(Timestamp.TIMESTAMP_FIELD, System.currentTimeMillis()).findAll();
 	}
 
 	@Override
-	public Observable<ErrorHolder<List<RETURNTYPE>>> getCacheObservable() {
+	public Observable<ErrorHolder<List<RETURNTYPE>>> fetchAsyncObservable() {
 
 		return select().findAllAsync()
 			.asObservable()
 			.subscribeOn(AndroidSchedulers.mainThread())
 			.observeOn(AndroidSchedulers.mainThread())
+			// Ensure data is valid and available
 			.filter(new Func1<RealmResults<RETURNTYPE>, Boolean>() {
 				@Override
 				public Boolean call(RealmResults<RETURNTYPE> data) {
@@ -55,7 +56,10 @@ public class AllRealmFetcher<RETURNTYPE extends RealmModel> extends RealmFetcher
 					return data.isValid();
 				}
 			})
+			// Only take the first emission. More data will be emitted if/when this RealmQuery's data is updated.
 			.first()
+			// Put data into ErrorHolder, ErrorHolder is necessary to pass
+			// the error to where it can be used, if necessary.
 			.map(new Func1<List<RETURNTYPE>, ErrorHolder<List<RETURNTYPE>>>() {
 				@Override
 				public ErrorHolder<List<RETURNTYPE>> call(List<RETURNTYPE> data) {
@@ -64,6 +68,8 @@ public class AllRealmFetcher<RETURNTYPE extends RealmModel> extends RealmFetcher
 					return errorHolder;
 				}
 			})
+			// Put any error into ErrorHolder so it is passed to onNext like any other response.
+			// Then the error can be relayed to the user.
 			.onErrorReturn(new Func1<Throwable, ErrorHolder<List<RETURNTYPE>>>() {
 				@Override
 				public ErrorHolder<List<RETURNTYPE>> call(Throwable throwable) {

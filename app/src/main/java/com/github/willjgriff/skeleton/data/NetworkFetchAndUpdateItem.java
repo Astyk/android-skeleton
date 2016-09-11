@@ -2,8 +2,8 @@ package com.github.willjgriff.skeleton.data;
 
 import android.support.annotation.NonNull;
 
-import com.github.willjgriff.skeleton.data.models.ErrorHolder;
-import com.github.willjgriff.skeleton.data.storage.updaters.RealmAsyncUpdater;
+import com.github.willjgriff.skeleton.data.models.helpers.ErrorHolder;
+import com.github.willjgriff.skeleton.data.storage.updaters.RealmUpdater;
 
 import io.realm.RealmModel;
 import rx.Observable;
@@ -15,12 +15,14 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Will on 14/08/2016.
  */
-public class NetworkFetchAndUpdate<RETURNTYPE extends RealmModel> {
+// TODO: To use this we can use the AllRealmFetcher but apply a function that only gets one item from it.
+// If it's not necessary, perhaps we can delete this.
+public class NetworkFetchAndUpdateItem<RETURNTYPE extends RealmModel> {
 
 	private Observable<RETURNTYPE> mRetrofitObservable;
-	private RealmAsyncUpdater<RETURNTYPE> mRealmUpdater;
+	private RealmUpdater<RETURNTYPE> mRealmUpdater;
 
-	public NetworkFetchAndUpdate(@NonNull Observable<RETURNTYPE> networkCall, @NonNull RealmAsyncUpdater<RETURNTYPE> realmUpdater) {
+	public NetworkFetchAndUpdateItem(@NonNull Observable<RETURNTYPE> networkCall, @NonNull RealmUpdater<RETURNTYPE> realmUpdater) {
 		mRetrofitObservable = networkCall;
 		mRealmUpdater = realmUpdater;
 	}
@@ -55,7 +57,7 @@ public class NetworkFetchAndUpdate<RETURNTYPE extends RealmModel> {
 	}
 
 	public void cancelUpdate() {
-		mRealmUpdater.cancelUpdate();
+		mRealmUpdater.cancel();
 	}
 }
 

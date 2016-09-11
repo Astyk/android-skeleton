@@ -2,8 +2,10 @@ package com.github.willjgriff.skeleton.data;
 
 import android.support.annotation.NonNull;
 
-import com.github.willjgriff.skeleton.data.models.ErrorHolder;
-import com.github.willjgriff.skeleton.data.storage.updaters.RealmAsyncUpdater;
+import com.github.willjgriff.skeleton.data.models.ApiResponse;
+import com.github.willjgriff.skeleton.data.models.helpers.ErrorHolder;
+import com.github.willjgriff.skeleton.data.storage.updaters.RealmSyncUpdater;
+import com.github.willjgriff.skeleton.data.storage.updaters.RealmUpdater;
 
 import java.util.List;
 
@@ -17,18 +19,15 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Will on 14/08/2016.
  */
-public class NetworkFetchAndUpdateList<RETROFITTYPE, REALMTYPE extends RealmModel> {
+public class NetworkFetchAndUpdateList<REALMTYPE extends RealmModel> {
 
-	private Observable<RETROFITTYPE> mRetrofitObservable;
-	private RealmAsyncUpdater<List<REALMTYPE>> mRealmUpdater;
-	private Func1<RETROFITTYPE, List<REALMTYPE>> mRetrofitToRealmFunc;
+	private Observable<ApiResponse<List<REALMTYPE>>> mRetrofitObservable;
+	private RealmUpdater<List<REALMTYPE>> mRealmUpdater;
 
-	public NetworkFetchAndUpdateList(@NonNull Observable<RETROFITTYPE> networkCall,
-	                                 @NonNull RealmAsyncUpdater<List<REALMTYPE>> realmUpdater,
-	                                 @NonNull Func1<RETROFITTYPE, List<REALMTYPE>> retrofitToRealmFunc) {
+	public NetworkFetchAndUpdateList(@NonNull Observable<ApiResponse<List<REALMTYPE>>> networkCall,
+	                                 @NonNull RealmUpdater<List<REALMTYPE>> realmUpdater) {
 		mRetrofitObservable = networkCall;
 		mRealmUpdater = realmUpdater;
-		mRetrofitToRealmFunc = retrofitToRealmFunc;
 	}
 
 	public Observable<ErrorHolder<List<REALMTYPE>>> getNetworkObservable() {
@@ -36,13 +35,22 @@ public class NetworkFetchAndUpdateList<RETROFITTYPE, REALMTYPE extends RealmMode
 		return mRetrofitObservable
 			.subscribeOn(Schedulers.io())
 			.observeOn(AndroidSchedulers.mainThread())
-			.map(mRetrofitToRealmFunc)
+			// Unpack content from ApiResponse
+			.map(new Func1<ApiResponse<List<REALMTYPE>>, List<REALMTYPE>>() {
+				@Override
+				public List<REALMTYPE> call(ApiResponse<List<REALMTYPE>> apiResponse) {
+					return apiResponse.getContent();
+				}
+			})
+			// Update Realm DB with new data
 			.doOnNext(new Action1<List<REALMTYPE>>() {
 				@Override
 				public void call(List<REALMTYPE> people) {
 					mRealmUpdater.update(people);
 				}
 			})
+			// Put data into ErrorHolder, ErrorHolder is necessary to pass the
+			// error to where it can be used, if necessary.
 			.map(new Func1<List<REALMTYPE>, ErrorHolder<List<REALMTYPE>>>() {
 				@Override
 				public ErrorHolder<List<REALMTYPE>> call(List<REALMTYPE> persons) {
@@ -51,6 +59,8 @@ public class NetworkFetchAndUpdateList<RETROFITTYPE, REALMTYPE extends RealmMode
 					return errorHolder;
 				}
 			})
+			// Put any error into ErrorHolder so it is passed to onNext like any other response.
+			// Then the error can be relayed to the user.
 			.onErrorReturn(new Func1<Throwable, ErrorHolder<List<REALMTYPE>>>() {
 				@Override
 				public ErrorHolder<List<REALMTYPE>> call(Throwable throwable) {
@@ -62,7 +72,7 @@ public class NetworkFetchAndUpdateList<RETROFITTYPE, REALMTYPE extends RealmMode
 	}
 
 	public void cancelUpdate() {
-		mRealmUpdater.cancelUpdate();
+		mRealmUpdater.cancel();
 	}
 }
 

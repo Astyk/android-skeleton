@@ -2,30 +2,30 @@ package com.github.willjgriff.skeleton.data.storage.updaters;
 
 import android.util.Log;
 
+import com.github.willjgriff.skeleton.data.storage.updaters.methods.RealmUpdateMethod;
+
 import io.realm.Realm;
 import io.realm.RealmAsyncTask;
-import io.realm.RealmModel;
 
 /**
- * Created by Will on 14/08/2016.
- * <p>
- * Encapsulates basic asynchronous realm transaction functionality.
+ * Created by Will on 11/09/2016.
  */
-public abstract class RealmAsyncUpdater<UPDATETYPE> {
 
-	private Realm mRealm;
+public class RealmAsyncUpdater<UPDATETYPE> extends RealmUpdater<UPDATETYPE> {
+
 	private RealmAsyncTask mRealmAsyncTask;
 
-	public RealmAsyncUpdater(Realm realm) {
-		mRealm = realm;
+	public RealmAsyncUpdater(Realm realm, RealmUpdateMethod<UPDATETYPE> realmUpdateMethod) {
+		super(realm, realmUpdateMethod);
 	}
 
+	@Override
 	public void update(final UPDATETYPE updatedData) {
 		mRealmAsyncTask = mRealm.executeTransactionAsync(new Realm.Transaction() {
 			@Override
 			public void execute(Realm realm) {
-				updateRealm(realm, updatedData);
-				Log.i("REALM", "Current thread inside Async: " + Thread.currentThread().toString());
+				mRealmUpdateMethod.updateRealm(realm, updatedData);
+				Log.d("REALM", "Current thread inside Async: " + Thread.currentThread().toString());
 			}
 		}, new Realm.Transaction.OnError() {
 			@Override
@@ -35,13 +35,11 @@ public abstract class RealmAsyncUpdater<UPDATETYPE> {
 		});
 	}
 
-	protected abstract void updateRealm(Realm realm, UPDATETYPE updatedData);
-
-	public void cancelUpdate() {
-		if (mRealmAsyncTask != null) {
+	@Override
+	public void cancel() {
+		if(mRealmAsyncTask != null) {
 			mRealmAsyncTask.cancel();
 			mRealmAsyncTask = null;
 		}
 	}
-
 }

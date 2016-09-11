@@ -1,10 +1,9 @@
 package com.github.willjgriff.skeleton.data.storage.fetchers;
 
-import com.github.willjgriff.skeleton.data.models.ErrorHolder;
+import com.github.willjgriff.skeleton.data.models.helpers.ErrorHolder;
 
 import java.util.List;
 
-import io.realm.Realm;
 import io.realm.RealmModel;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
@@ -18,8 +17,8 @@ public abstract class RealmFetcher<RETURNTYPE extends RealmModel> {
 
 	protected abstract RealmQuery<RETURNTYPE> select();
 
-	public abstract RealmResults<RETURNTYPE> fetch();
+	public abstract RealmResults<RETURNTYPE> fetchCurrentData();
 
-	public abstract Observable<ErrorHolder<List<RETURNTYPE>>> getCacheObservable();
+	public abstract Observable<ErrorHolder<List<RETURNTYPE>>> fetchAsyncObservable();
 
 }
