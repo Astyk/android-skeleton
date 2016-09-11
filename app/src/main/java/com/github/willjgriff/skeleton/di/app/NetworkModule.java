@@ -2,6 +2,7 @@ package com.github.willjgriff.skeleton.di.app;
 
 import com.github.willjgriff.skeleton.data.network.ApiRes;
 import com.github.willjgriff.skeleton.data.network.services.RandomPeopleService;
+import com.google.gson.GsonBuilder;
 
 import javax.inject.Singleton;
 
@@ -20,8 +21,9 @@ public class NetworkModule {
 	@Provides
 	@Singleton
 	GsonConverterFactory providesGsonConverterFactory() {
-		// We'll probably want to change this.
-		return GsonConverterFactory.create();
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		gsonBuilder.excludeFieldsWithoutExposeAnnotation();
+		return GsonConverterFactory.create(gsonBuilder.create());
 	}
 
 	@Provides

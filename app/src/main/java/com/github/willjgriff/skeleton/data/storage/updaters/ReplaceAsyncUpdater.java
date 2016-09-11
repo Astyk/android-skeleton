@@ -11,11 +11,11 @@ import io.realm.RealmModel;
  * Deletes all the current data from the Realm that's returned by the passed
  * {@link RealmFetcher} and copies the new updated data to it
  */
-public class ReplaceRealmUpdater<UPDATETYPE extends RealmModel> extends RealmUpdater<UPDATETYPE> {
+public class ReplaceAsyncUpdater<UPDATETYPE extends RealmModel> extends RealmAsyncUpdater<UPDATETYPE> {
 
 	private RealmFetcher<UPDATETYPE> mRealmFetcher;
 
-	public ReplaceRealmUpdater(Realm realm, RealmFetcher<UPDATETYPE> realmFetcher) {
+	public ReplaceAsyncUpdater(Realm realm, RealmFetcher<UPDATETYPE> realmFetcher) {
 		super(realm);
 		mRealmFetcher = realmFetcher;
 	}

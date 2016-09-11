@@ -2,16 +2,17 @@ package com.github.willjgriff.skeleton.ui.land;
 
 import com.github.willjgriff.skeleton.data.PeopleDataManager;
 import com.github.willjgriff.skeleton.data.models.ErrorHolder;
-import com.github.willjgriff.skeleton.data.models.People;
+import com.github.willjgriff.skeleton.data.models.Person;
 import com.github.willjgriff.skeleton.mvp.BasePresenter;
 import com.github.willjgriff.skeleton.ui.land.di.LandScope;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 import javax.inject.Inject;
 
+import rx.Subscriber;
 import rx.Subscription;
-import rx.functions.Action1;
 
 /**
  * Created by Will on 19/08/2016.
@@ -45,15 +46,26 @@ public class LandPresenter implements BasePresenter<LandView> {
 		getView().showNetworkLoading();
 
 		mPeopleSubscription = mPeopleDataManager.getPeopleObservable()
-			.subscribe(new Action1<ErrorHolder<People>>() {
+			// TODO: Can be replaced with Action1?
+			.subscribe(new Subscriber<ErrorHolder<List<Person>>>() {
 				@Override
-				public void call(ErrorHolder<People> peopleErrorHolder) {
-					if (peopleErrorHolder.hasError()) {
+				public void onCompleted() {
+
+				}
+
+				@Override
+				public void onError(Throwable e) {
+
+				}
+
+				@Override
+				public void onNext(ErrorHolder<List<Person>> listErrorHolder) {
+					if (listErrorHolder.hasError()) {
 						getView().showError();
 //						getView().hideNetworkLoading();
 //						getView().hideInitialLoading();
-					} else {
-						getView().setPeople(peopleErrorHolder.getData().getPeople());
+					} else if (listErrorHolder.getData() != null) {
+						getView().setPeople(listErrorHolder.getData());
 						// TODO: Add this to some sort of doOnFirst filter for hiding the initial loading.
 						getView().hideInitialLoading();
 						getView().hideNetworkLoading();

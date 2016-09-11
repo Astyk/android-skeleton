@@ -2,18 +2,22 @@ package com.github.willjgriff.skeleton.data;
 
 import android.support.annotation.NonNull;
 
+import com.github.willjgriff.skeleton.data.models.ApiResponse;
 import com.github.willjgriff.skeleton.data.models.ErrorHolder;
-import com.github.willjgriff.skeleton.data.models.People;
+import com.github.willjgriff.skeleton.data.models.Person;
 import com.github.willjgriff.skeleton.data.network.services.RandomPeopleService;
 import com.github.willjgriff.skeleton.data.storage.fetchers.AllRealmFetcher;
 import com.github.willjgriff.skeleton.data.storage.fetchers.RealmFetcher;
-import com.github.willjgriff.skeleton.data.storage.updaters.RealmUpdater;
-import com.github.willjgriff.skeleton.data.storage.updaters.ReplaceRealmUpdater;
+import com.github.willjgriff.skeleton.data.storage.updaters.RealmAsyncUpdater;
+import com.github.willjgriff.skeleton.data.storage.updaters.ReplaceListAsyncUpdater;
+
+import java.util.List;
 
 import io.realm.Realm;
 import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.subjects.PublishSubject;
 
 /**
@@ -25,45 +29,53 @@ public class PeopleDataManager {
 
 	private Realm mRealm;
 	private RandomPeopleService mPeopleService;
-	private NetworkFetchAndUpdate<People> mPeopleNetworkFetchAndUpdate;
-	private RealmFetcher<People> mPeopleRealmFetcher;
-	private PublishSubject<ErrorHolder<People>> mPeoplePublishSubject;
+	private NetworkFetchAndUpdateList<ApiResponse<List<Person>>, Person> mPeopleNetworkFetchAndUpdateList;
+	private RealmFetcher<Person> mPeopleRealmFetcher;
+	private PublishSubject<ErrorHolder<List<Person>>> mPeoplePublishSubject;
 	private Subscription mUpdateSubscription;
 
 	public PeopleDataManager(@NonNull Realm realm, @NonNull RandomPeopleService peopleService) {
 		mRealm = realm;
 		mPeopleService = peopleService;
-		mPeopleRealmFetcher = new AllRealmFetcher<>(People.class, realm);
+		mPeopleRealmFetcher = new AllRealmFetcher<>(Person.class, realm);
 		mPeoplePublishSubject = PublishSubject.create();
 	}
 
 	// We must subscribe to this before we publish data to it, even if we unsubscribe.
 	// Items published before any subscriptions made will be not be emitted or cached.
-	public Observable<ErrorHolder<People>> getPeopleObservable() {
+	public Observable<ErrorHolder<List<Person>>> getPeopleObservable() {
 		return mPeoplePublishSubject.asObservable().serialize().cache();
 	}
 
 	public void updatePeople() {
 		mUpdateSubscription = Observable
-			// TODO: Make this a merge.
+			// TODO: Make this a merge with a timestamp.
 			.concat(getPeopleFromCache(), getPeopleFromNetwork())
-			.subscribe(new Action1<ErrorHolder<People>>() {
+			.subscribe(new Action1<ErrorHolder<List<Person>>>() {
 				@Override
-				public void call(ErrorHolder<People> peopleErrorHolder) {
-					mPeoplePublishSubject.onNext(peopleErrorHolder);
+				public void call(ErrorHolder<List<Person>> errorHolder) {
+					mPeoplePublishSubject.onNext(errorHolder);
 				}
 			});
 	}
 
-	private Observable<ErrorHolder<People>> getPeopleFromCache() {
-		return mPeopleRealmFetcher.fetchObservable();
+	private Observable<ErrorHolder<List<Person>>> getPeopleFromCache() {
+		return mPeopleRealmFetcher.getCacheObservable();
 	}
 
-	private Observable<ErrorHolder<People>> getPeopleFromNetwork() {
-		RealmUpdater<People> realmUpdater = new ReplaceRealmUpdater<>(mRealm, mPeopleRealmFetcher);
-		mPeopleNetworkFetchAndUpdate = new NetworkFetchAndUpdate<>(mPeopleService.getPeople("40"), realmUpdater);
+	private Observable<ErrorHolder<List<Person>>> getPeopleFromNetwork() {
+		RealmAsyncUpdater<List<Person>> realmUpdater = new ReplaceListAsyncUpdater<>(mRealm, mPeopleRealmFetcher);
 
-		return mPeopleNetworkFetchAndUpdate.fetchAndUpdateData();
+		Func1<ApiResponse<List<Person>>, List<Person>> peopleToPersonListFunc = new Func1<ApiResponse<List<Person>>, List<Person>>() {
+			@Override
+			public List<Person> call(ApiResponse<List<Person>> listApiResponse) {
+				return listApiResponse.getContent();
+			}
+		};
+		mPeopleNetworkFetchAndUpdateList = new NetworkFetchAndUpdateList<>(
+			mPeopleService.getPeople("3"), realmUpdater, peopleToPersonListFunc);
+
+		return mPeopleNetworkFetchAndUpdateList.getNetworkObservable();
 	}
 
 	public void cancelUpdate() {
@@ -72,7 +84,7 @@ public class PeopleDataManager {
 		}
 		// TODO: Do I need to cancel realm async transaction before closing the Realm.
 		// Or can I leave it to finish?
-		mPeopleNetworkFetchAndUpdate.cancelUpdate();
+		mPeopleNetworkFetchAndUpdateList.cancelUpdate();
 		mRealm.close();
 	}
 

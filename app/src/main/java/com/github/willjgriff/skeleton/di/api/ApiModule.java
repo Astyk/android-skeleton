@@ -18,5 +18,4 @@ public class ApiModule {
 	PeopleDataManager providesRandomPeopleDataManager(Realm realm, RandomPeopleService peopleService) {
 		return new PeopleDataManager(realm, peopleService);
 	}
-
 }

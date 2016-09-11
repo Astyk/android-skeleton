@@ -1,6 +1,9 @@
 package com.github.willjgriff.skeleton.data.network.services;
 
-import com.github.willjgriff.skeleton.data.models.People;
+import com.github.willjgriff.skeleton.data.models.ApiResponse;
+import com.github.willjgriff.skeleton.data.models.Person;
+
+import java.util.List;
 
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -13,5 +16,5 @@ import rx.Observable;
 public interface RandomPeopleService {
 
 	@GET("./")
-	Observable<People> getPeople(@Query("results") String amount);
+	Observable<ApiResponse<List<Person>>> getPeople(@Query("results") String amount);
 }

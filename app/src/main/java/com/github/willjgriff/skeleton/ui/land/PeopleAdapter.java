@@ -57,7 +57,9 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.PeopleItem
 		}
 
 		public void bindData(Person person) {
-			mTextView.setText(person.getEmail());
+			if (person.getEmail() != null) {
+				mTextView.setText(person.getEmail());
+			}
 		}
 	}
 }

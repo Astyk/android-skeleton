@@ -9,14 +9,14 @@ import io.realm.RealmModel;
 /**
  * Created by Will on 14/08/2016.
  * <p>
- * Encapsulates basic realm transaction functionality.
+ * Encapsulates basic asynchronous realm transaction functionality.
  */
-public abstract class RealmUpdater<UPDATETYPE extends RealmModel> {
+public abstract class RealmAsyncUpdater<UPDATETYPE> {
 
 	private Realm mRealm;
 	private RealmAsyncTask mRealmAsyncTask;
 
-	public RealmUpdater(Realm realm) {
+	public RealmAsyncUpdater(Realm realm) {
 		mRealm = realm;
 	}
 
