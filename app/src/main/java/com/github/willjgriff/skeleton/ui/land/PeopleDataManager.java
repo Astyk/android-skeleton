@@ -13,12 +13,14 @@ import com.github.willjgriff.skeleton.data.storage.updaters.RealmUpdater;
 import com.github.willjgriff.skeleton.data.storage.updaters.methods.RealmUpdateMethod;
 import com.github.willjgriff.skeleton.data.storage.updaters.methods.ReplaceListRealmUpdateMethod;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
 import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.subjects.PublishSubject;
 
 /**
@@ -45,7 +47,10 @@ public class PeopleDataManager {
 	// We must subscribe to this before we publish data to it, even if we unsubscribe.
 	// Items published before any subscriptions made will be not be emitted or cached.
 	public Observable<ErrorHolder<List<Person>>> getPeopleObservable() {
-		return mPeoplePublishSubject.asObservable().serialize().cache();
+		return Observable
+			// TODO: Make this a merge with a timestamp.
+			.concat(getPeopleFromCache(), getPeopleFromNetwork());
+//		return mPeoplePublishSubject.asObservable().serialize().cache();
 	}
 
 	public void updatePeople() {
@@ -67,6 +72,7 @@ public class PeopleDataManager {
 	private Observable<ErrorHolder<List<Person>>> getPeopleFromNetwork() {
 		RealmUpdateMethod<List<Person>> realmUpdateMethod = new ReplaceListRealmUpdateMethod<>(mPeopleRealmFetcher);
 		RealmUpdater<List<Person>> realmSyncUpdater = new RealmSyncUpdater<>(mRealm, realmUpdateMethod);
+		// TODO: Pass in the people request param.
 		mPeopleNetworkFetchAndUpdateList = new NetworkFetchAndUpdateList<>(mPeopleService.getPeople("3"), realmSyncUpdater);
 
 		return mPeopleNetworkFetchAndUpdateList.getNetworkObservable();

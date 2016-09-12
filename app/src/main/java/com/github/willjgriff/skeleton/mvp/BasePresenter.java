@@ -10,5 +10,5 @@ public interface BasePresenter<VIEW> {
 
 	void unbindView();
 
-	void cancelLoading();
+	void onDestroy();
 }

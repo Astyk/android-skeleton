@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 
 import com.github.willjgriff.skeleton.R;
 import com.github.willjgriff.skeleton.data.models.Person;
+import com.github.willjgriff.skeleton.data.models.helpers.ErrorHolder;
 import com.github.willjgriff.skeleton.ui.land.di.LandInjector;
 import com.github.willjgriff.skeleton.ui.navigation.NavigationFragment;
 import com.github.willjgriff.skeleton.ui.navigation.NavigationToolbarListener;
@@ -21,6 +22,9 @@ import com.github.willjgriff.skeleton.ui.navigation.NavigationToolbarListener;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import rx.Subscriber;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by Will on 17/08/2016.
@@ -68,6 +72,31 @@ public class LandFragment extends Fragment implements LandView {
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		mPresenter.bindView(this);
+
+		// Find an Rx binding lib that does something similar.
+		mPresenter.getPeople().bindTo(mPeopleAdapter);
+
+		PublishSubject trigger = new PublishSubject<Void>();
+		button.rx_tap.bindTo(trigger);
+//		button.rx_tap.subscribe(on next) trigger.onNext(Void);
+		mPresenter.refreshTrigger = trigger;
+
+		mPresenter.people.subscribe(new Subscriber<ErrorHolder<List<Person>>>() {
+			@Override
+			public void onCompleted() {
+
+			}
+
+			@Override
+			public void onError(Throwable e) {
+
+			}
+
+			@Override
+			public void onNext(ErrorHolder<List<Person>> persons) {
+				mPeopleAdapter.setPeople(persons.getData());
+			}
+		});
 	}
 
 	@Override
@@ -78,7 +107,7 @@ public class LandFragment extends Fragment implements LandView {
 
 	@Override
 	public void onDestroy() {
-		mPresenter.cancelLoading();
+		mPresenter.onDestroy();
 		super.onDestroy();
 	}
 
