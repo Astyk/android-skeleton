@@ -1,5 +1,6 @@
 package com.github.willjgriff.skeleton.data.storage.fetchers;
 
+import com.github.willjgriff.skeleton.data.models.Person;
 import com.github.willjgriff.skeleton.data.models.helpers.ErrorHolder;
 import com.github.willjgriff.skeleton.data.models.helpers.Timestamp;
 
@@ -17,7 +18,7 @@ import rx.functions.Func1;
  * Created by Will on 14/08/2016.
  */
 // TODO: This is now coupled to the Timestamp interface. See if we can find a way to avoid this.
-public class AllRealmFetcher<RETURNTYPE extends RealmModel> extends RealmFetcher<RETURNTYPE> {
+public class AllRealmFetcher<RETURNTYPE extends RealmModel & Timestamp> extends RealmFetcher<RETURNTYPE> {
 
 	private Class<RETURNTYPE> mReturnClass;
 	private Realm mRealm;

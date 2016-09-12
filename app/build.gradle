@@ -50,7 +50,7 @@ dependencies {
     compile "com.android.support:appcompat-v7:${supportLib}"
     compile "com.android.support:design:${supportLib}"
     compile "com.android.support:recyclerview-v7:${supportLib}"
-    compile "com.android.support.constraint:constraint-layout:${constraint}"
+    compile 'com.google.firebase:firebase-messaging:9.4.0'
     compile "com.squareup.picasso:picasso:${picasso}"
 
     compile "com.squareup.retrofit2:retrofit:${retrofit}"
@@ -70,3 +70,5 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 }
+
+apply plugin: 'com.google.gms.google-services'

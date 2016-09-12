@@ -12,11 +12,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
 import com.github.willjgriff.skeleton.R;
+import com.github.willjgriff.skeleton.notifications.FirebaseIdService;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 public class NavigationActivity extends AppCompatActivity implements NavigationToolbarListener {
 
@@ -29,6 +32,8 @@ public class NavigationActivity extends AppCompatActivity implements NavigationT
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_navigation);
+
+		Log.d("NOTIFI", FirebaseInstanceId.getInstance().getToken());
 
 		setupToolbar();
 		setupNavigationView();
