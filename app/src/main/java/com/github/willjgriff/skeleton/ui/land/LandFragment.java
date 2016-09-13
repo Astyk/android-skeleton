@@ -88,9 +88,10 @@ public class LandFragment extends Fragment {
 		addSubscription(mPresenter.getNetworkErrors().subscribe(throwable -> {
 			showNetworkError();
 			hideNetworkLoading();
+			hideCacheLoading();
 		}));
 
-		// TODO: Think about the ordering of these loading states a bit.
+		// TODO: Think about the ordering of these loading states when we use a merge.
 		addSubscription(mPresenter.getCacheLoaded()
 			.subscribe(aBoolean -> {
 				hideCacheLoading();

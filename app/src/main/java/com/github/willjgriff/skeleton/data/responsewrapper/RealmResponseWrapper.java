@@ -19,14 +19,14 @@ public class RealmResponseWrapper<RESPONSETYPE extends RealmModel> {
 		return observable
 			// Only take the first emission. More data will be emitted if/when this RealmQuery's data is updated.
 			.first()
-			// Put data into ErrorHolder, ErrorHolder is necessary to pass
+			// Put data into ResponseHolder, ResponseHolder is necessary to pass
 			// the error to where it can be used, if necessary.
 			.map(responsetypes -> {
 				ResponseHolder<List<RESPONSETYPE>> responseHolder = new ResponseHolder<>(STORAGE);
 				responseHolder.setData(responsetypes);
 				return responseHolder;
 			})
-			// Put any error into ErrorHolder so it is passed to onNext like any other response.
+			// Put any error into ResponseHolder so it is passed to onNext like any other response.
 			// Then the error can be relayed to the user.
 			.onErrorReturn(throwable -> {
 				ResponseHolder<List<RESPONSETYPE>> responseHolder = new ResponseHolder<>(STORAGE);

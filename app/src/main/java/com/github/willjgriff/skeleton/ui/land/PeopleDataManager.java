@@ -24,7 +24,7 @@ import rx.Observable;
  * Created by Will on 06/09/2016.
  */
 // TODO: Once we're happy with the setup, abstract this so we can have
-// individual data loaders that a single data manager looks after.
+// specific data loaders that a single data manager looks after.
 public class PeopleDataManager {
 
 	private Realm mRealm;
@@ -39,8 +39,7 @@ public class PeopleDataManager {
 	}
 
 	public Observable<ResponseHolder<List<Person>>> getPeopleObservable(int countPeople) {
-//		return mPeoplePublishSubject.asObservable().serialize().replay(1).autoConnect();
-		// TODO: Make this a merge and add timestamps.
+		// TODO: Make this a merge, requires proper timestamping.
 		return Observable.concat(getPeopleFromCache(), getPeopleFromNetwork(countPeople));
 	}
 

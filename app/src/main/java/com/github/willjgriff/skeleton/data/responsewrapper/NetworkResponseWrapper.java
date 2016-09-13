@@ -15,25 +15,19 @@ public class NetworkResponseWrapper<RESPONSETYPE> {
 
 	public Observable<ResponseHolder<List<RESPONSETYPE>>> wrap(Observable<List<RESPONSETYPE>> observable) {
 		return observable
-			// Put data into ErrorHolder, ErrorHolder is necessary to pass the
+			// Put data into ResponseHolder, ResponseHolder is necessary to pass the
 			// error to where it can be used, if necessary.
-			.map(new Func1<List<RESPONSETYPE>, ResponseHolder<List<RESPONSETYPE>>>() {
-				@Override
-				public ResponseHolder<List<RESPONSETYPE>> call(List<RESPONSETYPE> persons) {
-					ResponseHolder<List<RESPONSETYPE>> responseHolder = new ResponseHolder<>(NETWORK);
-					responseHolder.setData(persons);
-					return responseHolder;
-				}
+			.map(persons -> {
+				ResponseHolder<List<RESPONSETYPE>> responseHolder = new ResponseHolder<>(NETWORK);
+				responseHolder.setData(persons);
+				return responseHolder;
 			})
-			// Put any error into ErrorHolder so it is passed to onNext like any other response.
+			// Put any error into ResponseHolder so it is passed to onNext like any other response.
 			// Then the error can be relayed to the user.
-			.onErrorReturn(new Func1<Throwable, ResponseHolder<List<RESPONSETYPE>>>() {
-				@Override
-				public ResponseHolder<List<RESPONSETYPE>> call(Throwable throwable) {
-					ResponseHolder<List<RESPONSETYPE>> responseHolder = new ResponseHolder<>(NETWORK);
-					responseHolder.setError(throwable);
-					return responseHolder;
-				}
+			.onErrorReturn(throwable -> {
+				ResponseHolder<List<RESPONSETYPE>> responseHolder = new ResponseHolder<>(NETWORK);
+				responseHolder.setError(throwable);
+				return responseHolder;
 			});
 	}
 }
