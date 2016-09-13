@@ -6,5 +6,5 @@ package com.github.willjgriff.skeleton.mvp;
 
 public interface BasePresenter {
 
-	void cancelLoading();
+	void cancelUpdate();
 }

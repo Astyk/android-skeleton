@@ -10,7 +10,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import rx.Observable;
-import rx.functions.Func1;
 import rx.observables.ConnectableObservable;
 
 import static com.github.willjgriff.skeleton.data.responsewrapper.ResponseHolder.Source.NETWORK;
@@ -34,8 +33,9 @@ public class LandPresenter implements BasePresenter {
 	private void setPeopleObservable() {
 		// replay(1) will emit the last value emitted for each new subscription.
 //		if (mPeopleObservable == null) {
-			mPeopleObservable = mPeopleDataManager.getPeopleObservable(20).replay(1);
-			mPeopleObservable.connect();
+		mPeopleObservable = mPeopleDataManager.getPeopleObservable(20).replay(1);
+		// TODO: Find out how this actually behaves.
+		mPeopleObservable.connect();
 //		}
 	}
 
@@ -75,7 +75,7 @@ public class LandPresenter implements BasePresenter {
 	}
 
 	@Override
-	public void cancelLoading() {
+	public void cancelUpdate() {
 		mPeopleDataManager.cancelUpdate();
 	}
 }

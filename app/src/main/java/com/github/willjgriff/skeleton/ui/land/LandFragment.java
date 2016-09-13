@@ -115,20 +115,24 @@ public class LandFragment extends Fragment {
 		mCompositeSubscription.add(subscription);
 	}
 
-	public void showCacheError() {
+	private void showCacheError() {
 		Snackbar.make(getView(), R.string.fragment_land_cache_error_string, Snackbar.LENGTH_LONG).show();
 	}
 
-	public void hideCacheLoading() {
+	private void hideCacheLoading() {
 		mProgressBar.setVisibility(View.INVISIBLE);
 	}
 
-	public void showNetworkError() {
+	private void showNetworkError() {
 		Snackbar.make(getView(), R.string.fragment_land_network_error_string, Snackbar.LENGTH_LONG).show();
 	}
 
-	public void hideNetworkLoading() {
+	private void hideNetworkLoading() {
 		mToolbarListener.hideNetworkLoadingView();
+	}
+
+	private void setPeople(List<Person> people) {
+		mPeopleAdapter.setPeople(people);
 	}
 
 	@Override
@@ -139,12 +143,7 @@ public class LandFragment extends Fragment {
 
 	@Override
 	public void onDestroy() {
-		mPresenter.cancelLoading();
-		LandInjector.INSTANCE.invalidate();
+		mPresenter.cancelUpdate();
 		super.onDestroy();
-	}
-
-	public void setPeople(List<Person> people) {
-		mPeopleAdapter.setPeople(people);
 	}
 }
