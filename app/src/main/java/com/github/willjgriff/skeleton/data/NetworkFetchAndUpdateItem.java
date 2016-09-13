@@ -2,7 +2,7 @@ package com.github.willjgriff.skeleton.data;
 
 import android.support.annotation.NonNull;
 
-import com.github.willjgriff.skeleton.data.models.helpers.ResponseHolder;
+import com.github.willjgriff.skeleton.data.responsewrapper.ResponseHolder;
 import com.github.willjgriff.skeleton.data.storage.updaters.RealmUpdater;
 
 import io.realm.RealmModel;
@@ -12,7 +12,7 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-import static com.github.willjgriff.skeleton.data.models.helpers.ResponseHolder.Source.NETWORK;
+import static com.github.willjgriff.skeleton.data.responsewrapper.ResponseHolder.Source.NETWORK;
 
 /**
  * Created by Will on 14/08/2016.

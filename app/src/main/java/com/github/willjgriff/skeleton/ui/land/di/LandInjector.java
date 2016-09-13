@@ -12,6 +12,8 @@ public enum LandInjector {
 
 	LandComponent mLandComponent;
 
+	// Retaining this component is necessary if the fragment that
+	// uses it can be recreated before it's navigated away from.
 	public LandComponent getComponent() {
 		if (mLandComponent == null) {
 			mLandComponent = DaggerLandComponent.builder()

@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'realm-android'
+apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion 24
@@ -28,6 +29,11 @@ android {
             ]
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 ext {
@@ -39,6 +45,7 @@ ext {
     retrofit    = '2.1.0'
     rxJava      = '1.1.6'
     rxAndroid   = '1.2.1'
+    rxBindings  = '0.4.0'
 
     junit       = '4.12'
 
@@ -58,6 +65,13 @@ dependencies {
     compile "com.squareup.retrofit2:adapter-rxjava:${retrofit}"
     compile "io.reactivex:rxjava:${rxJava}"
     compile "io.reactivex:rxandroid:${rxAndroid}"
+
+    // Rx Bindings, remove unused ones
+    compile "com.jakewharton.rxbinding:rxbinding:${rxBindings}"
+    compile "com.jakewharton.rxbinding:rxbinding-support-v4:${rxBindings}"
+    compile "com.jakewharton.rxbinding:rxbinding-appcompat-v7:${rxBindings}"
+    compile "com.jakewharton.rxbinding:rxbinding-design:${rxBindings}"
+    compile "com.jakewharton.rxbinding:rxbinding-recyclerview-v7:${rxBindings}"
 
     // Dependencies for Dagger2
     compile "com.google.dagger:dagger:${dagger}"

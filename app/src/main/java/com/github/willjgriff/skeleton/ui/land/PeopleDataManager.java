@@ -4,7 +4,9 @@ import android.support.annotation.NonNull;
 
 import com.github.willjgriff.skeleton.data.NetworkFetchAndUpdateList;
 import com.github.willjgriff.skeleton.data.models.Person;
-import com.github.willjgriff.skeleton.data.models.helpers.ResponseHolder;
+import com.github.willjgriff.skeleton.data.responsewrapper.NetworkResponseWrapper;
+import com.github.willjgriff.skeleton.data.responsewrapper.RealmResponseWrapper;
+import com.github.willjgriff.skeleton.data.responsewrapper.ResponseHolder;
 import com.github.willjgriff.skeleton.data.network.services.RandomPeopleService;
 import com.github.willjgriff.skeleton.data.storage.fetchers.AllRealmFetcher;
 import com.github.willjgriff.skeleton.data.storage.fetchers.RealmFetcher;
@@ -36,22 +38,25 @@ public class PeopleDataManager {
 		mPeopleRealmFetcher = new AllRealmFetcher<>(Person.class, realm);
 	}
 
-	public Observable<ResponseHolder<List<Person>>> getPeopleObservable() {
+	public Observable<ResponseHolder<List<Person>>> getPeopleObservable(int countPeople) {
 //		return mPeoplePublishSubject.asObservable().serialize().replay(1).autoConnect();
 		// TODO: Make this a merge and add timestamps.
-		return Observable.concat(getPeopleFromCache(), getPeopleFromNetwork());
+		return Observable.concat(getPeopleFromCache(), getPeopleFromNetwork(countPeople));
 	}
 
 	private Observable<ResponseHolder<List<Person>>> getPeopleFromCache() {
-		return mPeopleRealmFetcher.fetchAsyncObservable();
+		RealmResponseWrapper<Person> realmResponseWrapper = new RealmResponseWrapper<>();
+		return realmResponseWrapper.wrap(mPeopleRealmFetcher.getAsyncObservable());
 	}
 
-	private Observable<ResponseHolder<List<Person>>> getPeopleFromNetwork() {
+	private Observable<ResponseHolder<List<Person>>> getPeopleFromNetwork(int countPeople) {
 		RealmUpdateMethod<List<Person>> realmUpdateMethod = new ReplaceListRealmUpdateMethod<>(mPeopleRealmFetcher);
 		RealmUpdater<List<Person>> realmSyncUpdater = new RealmSyncUpdater<>(mRealm, realmUpdateMethod);
-		mPeopleNetworkFetchAndUpdateList = new NetworkFetchAndUpdateList<>(mPeopleService.getPeople("3"), realmSyncUpdater);
+		mPeopleNetworkFetchAndUpdateList = new NetworkFetchAndUpdateList<>(
+			mPeopleService.getPeople(countPeople), realmSyncUpdater);
 
-		return mPeopleNetworkFetchAndUpdateList.getNetworkObservable();
+		NetworkResponseWrapper<Person> networkResponseWrapper = new NetworkResponseWrapper<>();
+		return networkResponseWrapper.wrap(mPeopleNetworkFetchAndUpdateList.getNetworkObservable());
 	}
 
 	public void cancelUpdate() {

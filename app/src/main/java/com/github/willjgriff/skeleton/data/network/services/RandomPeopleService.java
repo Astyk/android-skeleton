@@ -16,5 +16,5 @@ import rx.Observable;
 public interface RandomPeopleService {
 
 	@GET("./")
-	Observable<ApiResponse<List<Person>>> getPeople(@Query("results") String amount);
+	Observable<ApiResponse<List<Person>>> getPeople(@Query("results") int amount);
 }

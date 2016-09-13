@@ -22,22 +22,22 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.functions.Action1;
+import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by Will on 17/08/2016.
  */
 // TODO: Abstract the View - Presenter binding behaviour into a base class
-public class LandFragment extends Fragment implements LandView {
+public class LandFragment extends Fragment {
 
 	@Inject
 	LandPresenter mPresenter;
 
-	private RecyclerView mPeople;
 	private PeopleAdapter mPeopleAdapter;
 	private NavigationToolbarListener mToolbarListener;
 	private ProgressBar mProgressBar;
-	private boolean mOrientationChange;
+	private CompositeSubscription mCompositeSubscription;
 
 	@Override
 	public void onAttach(Context context) {
@@ -49,106 +49,101 @@ public class LandFragment extends Fragment implements LandView {
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		LandInjector.INSTANCE.getComponent().inject(this);
+		// Is this safer than the onSaveInstanceState method?
+		setRetainInstance(true);
 	}
 
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_land, container, false);
-
-		mPeople = (RecyclerView) view.findViewById(R.id.fragment_land_people);
-		mPeopleAdapter = new PeopleAdapter();
-		mPeople.setAdapter(mPeopleAdapter);
-		mPeople.setLayoutManager(new LinearLayoutManager(getContext()));
-		mToolbarListener.setToolbarTitle(NavigationFragment.LAND.getNavigationTitle());
-		mProgressBar = (ProgressBar) view.findViewById(R.id.fragment_land_progress_bar);
-
-		return view;
+		mCompositeSubscription = new CompositeSubscription();
+		return inflater.inflate(R.layout.fragment_land, container, false);
 	}
 
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		mPresenter.bindView();
+		setupView(view);
+		setupSubscriptions();
+	}
+
+	private void setupView(View view) {
+		RecyclerView people = (RecyclerView) view.findViewById(R.id.fragment_land_people);
+		mPeopleAdapter = new PeopleAdapter();
+		people.setAdapter(mPeopleAdapter);
+		people.setLayoutManager(new LinearLayoutManager(getContext()));
+		mToolbarListener.setToolbarTitle(NavigationFragment.LAND.getNavigationTitle());
+		mProgressBar = (ProgressBar) view.findViewById(R.id.fragment_land_progress_bar);
 
 		showInitialLoading();
 		showNetworkLoading();
+	}
 
-		mPresenter.mListPeople.subscribe(new Action1<List<Person>>() {
-			@Override
-			public void call(List<Person> persons) {
-				setPeople(persons);
-			}
-		});
-		mPresenter.mErrorObservable.subscribe(new Action1<Throwable>() {
-			@Override
-			public void call(Throwable throwable) {
-				showError();
-			}
-		});
+	private void setupSubscriptions() {
+		addSubscription(mPresenter.getPeopleList().subscribe(this::setPeople));
+		addSubscription(mPresenter.getCacheErrors().subscribe(throwable -> {
+			showCacheError();
+			hideCacheLoading();
+		}));
+		addSubscription(mPresenter.getNetworkErrors().subscribe(throwable -> {
+			showNetworkError();
+			hideNetworkLoading();
+		}));
 
-		// TODO: Think about these a bit.
-		mPresenter.mPeopleLoadedFromCache.subscribe(new Action1<Boolean>() {
-			@Override
-			public void call(Boolean aBoolean) {
-				hideInitialLoading();
-			}
-		});
-
-		mPresenter.mPeopleLoadedFromNetwork.subscribe(new Action1<Boolean>() {
-			@Override
-			public void call(Boolean aBoolean) {
-				hideInitialLoading();
+		// TODO: Think about the ordering of these loading states a bit.
+		addSubscription(mPresenter.getCacheLoaded()
+			.subscribe(aBoolean -> {
+				hideCacheLoading();
+			}));
+		addSubscription(mPresenter.getNetworkLoaded()
+			.subscribe(aBoolean -> {
 				hideNetworkLoading();
-			}
-		});
-
+				hideCacheLoading();
+			}));
 	}
 
-	// Find a better way to do this.
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		mOrientationChange = true;
-	}
-
-	@Override
-	public void onDestroy() {
-		if (!mOrientationChange) {
-			mPresenter.cancelLoading();
-			LandInjector.INSTANCE.invalidate();
-		}
-		super.onDestroy();
-	}
-
-	@Override
-	public void setPeople(List<Person> people) {
-		mPeopleAdapter.setPeople(people);
-	}
-
-	@Override
 	public void showInitialLoading() {
 		mProgressBar.setVisibility(View.VISIBLE);
 	}
 
-	@Override
-	public void hideInitialLoading() {
-		mProgressBar.setVisibility(View.INVISIBLE);
-	}
-
-	@Override
 	public void showNetworkLoading() {
 		mToolbarListener.showNetworkLoadingView();
 	}
 
-	@Override
+	private void addSubscription(Subscription subscription) {
+		mCompositeSubscription.add(subscription);
+	}
+
+	public void showCacheError() {
+		Snackbar.make(getView(), R.string.fragment_land_cache_error_string, Snackbar.LENGTH_LONG).show();
+	}
+
+	public void hideCacheLoading() {
+		mProgressBar.setVisibility(View.INVISIBLE);
+	}
+
+	public void showNetworkError() {
+		Snackbar.make(getView(), R.string.fragment_land_network_error_string, Snackbar.LENGTH_LONG).show();
+	}
+
 	public void hideNetworkLoading() {
 		mToolbarListener.hideNetworkLoadingView();
 	}
 
 	@Override
-	public void showError() {
-		Snackbar.make(getView(), R.string.fragment_land_error_string, Snackbar.LENGTH_LONG).show();
+	public void onDestroyView() {
+		mCompositeSubscription.unsubscribe();
+		super.onDestroyView();
 	}
 
+	@Override
+	public void onDestroy() {
+		mPresenter.cancelLoading();
+		LandInjector.INSTANCE.invalidate();
+		super.onDestroy();
+	}
+
+	public void setPeople(List<Person> people) {
+		mPeopleAdapter.setPeople(people);
+	}
 }

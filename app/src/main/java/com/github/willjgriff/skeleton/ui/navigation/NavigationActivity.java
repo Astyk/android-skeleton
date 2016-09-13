@@ -2,6 +2,7 @@ package com.github.willjgriff.skeleton.ui.navigation;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.NavigationView;
@@ -22,7 +23,6 @@ public class NavigationActivity extends AppCompatActivity implements NavigationT
 
 	private DrawerLayout mDrawerLayout;
 	private ActionBarDrawerToggle mDrawerToggle;
-	private NavigationView mNavigationView;
 	private ProgressBar mProgressBar;
 
 	@Override
@@ -63,14 +63,13 @@ public class NavigationActivity extends AppCompatActivity implements NavigationT
 	}
 
 	private void setupNavigationView() {
-		mNavigationView = (NavigationView) findViewById(R.id.activity_navigation_nav_view);
-		mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+		NavigationView navigationView = (NavigationView) findViewById(R.id.activity_navigation_nav_view);
+		navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 			@Override
-			public boolean onNavigationItemSelected(MenuItem item) {
+			public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 				switchNavigationItem(item);
 				return false;
 			}
-
 		});
 	}
 
@@ -101,10 +100,9 @@ public class NavigationActivity extends AppCompatActivity implements NavigationT
 	}
 
 	private void switchToFragment(NavigationFragment navigationFragment) {
-		FragmentManager fragmentManager = getSupportFragmentManager();
-
 		if (isDifferentFragment(navigationFragment)) {
-			fragmentManager.beginTransaction()
+			getSupportFragmentManager()
+				.beginTransaction()
 				.replace(R.id.activity_navigation_container,
 					Fragment.instantiate(this, navigationFragment.getFragmentClass().getName()),
 					navigationFragment.toString())
@@ -115,10 +113,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationT
 
 	private boolean isDifferentFragment(NavigationFragment navigationFragment) {
 		Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.activity_navigation_container);
-		if (currentFragment != null) {
-			return !currentFragment.getTag().equals(navigationFragment.toString());
-		}
-		return true;
+		return currentFragment == null || !currentFragment.getTag().equals(navigationFragment.toString());
 	}
 
 	@Override

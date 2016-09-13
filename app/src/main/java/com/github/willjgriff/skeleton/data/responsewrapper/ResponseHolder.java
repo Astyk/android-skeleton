@@ -1,4 +1,4 @@
-package com.github.willjgriff.skeleton.data.models.helpers;
+package com.github.willjgriff.skeleton.data.responsewrapper;
 
 /**
  * Created by Will on 10/09/2016.
@@ -18,12 +18,12 @@ public class ResponseHolder<RETURNTYPE> {
 		return mSource;
 	}
 
-	public void setData(RETURNTYPE data) {
-		mData = data;
-	}
-
 	public RETURNTYPE getData() {
 		return mData;
+	}
+
+	public void setData(RETURNTYPE data) {
+		mData = data;
 	}
 
 	public boolean hasData() {
