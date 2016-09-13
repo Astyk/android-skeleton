@@ -1,6 +1,6 @@
 package com.github.willjgriff.skeleton.data.storage.fetchers;
 
-import com.github.willjgriff.skeleton.data.models.helpers.ErrorHolder;
+import com.github.willjgriff.skeleton.data.models.helpers.ResponseHolder;
 
 import java.util.List;
 
@@ -19,6 +19,6 @@ public abstract class RealmFetcher<RETURNTYPE extends RealmModel> {
 
 	public abstract RealmResults<RETURNTYPE> fetchCurrentData();
 
-	public abstract Observable<ErrorHolder<List<RETURNTYPE>>> fetchAsyncObservable();
+	public abstract Observable<ResponseHolder<List<RETURNTYPE>>> fetchAsyncObservable();
 
 }

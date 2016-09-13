@@ -2,7 +2,7 @@ package com.github.willjgriff.skeleton.data;
 
 import android.support.annotation.NonNull;
 
-import com.github.willjgriff.skeleton.data.models.helpers.ErrorHolder;
+import com.github.willjgriff.skeleton.data.models.helpers.ResponseHolder;
 import com.github.willjgriff.skeleton.data.storage.updaters.RealmUpdater;
 
 import io.realm.RealmModel;
@@ -11,6 +11,8 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
+
+import static com.github.willjgriff.skeleton.data.models.helpers.ResponseHolder.Source.NETWORK;
 
 /**
  * Created by Will on 14/08/2016.
@@ -27,7 +29,7 @@ public class NetworkFetchAndUpdateItem<RETURNTYPE extends RealmModel> {
 		mRealmUpdater = realmUpdater;
 	}
 
-	public Observable<ErrorHolder<RETURNTYPE>> fetchAndUpdateData() {
+	public Observable<ResponseHolder<RETURNTYPE>> fetchAndUpdateData() {
 
 		return mRetrofitObservable
 			.subscribeOn(Schedulers.io())
@@ -38,20 +40,20 @@ public class NetworkFetchAndUpdateItem<RETURNTYPE extends RealmModel> {
 					mRealmUpdater.update(returnData);
 				}
 			})
-			.map(new Func1<RETURNTYPE, ErrorHolder<RETURNTYPE>>() {
+			.map(new Func1<RETURNTYPE, ResponseHolder<RETURNTYPE>>() {
 				@Override
-				public ErrorHolder<RETURNTYPE> call(RETURNTYPE data) {
-					ErrorHolder<RETURNTYPE> errorHolder = new ErrorHolder<>();
-					errorHolder.setData(data);
-					return errorHolder;
+				public ResponseHolder<RETURNTYPE> call(RETURNTYPE data) {
+					ResponseHolder<RETURNTYPE> responseHolder = new ResponseHolder<>(NETWORK);
+					responseHolder.setData(data);
+					return responseHolder;
 				}
 			})
-			.onErrorReturn(new Func1<Throwable, ErrorHolder<RETURNTYPE>>() {
+			.onErrorReturn(new Func1<Throwable, ResponseHolder<RETURNTYPE>>() {
 				@Override
-				public ErrorHolder<RETURNTYPE> call(Throwable throwable) {
-					ErrorHolder<RETURNTYPE> errorHolder = new ErrorHolder<>();
-					errorHolder.setError(throwable);
-					return errorHolder;
+				public ResponseHolder<RETURNTYPE> call(Throwable throwable) {
+					ResponseHolder<RETURNTYPE> responseHolder = new ResponseHolder<>(NETWORK);
+					responseHolder.setError(throwable);
+					return responseHolder;
 				}
 			});
 	}

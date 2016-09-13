@@ -10,9 +10,18 @@ public enum LandInjector {
 
 	INSTANCE;
 
+	LandComponent mLandComponent;
+
 	public LandComponent getComponent() {
-		return DaggerLandComponent.builder()
-			.apiComponent(ApiInjector.INSTANCE.getComponent())
-			.build();
+		if (mLandComponent == null) {
+			mLandComponent = DaggerLandComponent.builder()
+				.apiComponent(ApiInjector.INSTANCE.getComponent())
+				.build();
+		}
+		return mLandComponent;
+	}
+
+	public void invalidate() {
+		mLandComponent = null;
 	}
 }

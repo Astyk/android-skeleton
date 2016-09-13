@@ -22,6 +22,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import rx.functions.Action1;
+
 /**
  * Created by Will on 17/08/2016.
  */
@@ -35,6 +37,7 @@ public class LandFragment extends Fragment implements LandView {
 	private PeopleAdapter mPeopleAdapter;
 	private NavigationToolbarListener mToolbarListener;
 	private ProgressBar mProgressBar;
+	private boolean mOrientationChange;
 
 	@Override
 	public void onAttach(Context context) {
@@ -46,7 +49,6 @@ public class LandFragment extends Fragment implements LandView {
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		LandInjector.INSTANCE.getComponent().inject(this);
-		setRetainInstance(true);
 	}
 
 	@Nullable
@@ -67,18 +69,55 @@ public class LandFragment extends Fragment implements LandView {
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		mPresenter.bindView(this);
+		mPresenter.bindView();
+
+		showInitialLoading();
+		showNetworkLoading();
+
+		mPresenter.mListPeople.subscribe(new Action1<List<Person>>() {
+			@Override
+			public void call(List<Person> persons) {
+				setPeople(persons);
+			}
+		});
+		mPresenter.mErrorObservable.subscribe(new Action1<Throwable>() {
+			@Override
+			public void call(Throwable throwable) {
+				showError();
+			}
+		});
+
+		// TODO: Think about these a bit.
+		mPresenter.mPeopleLoadedFromCache.subscribe(new Action1<Boolean>() {
+			@Override
+			public void call(Boolean aBoolean) {
+				hideInitialLoading();
+			}
+		});
+
+		mPresenter.mPeopleLoadedFromNetwork.subscribe(new Action1<Boolean>() {
+			@Override
+			public void call(Boolean aBoolean) {
+				hideInitialLoading();
+				hideNetworkLoading();
+			}
+		});
+
 	}
 
+	// Find a better way to do this.
 	@Override
-	public void onDestroyView() {
-		mPresenter.unbindView();
-		super.onDestroyView();
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		mOrientationChange = true;
 	}
 
 	@Override
 	public void onDestroy() {
-		mPresenter.cancelLoading();
+		if (!mOrientationChange) {
+			mPresenter.cancelLoading();
+			LandInjector.INSTANCE.invalidate();
+		}
 		super.onDestroy();
 	}
 

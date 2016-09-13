@@ -1,87 +1,99 @@
 package com.github.willjgriff.skeleton.ui.land;
 
-import com.github.willjgriff.skeleton.data.models.helpers.ErrorHolder;
 import com.github.willjgriff.skeleton.data.models.Person;
+import com.github.willjgriff.skeleton.data.models.helpers.ResponseHolder;
 import com.github.willjgriff.skeleton.mvp.BasePresenter;
 import com.github.willjgriff.skeleton.ui.land.di.LandScope;
 
-import java.lang.ref.WeakReference;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.Subscriber;
-import rx.Subscription;
+import rx.Observable;
+import rx.functions.Func1;
+import rx.observables.ConnectableObservable;
+
+import static com.github.willjgriff.skeleton.data.models.helpers.ResponseHolder.Source.NETWORK;
+import static com.github.willjgriff.skeleton.data.models.helpers.ResponseHolder.Source.STORAGE;
 
 /**
  * Created by Will on 19/08/2016.
  */
 // TODO: Abstract the View - Presenter binding behaviour into a base class
 @LandScope
-public class LandPresenter implements BasePresenter<LandView> {
+public class LandPresenter implements BasePresenter {
 
+	// TODO: Make functions to return each of these.
+	public Observable<List<Person>> mListPeople;
+	public Observable<Throwable> mErrorObservable;
+	public Observable<Boolean> mPeopleLoadedFromCache;
+	public Observable<Boolean> mPeopleLoadedFromNetwork;
 	private PeopleDataManager mPeopleDataManager;
-	private WeakReference<LandView> mLandView;
-	private Subscription mPeopleSubscription;
+	private ConnectableObservable<ResponseHolder<List<Person>>> mPeopleObservable;
 
 	@Inject
 	LandPresenter(PeopleDataManager peopleDataManager) {
 		mPeopleDataManager = peopleDataManager;
-	}
 
-	@Override
-	public void bindView(LandView view) {
-		mLandView = new WeakReference<>(view);
+		// replay(1) will emit the last value emitted for each new subscription.
+//		if (mPeopleObservable == null) {
+		mPeopleObservable = mPeopleDataManager.getPeopleObservable().replay(1);
+		mPeopleObservable.connect();
+//		}
 
-		if (mPeopleSubscription == null || mPeopleSubscription.isUnsubscribed()) {
-			setupPeopleSubscription();
-		}
 
-		mPeopleDataManager.updatePeople();
-	}
+		Observable<ResponseHolder<List<Person>>> validPeopleObservable = mPeopleObservable.filter(new Func1<ResponseHolder<List<Person>>, Boolean>() {
+			@Override
+			public Boolean call(ResponseHolder<List<Person>> listResponseHolder) {
+				return listResponseHolder.hasData();
+			}
+		});
 
-	private void setupPeopleSubscription() {
-		getView().showInitialLoading();
-		getView().showNetworkLoading();
+		mListPeople = validPeopleObservable.map(new Func1<ResponseHolder<List<Person>>, List<Person>>() {
+			@Override
+			public List<Person> call(ResponseHolder<List<Person>> listResponseHolder) {
+				return listResponseHolder.getData();
+			}
+		});
 
-		mPeopleSubscription = mPeopleDataManager.getPeopleObservable()
-			// TODO: Can be replaced with Action1?
-			.subscribe(new Subscriber<ErrorHolder<List<Person>>>() {
+		// TODO: Not sure about these.
+		mPeopleLoadedFromCache = validPeopleObservable.filter(new Func1<ResponseHolder<List<Person>>, Boolean>() {
+			@Override
+			public Boolean call(ResponseHolder<List<Person>> listResponseHolder) {
+				return listResponseHolder.getData().size() > 0 && listResponseHolder.getSource() == STORAGE;
+			}
+		})
+			.distinct()
+			.map(new Func1<ResponseHolder<List<Person>>, Boolean>() {
 				@Override
-				public void onCompleted() {
-
-				}
-
-				@Override
-				public void onError(Throwable e) {
-
-				}
-
-				@Override
-				public void onNext(ErrorHolder<List<Person>> listErrorHolder) {
-					if (listErrorHolder.hasError()) {
-						getView().showError();
-//						getView().hideNetworkLoading();
-//						getView().hideInitialLoading();
-					} else if (listErrorHolder.getData() != null) {
-						getView().setPeople(listErrorHolder.getData());
-						// TODO: Add this to some sort of doOnFirst filter for hiding the initial loading.
-						getView().hideInitialLoading();
-						getView().hideNetworkLoading();
-					}
+				public Boolean call(ResponseHolder<List<Person>> listResponseHolder) {
+					return true;
 				}
 			});
-	}
 
-	private LandView getView() {
-		return mLandView.get();
-	}
+		mPeopleLoadedFromNetwork = validPeopleObservable.filter(new Func1<ResponseHolder<List<Person>>, Boolean>() {
+			@Override
+			public Boolean call(ResponseHolder<List<Person>> listResponseHolder) {
+				return listResponseHolder.getSource() == NETWORK;
+			}
+		}).map(new Func1<ResponseHolder<List<Person>>, Boolean>() {
+			@Override
+			public Boolean call(ResponseHolder<List<Person>> listResponseHolder) {
+				return true;
+			}
+		});
 
-	@Override
-	public void unbindView() {
-		if (mPeopleSubscription != null && !mPeopleSubscription.isUnsubscribed()) {
-			mPeopleSubscription.unsubscribe();
-		}
+		mErrorObservable = mPeopleObservable.filter(new Func1<ResponseHolder<List<Person>>, Boolean>() {
+			@Override
+			public Boolean call(ResponseHolder<List<Person>> listResponseHolder) {
+				return listResponseHolder.hasError();
+			}
+		}).map(new Func1<ResponseHolder<List<Person>>, Throwable>() {
+			@Override
+			public Throwable call(ResponseHolder<List<Person>> listResponseHolder) {
+				return listResponseHolder.getError();
+			}
+		});
 	}
 
 	@Override

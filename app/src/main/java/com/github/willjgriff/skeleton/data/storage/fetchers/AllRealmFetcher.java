@@ -1,6 +1,6 @@
 package com.github.willjgriff.skeleton.data.storage.fetchers;
 
-import com.github.willjgriff.skeleton.data.models.helpers.ErrorHolder;
+import com.github.willjgriff.skeleton.data.models.helpers.ResponseHolder;
 import com.github.willjgriff.skeleton.data.models.helpers.Timestamp;
 
 import java.util.List;
@@ -13,11 +13,13 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 
+import static com.github.willjgriff.skeleton.data.models.helpers.ResponseHolder.Source.STORAGE;
+
 /**
  * Created by Will on 14/08/2016.
  */
 // TODO: This is now coupled to the Timestamp interface. See if we can find a way to avoid this.
-public class AllRealmFetcher<RETURNTYPE extends RealmModel> extends RealmFetcher<RETURNTYPE> {
+public class AllRealmFetcher<RETURNTYPE extends RealmModel & Timestamp> extends RealmFetcher<RETURNTYPE> {
 
 	private Class<RETURNTYPE> mReturnClass;
 	private Realm mRealm;
@@ -36,8 +38,9 @@ public class AllRealmFetcher<RETURNTYPE extends RealmModel> extends RealmFetcher
 		return select().lessThan(Timestamp.TIMESTAMP_FIELD, System.currentTimeMillis()).findAll();
 	}
 
+	// TODO: This shouldn't return an Observable of ResponseHolder
 	@Override
-	public Observable<ErrorHolder<List<RETURNTYPE>>> fetchAsyncObservable() {
+	public Observable<ResponseHolder<List<RETURNTYPE>>> fetchAsyncObservable() {
 
 		return select().findAllAsync()
 			.asObservable()
@@ -60,22 +63,22 @@ public class AllRealmFetcher<RETURNTYPE extends RealmModel> extends RealmFetcher
 			.first()
 			// Put data into ErrorHolder, ErrorHolder is necessary to pass
 			// the error to where it can be used, if necessary.
-			.map(new Func1<List<RETURNTYPE>, ErrorHolder<List<RETURNTYPE>>>() {
+			.map(new Func1<List<RETURNTYPE>, ResponseHolder<List<RETURNTYPE>>>() {
 				@Override
-				public ErrorHolder<List<RETURNTYPE>> call(List<RETURNTYPE> data) {
-					ErrorHolder<List<RETURNTYPE>> errorHolder = new ErrorHolder<>();
-					errorHolder.setData(data);
-					return errorHolder;
+				public ResponseHolder<List<RETURNTYPE>> call(List<RETURNTYPE> data) {
+					ResponseHolder<List<RETURNTYPE>> responseHolder = new ResponseHolder<>(STORAGE);
+					responseHolder.setData(data);
+					return responseHolder;
 				}
 			})
 			// Put any error into ErrorHolder so it is passed to onNext like any other response.
 			// Then the error can be relayed to the user.
-			.onErrorReturn(new Func1<Throwable, ErrorHolder<List<RETURNTYPE>>>() {
+			.onErrorReturn(new Func1<Throwable, ResponseHolder<List<RETURNTYPE>>>() {
 				@Override
-				public ErrorHolder<List<RETURNTYPE>> call(Throwable throwable) {
-					ErrorHolder<List<RETURNTYPE>> errorHolder = new ErrorHolder<>();
-					errorHolder.setError(throwable);
-					return errorHolder;
+				public ResponseHolder<List<RETURNTYPE>> call(Throwable throwable) {
+					ResponseHolder<List<RETURNTYPE>> responseHolder = new ResponseHolder<>(STORAGE);
+					responseHolder.setError(throwable);
+					return responseHolder;
 				}
 			});
 
