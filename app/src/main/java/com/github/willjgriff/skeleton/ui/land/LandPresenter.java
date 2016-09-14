@@ -10,7 +10,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import rx.Observable;
-import rx.observables.ConnectableObservable;
+import rx.functions.Func1;
+import rx.subjects.PublishSubject;
 
 import static com.github.willjgriff.skeleton.data.responsewrapper.ResponseHolder.Source.NETWORK;
 import static com.github.willjgriff.skeleton.data.responsewrapper.ResponseHolder.Source.STORAGE;
@@ -22,21 +23,28 @@ import static com.github.willjgriff.skeleton.data.responsewrapper.ResponseHolder
 public class LandPresenter implements BasePresenter {
 
 	private PeopleDataManager mPeopleDataManager;
-	private ConnectableObservable<ResponseHolder<List<Person>>> mPeopleObservable;
+	private Observable<ResponseHolder<List<Person>>> mPeopleObservable;
+	private PublishSubject<Void> mRefreshTrigger;
+	// TODO: Can we get rid of this?
+	private boolean mNetworkRequestMade;
 
 	@Inject
 	LandPresenter(PeopleDataManager peopleDataManager) {
 		mPeopleDataManager = peopleDataManager;
-		setPeopleObservable();
 	}
 
-	private void setPeopleObservable() {
-		// replay(1) will emit the last value emitted for each new subscription.
-//		if (mPeopleObservable == null) {
-		mPeopleObservable = mPeopleDataManager.getPeopleObservable(20).replay(1);
-		// TODO: Find out how this actually behaves.
-		mPeopleObservable.connect();
-//		}
+	public void setRefreshTrigger(PublishSubject<Void> refreshTrigger) {
+		mRefreshTrigger = refreshTrigger;
+		// TODO: Check if still loading, rotation doesn't load from network twice.
+		if (mPeopleObservable == null) {
+			mPeopleObservable = refreshTrigger.flatMap(new Func1<Void, Observable<ResponseHolder<List<Person>>>>() {
+				@Override
+				public Observable<ResponseHolder<List<Person>>> call(Void aVoid) {
+					// replay(1) will emit the last value emitted for each new subscription.
+					return mPeopleDataManager.getPeopleObservable(20).replay(1).autoConnect();
+				}
+			}).replay(1).autoConnect();
+		}
 	}
 
 	public Observable<List<Person>> getPeopleList() {
@@ -77,5 +85,12 @@ public class LandPresenter implements BasePresenter {
 	@Override
 	public void cancelUpdate() {
 		mPeopleDataManager.cancelUpdate();
+	}
+
+	public void makeNetworkRequest() {
+		if (!mNetworkRequestMade) {
+			mRefreshTrigger.onNext(null);
+			mNetworkRequestMade = true;
+		}
 	}
 }

@@ -19,6 +19,7 @@ import java.util.List;
 
 import io.realm.Realm;
 import rx.Observable;
+import rx.observables.ConnectableObservable;
 
 /**
  * Created by Will on 06/09/2016.
@@ -61,7 +62,9 @@ public class PeopleDataManager {
 	public void cancelUpdate() {
 		// TODO: Do I need to cancel realm async transaction before closing the Realm.
 		// Or can I leave it to finish?
-		mPeopleNetworkFetchAndUpdateList.cancelUpdate();
+		if (mPeopleNetworkFetchAndUpdateList != null) {
+			mPeopleNetworkFetchAndUpdateList.cancelUpdate();
+		}
 		mRealm.close();
 	}
 
