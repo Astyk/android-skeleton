@@ -9,7 +9,7 @@
     <string name="navigation_settings">Settings</string>
 
     <!--landing fragment-->
-    <string name="fragment_land_cache_error_string">Error loading content from cache</string>
-    <string name="fragment_land_network_error_string">Error loading content from network</string>
+    <string name="fragment_land_cache_error_string">Error loading from cache. Content may not be as expected</string>
+    <string name="fragment_land_network_error_string">Error loading from network. Content may not be as expected</string>
 
 </resources>

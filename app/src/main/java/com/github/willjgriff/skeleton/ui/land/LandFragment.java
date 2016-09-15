@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +14,7 @@ import android.widget.ProgressBar;
 
 import com.github.willjgriff.skeleton.R;
 import com.github.willjgriff.skeleton.data.models.Person;
+import com.github.willjgriff.skeleton.mvp.RxFragment;
 import com.github.willjgriff.skeleton.ui.land.di.LandInjector;
 import com.github.willjgriff.skeleton.ui.navigation.NavigationFragment;
 import com.github.willjgriff.skeleton.ui.navigation.NavigationToolbarListener;
@@ -24,26 +24,22 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.Subscription;
-import rx.functions.Action1;
 import rx.subjects.PublishSubject;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by Will on 17/08/2016.
  */
 // TODO: Abstract the View - Presenter binding behaviour into a base class
-public class LandFragment extends Fragment {
+public class LandFragment extends RxFragment {
 
 	@Inject
 	LandPresenter mPresenter;
 
-	private CompositeSubscription mCompositeSubscription;
+	private PublishSubject<Void> mRefreshTrigger;
 	private PeopleAdapter mPeopleAdapter;
 	private NavigationToolbarListener mToolbarListener;
 	private ProgressBar mProgressBar;
 	private SwipeRefreshLayout mSwipeRefreshLayout;
-	private PublishSubject<Void> mRefreshTrigger;
 
 	@Override
 	public void onAttach(Context context) {
@@ -55,15 +51,12 @@ public class LandFragment extends Fragment {
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		LandInjector.INSTANCE.getComponent().inject(this);
-		// Is this safer than the onSaveInstanceState method?
-		setRetainInstance(true);
 		mRefreshTrigger = PublishSubject.create();
 	}
 
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		mCompositeSubscription = new CompositeSubscription();
 		return inflater.inflate(R.layout.fragment_land, container, false);
 	}
 
@@ -72,6 +65,13 @@ public class LandFragment extends Fragment {
 		super.onViewCreated(view, savedInstanceState);
 		setupView(view);
 		setupSubscriptions();
+	}
+
+	@Override
+	public void onDestroy() {
+		mPresenter.cancelUpdate();
+		mToolbarListener.hideNetworkLoadingView();
+		super.onDestroy();
 	}
 
 	private void setupView(View view) {
@@ -84,17 +84,13 @@ public class LandFragment extends Fragment {
 		mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_land_swipe_refresh);
 		mSwipeRefreshLayout.setColorSchemeResources(R.color.accent);
 
-		showInitialLoading();
+		showCacheLoading();
 		showNetworkLoading();
 	}
 
 	private void setupSubscriptions() {
-		mPresenter.setRefreshTrigger(mRefreshTrigger);
-		RxSwipeRefreshLayout.refreshes(mSwipeRefreshLayout).subscribe(new Action1<Void>() {
-			@Override
-			public void call(Void aVoid) {
-				mRefreshTrigger.onNext(aVoid);
-			}
+		RxSwipeRefreshLayout.refreshes(mSwipeRefreshLayout).subscribe(aVoid -> {
+			mPresenter.triggerNetworkPeopleFetch();
 		});
 
 		addSubscription(mPresenter.getPeopleList().subscribe(this::setPeople));
@@ -119,10 +115,10 @@ public class LandFragment extends Fragment {
 				hideCacheLoading();
 			}));
 
-		mPresenter.makeNetworkRequest();
+		mPresenter.triggerAllPeopleFetch();
 	}
 
-	public void showInitialLoading() {
+	public void showCacheLoading() {
 		mProgressBar.setVisibility(View.VISIBLE);
 	}
 
@@ -130,8 +126,8 @@ public class LandFragment extends Fragment {
 		mToolbarListener.showNetworkLoadingView();
 	}
 
-	private void addSubscription(Subscription subscription) {
-		mCompositeSubscription.add(subscription);
+	private void setPeople(List<Person> people) {
+		mPeopleAdapter.setPeople(people);
 	}
 
 	private void showCacheError() {
@@ -149,22 +145,5 @@ public class LandFragment extends Fragment {
 	private void hideNetworkLoading() {
 		mToolbarListener.hideNetworkLoadingView();
 		mSwipeRefreshLayout.setRefreshing(false);
-	}
-
-
-	@Override
-	public void onDestroyView() {
-		mCompositeSubscription.unsubscribe();
-		super.onDestroyView();
-	}
-
-	@Override
-	public void onDestroy() {
-		mPresenter.cancelUpdate();
-		super.onDestroy();
-	}
-
-	private void setPeople(List<Person> people) {
-		mPeopleAdapter.setPeople(people);
 	}
 }

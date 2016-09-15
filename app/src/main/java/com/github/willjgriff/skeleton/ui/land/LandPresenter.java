@@ -31,13 +31,14 @@ public class LandPresenter implements BasePresenter {
 	@Inject
 	LandPresenter(PeopleDataManager peopleDataManager) {
 		mPeopleDataManager = peopleDataManager;
+		mRefreshTrigger = PublishSubject.create();
+		setRefreshTrigger();
 	}
 
-	public void setRefreshTrigger(PublishSubject<Void> refreshTrigger) {
-		mRefreshTrigger = refreshTrigger;
+	public void setRefreshTrigger() {
 		// TODO: Check if still loading, rotation doesn't load from network twice.
 		if (mPeopleObservable == null) {
-			mPeopleObservable = refreshTrigger.flatMap(new Func1<Void, Observable<ResponseHolder<List<Person>>>>() {
+			mPeopleObservable = mRefreshTrigger.flatMap(new Func1<Void, Observable<ResponseHolder<List<Person>>>>() {
 				@Override
 				public Observable<ResponseHolder<List<Person>>> call(Void aVoid) {
 					// replay(1) will emit the last value emitted for each new subscription.
@@ -84,12 +85,17 @@ public class LandPresenter implements BasePresenter {
 
 	@Override
 	public void cancelUpdate() {
-		mPeopleDataManager.cancelUpdate();
+		mPeopleDataManager.closeDataManager();
 	}
 
-	public void makeNetworkRequest() {
+	public void triggerNetworkPeopleFetch() {
+		mPeopleDataManager.triggerNetworkUpdate();
+	}
+
+	public void triggerAllPeopleFetch() {
 		if (!mNetworkRequestMade) {
 			mRefreshTrigger.onNext(null);
+			mPeopleDataManager.triggerNetworkUpdate();
 			mNetworkRequestMade = true;
 		}
 	}
