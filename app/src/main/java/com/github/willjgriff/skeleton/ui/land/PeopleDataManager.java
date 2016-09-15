@@ -44,7 +44,7 @@ public class PeopleDataManager {
 	}
 
 	public Observable<ResponseHolder<List<Person>>> getPeopleObservable(int countPeople) {
-		// TODO: Make this a merge, requires proper timestamping.
+		// TODO: Add timestamping to prevent data coming in wrong order.
 		// This HAS to be a merge, otherwise the network trigger doesn't work and no network data is got.
 		return Observable.merge(getPeopleFromCache(), getPeopleFromNetworkTrigger(countPeople));
 	}
