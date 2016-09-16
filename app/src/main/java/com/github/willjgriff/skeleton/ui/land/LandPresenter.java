@@ -24,27 +24,19 @@ public class LandPresenter implements BasePresenter {
 
 	private PeopleDataManager mPeopleDataManager;
 	private Observable<ResponseHolder<List<Person>>> mPeopleObservable;
-	private PublishSubject<Void> mRefreshTrigger;
 	// TODO: Can we get rid of this?
 	private boolean mNetworkRequestMade;
 
 	@Inject
 	LandPresenter(PeopleDataManager peopleDataManager) {
 		mPeopleDataManager = peopleDataManager;
-		mRefreshTrigger = PublishSubject.create();
 		setRefreshTrigger();
 	}
 
 	public void setRefreshTrigger() {
 		// TODO: Check if still loading, rotation doesn't load from network twice.
 		if (mPeopleObservable == null) {
-			mPeopleObservable = mRefreshTrigger.flatMap(new Func1<Void, Observable<ResponseHolder<List<Person>>>>() {
-				@Override
-				public Observable<ResponseHolder<List<Person>>> call(Void aVoid) {
-					// replay(1) will emit the last value emitted for each new subscription.
-					return mPeopleDataManager.getPeopleObservable(20).replay(1).autoConnect();
-				}
-			}).replay(1).autoConnect();
+			mPeopleObservable = mPeopleDataManager.getPeopleObservable(20).replay(1).autoConnect();
 		}
 	}
 
@@ -88,15 +80,14 @@ public class LandPresenter implements BasePresenter {
 		mPeopleDataManager.closeDataManager();
 	}
 
-	public void triggerNetworkPeopleFetch() {
-		mPeopleDataManager.triggerNetworkUpdate();
-	}
-
-	public void triggerAllPeopleFetch() {
+	public void triggerInitialFetch() {
 		if (!mNetworkRequestMade) {
-			mRefreshTrigger.onNext(null);
 			mPeopleDataManager.triggerNetworkUpdate();
 			mNetworkRequestMade = true;
 		}
+	}
+
+	public void triggerRefreshFetch() {
+		mPeopleDataManager.triggerNetworkUpdate();
 	}
 }

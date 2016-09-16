@@ -37,19 +37,9 @@ public class NetworkFetchAndUpdateList<REALMTYPE extends RealmModel> {
 			.subscribeOn(Schedulers.io())
 			.observeOn(AndroidSchedulers.mainThread())
 			// Unpack content from ApiResponse
-			.map(new Func1<ApiResponse<List<REALMTYPE>>, List<REALMTYPE>>() {
-				@Override
-				public List<REALMTYPE> call(ApiResponse<List<REALMTYPE>> apiResponse) {
-					return apiResponse.getContent();
-				}
-			})
+			.map(ApiResponse::getContent)
 			// Update Realm DB with new data
-			.doOnNext(new Action1<List<REALMTYPE>>() {
-				@Override
-				public void call(List<REALMTYPE> people) {
-					mRealmUpdater.update(people);
-				}
-			});
+			.doOnNext(people -> mRealmUpdater.update(people));
 	}
 
 	public void cancelUpdate() {

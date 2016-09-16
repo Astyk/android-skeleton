@@ -35,6 +35,7 @@ public class AllRealmFetcher<RETURNTYPE extends RealmModel & Timestamp> extends 
 
 	@Override
 	public Observable<RealmResults<RETURNTYPE>> getAsyncObservable() {
+
 		return select().findAllAsync()
 			.asObservable()
 			.subscribeOn(AndroidSchedulers.mainThread())
@@ -42,6 +43,5 @@ public class AllRealmFetcher<RETURNTYPE extends RealmModel & Timestamp> extends 
 			// Ensure data is valid and available
 			.filter(RealmResults::isLoaded)
 			.filter(RealmResults::isValid);
-
 	}
 }

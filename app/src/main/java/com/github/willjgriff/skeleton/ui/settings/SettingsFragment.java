@@ -28,7 +28,7 @@ public class SettingsFragment extends Fragment {
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		getAllTrigger().subscribe(new Subscriber<Integer>() {
+		allWithTrigger.subscribe(new Subscriber<Integer>() {
 			@Override
 			public void onCompleted() {
 				cache.subscribe(integer -> {
@@ -47,7 +47,6 @@ public class SettingsFragment extends Fragment {
 			}
 		});
 
-		allTrigger.onNext(null);
 		networkTrigger.onNext(null);
 	}
 

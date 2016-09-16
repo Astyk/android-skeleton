@@ -35,7 +35,6 @@ public class LandFragment extends RxFragment {
 	@Inject
 	LandPresenter mPresenter;
 
-	private PublishSubject<Void> mRefreshTrigger;
 	private PeopleAdapter mPeopleAdapter;
 	private NavigationToolbarListener mToolbarListener;
 	private ProgressBar mProgressBar;
@@ -51,7 +50,6 @@ public class LandFragment extends RxFragment {
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		LandInjector.INSTANCE.getComponent().inject(this);
-		mRefreshTrigger = PublishSubject.create();
 	}
 
 	@Nullable
@@ -90,7 +88,7 @@ public class LandFragment extends RxFragment {
 
 	private void setupSubscriptions() {
 		RxSwipeRefreshLayout.refreshes(mSwipeRefreshLayout).subscribe(aVoid -> {
-			mPresenter.triggerNetworkPeopleFetch();
+			mPresenter.triggerRefreshFetch();
 		});
 
 		addSubscription(mPresenter.getPeopleList().subscribe(this::setPeople));
@@ -115,7 +113,7 @@ public class LandFragment extends RxFragment {
 				hideCacheLoading();
 			}));
 
-		mPresenter.triggerAllPeopleFetch();
+		mPresenter.triggerInitialFetch();
 	}
 
 	public void showCacheLoading() {
