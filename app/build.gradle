@@ -57,7 +57,6 @@ dependencies {
     compile "com.android.support:appcompat-v7:${supportLib}"
     compile "com.android.support:design:${supportLib}"
     compile "com.android.support:recyclerview-v7:${supportLib}"
-    compile "com.android.support.constraint:constraint-layout:${constraint}"
     compile "com.squareup.picasso:picasso:${picasso}"
 
     compile "com.squareup.retrofit2:retrofit:${retrofit}"
