@@ -17,26 +17,24 @@ import rx.functions.Func1;
 public class AllRealmFetcher<RETURNTYPE extends RealmModel & Timestamp> extends RealmFetcher<RETURNTYPE> {
 
 	private Class<RETURNTYPE> mReturnClass;
-	private Realm mRealm;
 
-	public AllRealmFetcher(Class<RETURNTYPE> returnClass, Realm realm) {
+	public AllRealmFetcher(Class<RETURNTYPE> returnClass) {
 		mReturnClass = returnClass;
-		mRealm = realm;
 	}
 
-	protected RealmQuery<RETURNTYPE> select() {
-		return mRealm.where(mReturnClass);
-	}
-
-	@Override
-	public RealmResults<RETURNTYPE> fetchCurrentData() {
-		return select().lessThan(Timestamp.TIMESTAMP_FIELD, System.currentTimeMillis()).findAll();
+	protected RealmQuery<RETURNTYPE> select(Realm realm) {
+		return realm.where(mReturnClass);
 	}
 
 	@Override
-	public Observable<RealmResults<RETURNTYPE>> getAsyncObservable() {
+	public RealmResults<RETURNTYPE> fetchCurrentData(Realm realm) {
+		return select(realm).lessThan(Timestamp.TIMESTAMP_FIELD, System.currentTimeMillis()).findAll();
+	}
 
-		return select().findAllAsync()
+	@Override
+	public Observable<RealmResults<RETURNTYPE>> getAsyncObservable(Realm realm) {
+
+		return select(realm).findAllAsync()
 			.asObservable()
 			.subscribeOn(AndroidSchedulers.mainThread())
 			.observeOn(AndroidSchedulers.mainThread())

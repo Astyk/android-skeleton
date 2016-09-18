@@ -19,8 +19,8 @@ public class RealmResponseWrapper<RESPONSETYPE extends RealmModel> {
 		return observable
 			// Only take the first emission. More data will be emitted if/when this RealmQuery's data is updated.
 			.first()
-			// Put data into ResponseHolder, ResponseHolder is necessary to pass
-			// the error to where it can be used, if necessary.
+			// Put data into ResponseHolder, ResponseHolder is necessary to differentiate between
+			// cache and network sourced data and retain any errors.
 			.map(responsetypes -> {
 				ResponseHolder<List<RESPONSETYPE>> responseHolder = new ResponseHolder<>(STORAGE);
 				responseHolder.setData(responsetypes);

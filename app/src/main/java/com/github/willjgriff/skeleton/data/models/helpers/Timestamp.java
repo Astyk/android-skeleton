@@ -6,7 +6,9 @@ package com.github.willjgriff.skeleton.data.models.helpers;
 // TODO: This process isn't great, the implementing object must use "timestamp" field
 public interface Timestamp {
 
-	public static final String TIMESTAMP_FIELD = "timestamp";
+	// Implementing class MUST have a "timestamp" field. I'm aware how poor this is. Unfortunately
+	// Realm objects cannot use polymorphism yet... I should find an alternative to this approach.
+	String TIMESTAMP_FIELD = "timestamp";
 
 	void setTimestamp(long timestamp);
 

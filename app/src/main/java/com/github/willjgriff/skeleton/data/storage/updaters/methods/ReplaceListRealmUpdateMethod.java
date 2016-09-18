@@ -28,7 +28,7 @@ public class ReplaceListRealmUpdateMethod<UPDATETYPE extends RealmModel & Timest
 		// emitted value, the one before any updating occurs, so this isn't a problem for now.
 		// Timestamping the Data is necessary because if we remove old data before new data is added an
 		// IllegalStateException can occur because the current LiveRealmObject is empty.
-		RealmResults<UPDATETYPE> previousData = mRealmFetcher.fetchCurrentData();
+		RealmResults<UPDATETYPE> previousData = mRealmFetcher.fetchCurrentData(realm);
 
 		List<UPDATETYPE> timestampedData = timestampNewData(updatedData);
 		realm.copyToRealmOrUpdate(timestampedData);

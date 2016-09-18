@@ -21,7 +21,8 @@ public class ReplaceItemRealmUpdateMethod<UPDATETYPE extends RealmModel & Timest
 	@Override
 	public void updateRealm(Realm realm, UPDATETYPE updatedData) {
 		// TODO: Add timestamp to updatedData before storing similar to ReplaceListRealmUpdateMethod
-		mRealmFetcher.fetchCurrentData().deleteAllFromRealm();
+		// This could currently throw an IllegalStateException.
+		mRealmFetcher.fetchCurrentData(realm).deleteAllFromRealm();
 		realm.copyToRealmOrUpdate(updatedData);
 	}
 }

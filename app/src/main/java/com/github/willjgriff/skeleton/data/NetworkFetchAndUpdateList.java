@@ -36,6 +36,7 @@ public class NetworkFetchAndUpdateList<REALMTYPE extends RealmModel> {
 		return mRetrofitObservable
 			.subscribeOn(Schedulers.io())
 			.observeOn(AndroidSchedulers.mainThread())
+			.filter(listApiResponse -> listApiResponse.getContent() != null)
 			// Unpack content from ApiResponse
 			.map(ApiResponse::getContent)
 			// Update Realm DB with new data

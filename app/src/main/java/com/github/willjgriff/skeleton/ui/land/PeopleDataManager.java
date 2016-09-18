@@ -10,17 +10,18 @@ import com.github.willjgriff.skeleton.data.responsewrapper.ResponseHolder;
 import com.github.willjgriff.skeleton.data.network.services.RandomPeopleService;
 import com.github.willjgriff.skeleton.data.storage.fetchers.AllRealmFetcher;
 import com.github.willjgriff.skeleton.data.storage.fetchers.RealmFetcher;
-import com.github.willjgriff.skeleton.data.storage.updaters.RealmSyncUpdater;
+import com.github.willjgriff.skeleton.data.storage.updaters.RealmAsyncUpdater;
 import com.github.willjgriff.skeleton.data.storage.updaters.RealmUpdater;
 import com.github.willjgriff.skeleton.data.storage.updaters.methods.RealmUpdateMethod;
 import com.github.willjgriff.skeleton.data.storage.updaters.methods.ReplaceListRealmUpdateMethod;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
 import rx.Observable;
+import rx.functions.Action1;
 import rx.functions.Func1;
-import rx.observables.ConnectableObservable;
 import rx.subjects.PublishSubject;
 
 /**
@@ -35,39 +36,42 @@ public class PeopleDataManager {
 	private NetworkFetchAndUpdateList<Person> mPeopleNetworkFetchAndUpdateList;
 	private RealmFetcher<Person> mPeopleRealmFetcher;
 	private PublishSubject<Void> mNetworkFetchTrigger;
+	private boolean mNetworkDataFetched = false;
 
 	public PeopleDataManager(@NonNull Realm realm, @NonNull RandomPeopleService peopleService) {
 		mRealm = realm;
 		mPeopleService = peopleService;
-		mPeopleRealmFetcher = new AllRealmFetcher<>(Person.class, realm);
+		mPeopleRealmFetcher = new AllRealmFetcher<>(Person.class);
 		mNetworkFetchTrigger = PublishSubject.create();
 	}
 
 	public Observable<ResponseHolder<List<Person>>> getPeopleObservable(int countPeople) {
-		// TODO: Add timestamping to prevent data coming in wrong order.
-		// This HAS to be a merge, otherwise the network trigger doesn't work and no network data is got.
-		return Observable.merge(getPeopleFromCache(), getPeopleFromNetworkTrigger(countPeople));
+		// This HAS to be a merge, not a concat, to enable the network trigger to work.
+		return Observable.merge(getPeopleFromCache(), getPeopleFromNetworkTrigger(countPeople))
+			.doOnNext(listResponseHolder -> {
+				if (ResponseHolder.Source.NETWORK == listResponseHolder.getSource()) {
+					// TODO: there must be a better way of preventing data coming in the wrong order.
+					mNetworkDataFetched = true;
+				}
+			})
+			.filter(listResponseHolder
+				-> ResponseHolder.Source.STORAGE != listResponseHolder.getSource() || !mNetworkDataFetched);
 	}
 
 	private Observable<ResponseHolder<List<Person>>> getPeopleFromCache() {
 		RealmResponseWrapper<Person> realmResponseWrapper = new RealmResponseWrapper<>();
-		return realmResponseWrapper.wrap(mPeopleRealmFetcher.getAsyncObservable());
+		return realmResponseWrapper.wrap(mPeopleRealmFetcher.getAsyncObservable(mRealm));
 	}
 
 	private Observable<ResponseHolder<List<Person>>> getPeopleFromNetworkTrigger(int countPeople) {
-		return mNetworkFetchTrigger.flatMap(new Func1<Void, Observable<ResponseHolder<List<Person>>>>() {
-			@Override
-			public Observable<ResponseHolder<List<Person>>> call(Void aVoid) {
-				return getPeopleFromNetwork(countPeople);
-			}
-		});
+		return mNetworkFetchTrigger.flatMap(aVoid -> getPeopleFromNetwork(countPeople));
 	}
 
 	private Observable<ResponseHolder<List<Person>>> getPeopleFromNetwork(int countPeople) {
 		RealmUpdateMethod<List<Person>> realmUpdateMethod = new ReplaceListRealmUpdateMethod<>(mPeopleRealmFetcher);
-		RealmUpdater<List<Person>> realmSyncUpdater = new RealmSyncUpdater<>(mRealm, realmUpdateMethod);
+		RealmUpdater<List<Person>> realmAsyncUpdater = new RealmAsyncUpdater<>(mRealm, realmUpdateMethod);
 		mPeopleNetworkFetchAndUpdateList = new NetworkFetchAndUpdateList<>(
-			mPeopleService.getPeople(countPeople), realmSyncUpdater);
+			mPeopleService.getPeople(countPeople), realmAsyncUpdater);
 
 		NetworkResponseWrapper<Person> networkResponseWrapper = new NetworkResponseWrapper<>();
 		return networkResponseWrapper.wrap(mPeopleNetworkFetchAndUpdateList.getNetworkObservable());
@@ -78,11 +82,6 @@ public class PeopleDataManager {
 	}
 
 	public void closeDataManager() {
-		// TODO: Do I need to cancel realm async transaction before closing the Realm.
-		// Or can I leave it to finish?
-		if (mPeopleNetworkFetchAndUpdateList != null) {
-			mPeopleNetworkFetchAndUpdateList.cancelUpdate();
-		}
 		mRealm.close();
 	}
 

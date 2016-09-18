@@ -15,8 +15,8 @@ public class NetworkResponseWrapper<RESPONSETYPE> {
 
 	public Observable<ResponseHolder<List<RESPONSETYPE>>> wrap(Observable<List<RESPONSETYPE>> observable) {
 		return observable
-			// Put data into ResponseHolder, ResponseHolder is necessary to pass the
-			// error to where it can be used, if necessary.
+			// Put data into ResponseHolder, ResponseHolder is necessary to differentiate between
+			// cache and network sourced data and retain any errors.
 			.map(persons -> {
 				ResponseHolder<List<RESPONSETYPE>> responseHolder = new ResponseHolder<>(NETWORK);
 				responseHolder.setData(persons);
