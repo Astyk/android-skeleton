@@ -24,12 +24,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.subjects.PublishSubject;
-
 /**
  * Created by Will on 17/08/2016.
  */
-// TODO: Abstract the View - Presenter binding behaviour into a base class
 public class LandFragment extends RxFragment {
 
 	@Inject
@@ -46,12 +43,6 @@ public class LandFragment extends RxFragment {
 		mToolbarListener = (NavigationToolbarListener) context;
 	}
 
-	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		LandInjector.INSTANCE.getComponent().inject(this);
-	}
-
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -59,17 +50,23 @@ public class LandFragment extends RxFragment {
 	}
 
 	@Override
-	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-		setupView(view);
-		setupSubscriptions();
-	}
-
-	@Override
 	public void onDestroy() {
 		mPresenter.cancelUpdate();
 		mToolbarListener.hideNetworkLoadingView();
 		super.onDestroy();
+	}
+
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		LandInjector.INSTANCE.getComponent().inject(this);
+	}
+
+	@Override
+	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		setupView(view);
+		setupSubscriptions();
 	}
 
 	private void setupView(View view) {
@@ -92,26 +89,26 @@ public class LandFragment extends RxFragment {
 		});
 
 		addSubscription(mPresenter.getPeopleList().subscribe(this::setPeople));
+
+		addSubscription(mPresenter.getCacheLoaded().subscribe(aBoolean -> {
+			hideCacheLoading();
+		}));
+
+		addSubscription(mPresenter.getNetworkLoaded().subscribe(aBoolean -> {
+			hideNetworkLoading();
+			hideCacheLoading();
+		}));
+
 		addSubscription(mPresenter.getCacheErrors().subscribe(throwable -> {
 			showCacheError();
 			hideCacheLoading();
 		}));
+
 		addSubscription(mPresenter.getNetworkErrors().subscribe(throwable -> {
 			showNetworkError();
 			hideNetworkLoading();
 			hideCacheLoading();
 		}));
-
-		// TODO: Think about the ordering of these loading states when we use a merge.
-		addSubscription(mPresenter.getCacheLoaded()
-			.subscribe(aBoolean -> {
-				hideCacheLoading();
-			}));
-		addSubscription(mPresenter.getNetworkLoaded()
-			.subscribe(aBoolean -> {
-				hideNetworkLoading();
-				hideCacheLoading();
-			}));
 
 		mPresenter.triggerInitialFetch();
 	}
@@ -122,10 +119,6 @@ public class LandFragment extends RxFragment {
 
 	public void showNetworkLoading() {
 		mToolbarListener.showNetworkLoadingView();
-	}
-
-	private void setPeople(List<Person> people) {
-		mPeopleAdapter.setPeople(people);
 	}
 
 	private void showCacheError() {
@@ -142,6 +135,12 @@ public class LandFragment extends RxFragment {
 
 	private void hideNetworkLoading() {
 		mToolbarListener.hideNetworkLoadingView();
-		mSwipeRefreshLayout.setRefreshing(false);
+		if (mSwipeRefreshLayout.isRefreshing()) {
+			mSwipeRefreshLayout.setRefreshing(false);
+		}
+	}
+
+	private void setPeople(List<Person> people) {
+		mPeopleAdapter.setPeople(people);
 	}
 }

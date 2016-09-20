@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -130,12 +129,16 @@ public class NavigationActivity extends AppCompatActivity implements NavigationT
 
 	@Override
 	public void showNetworkLoadingView() {
-		mProgressBar.setVisibility(View.VISIBLE);
+		if (View.GONE == mProgressBar.getVisibility()) {
+			mProgressBar.setVisibility(View.VISIBLE);
+		}
 	}
 
 	@Override
 	public void hideNetworkLoadingView() {
-		mProgressBar.setVisibility(View.GONE);
+		if (View.VISIBLE == mProgressBar.getVisibility()) {
+			mProgressBar.setVisibility(View.GONE);
+		}
 	}
 
 	@Override

@@ -20,6 +20,4 @@ public abstract class RealmUpdater<UPDATETYPE> {
 
 	public abstract void update(UPDATETYPE newData);
 
-	public abstract void cancel();
-
 }

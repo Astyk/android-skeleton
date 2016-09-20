@@ -10,18 +10,16 @@ import com.github.willjgriff.skeleton.data.responsewrapper.ResponseHolder;
 import com.github.willjgriff.skeleton.data.network.services.RandomPeopleService;
 import com.github.willjgriff.skeleton.data.storage.fetchers.AllRealmFetcher;
 import com.github.willjgriff.skeleton.data.storage.fetchers.RealmFetcher;
-import com.github.willjgriff.skeleton.data.storage.updaters.RealmAsyncUpdater;
+import com.github.willjgriff.skeleton.data.storage.updaters.AsyncRealmUpdater;
+import com.github.willjgriff.skeleton.data.storage.updaters.BasicAsyncRealmUpdater;
 import com.github.willjgriff.skeleton.data.storage.updaters.RealmUpdater;
 import com.github.willjgriff.skeleton.data.storage.updaters.methods.RealmUpdateMethod;
 import com.github.willjgriff.skeleton.data.storage.updaters.methods.ReplaceListRealmUpdateMethod;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
 import rx.Observable;
-import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.subjects.PublishSubject;
 
 /**
@@ -69,7 +67,7 @@ public class PeopleDataManager {
 
 	private Observable<ResponseHolder<List<Person>>> getPeopleFromNetwork(int countPeople) {
 		RealmUpdateMethod<List<Person>> realmUpdateMethod = new ReplaceListRealmUpdateMethod<>(mPeopleRealmFetcher);
-		RealmUpdater<List<Person>> realmAsyncUpdater = new RealmAsyncUpdater<>(mRealm, realmUpdateMethod);
+		RealmUpdater<List<Person>> realmAsyncUpdater = new BasicAsyncRealmUpdater<>(mRealm, realmUpdateMethod);
 		mPeopleNetworkFetchAndUpdateList = new NetworkFetchAndUpdateList<>(
 			mPeopleService.getPeople(countPeople), realmAsyncUpdater);
 

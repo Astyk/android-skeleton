@@ -10,8 +10,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import rx.Observable;
-import rx.functions.Func1;
-import rx.subjects.PublishSubject;
 
 import static com.github.willjgriff.skeleton.data.responsewrapper.ResponseHolder.Source.NETWORK;
 import static com.github.willjgriff.skeleton.data.responsewrapper.ResponseHolder.Source.STORAGE;
@@ -25,7 +23,7 @@ public class LandPresenter implements BasePresenter {
 	private PeopleDataManager mPeopleDataManager;
 	private Observable<ResponseHolder<List<Person>>> mPeopleObservable;
 	// TODO: Can we get rid of this?
-	private boolean mNetworkRequestMade;
+	private boolean mInitialDataRequestMade;
 
 	@Inject
 	LandPresenter(PeopleDataManager peopleDataManager) {
@@ -34,7 +32,6 @@ public class LandPresenter implements BasePresenter {
 	}
 
 	public void setRefreshTrigger() {
-		// TODO: Check if still loading, rotation doesn't load from network twice.
 		if (mPeopleObservable == null) {
 			mPeopleObservable = mPeopleDataManager.getPeopleObservable(20).replay(1).autoConnect();
 		}
@@ -81,9 +78,9 @@ public class LandPresenter implements BasePresenter {
 	}
 
 	public void triggerInitialFetch() {
-		if (!mNetworkRequestMade) {
+		if (!mInitialDataRequestMade) {
 			mPeopleDataManager.triggerNetworkUpdate();
-			mNetworkRequestMade = true;
+			mInitialDataRequestMade = true;
 		}
 	}
 

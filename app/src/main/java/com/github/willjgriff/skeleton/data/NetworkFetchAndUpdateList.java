@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.github.willjgriff.skeleton.data.models.ApiResponse;
 import com.github.willjgriff.skeleton.data.responsewrapper.ResponseHolder;
+import com.github.willjgriff.skeleton.data.storage.updaters.AsyncRealmUpdater;
 import com.github.willjgriff.skeleton.data.storage.updaters.RealmUpdater;
 
 import java.util.List;
@@ -38,13 +39,10 @@ public class NetworkFetchAndUpdateList<REALMTYPE extends RealmModel> {
 			.observeOn(AndroidSchedulers.mainThread())
 			.filter(listApiResponse -> listApiResponse.getContent() != null)
 			// Unpack content from ApiResponse
-			.map(ApiResponse::getContent)
+			.map(listApiResponse -> listApiResponse.getContent())
 			// Update Realm DB with new data
-			.doOnNext(people -> mRealmUpdater.update(people));
+			.doOnNext(realmtypes -> mRealmUpdater.update(realmtypes));
 	}
 
-	public void cancelUpdate() {
-		mRealmUpdater.cancel();
-	}
 }
 

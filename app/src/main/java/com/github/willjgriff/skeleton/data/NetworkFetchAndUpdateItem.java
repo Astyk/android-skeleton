@@ -17,8 +17,6 @@ import static com.github.willjgriff.skeleton.data.responsewrapper.ResponseHolder
 /**
  * Created by Will on 14/08/2016.
  */
-// TODO: To use this we can use the AllRealmFetcher but apply a function that only gets one item from it.
-// If it's not necessary, perhaps we can delete this.
 public class NetworkFetchAndUpdateItem<RETURNTYPE extends RealmModel> {
 
 	private Observable<RETURNTYPE> mRetrofitObservable;
@@ -29,37 +27,12 @@ public class NetworkFetchAndUpdateItem<RETURNTYPE extends RealmModel> {
 		mRealmUpdater = realmUpdater;
 	}
 
-	public Observable<ResponseHolder<RETURNTYPE>> fetchAndUpdateData() {
+	public Observable<RETURNTYPE> fetchAndUpdateData() {
 
 		return mRetrofitObservable
 			.subscribeOn(Schedulers.io())
 			.observeOn(AndroidSchedulers.mainThread())
-			.doOnNext(new Action1<RETURNTYPE>() {
-				@Override
-				public void call(RETURNTYPE returnData) {
-					mRealmUpdater.update(returnData);
-				}
-			})
-			.map(new Func1<RETURNTYPE, ResponseHolder<RETURNTYPE>>() {
-				@Override
-				public ResponseHolder<RETURNTYPE> call(RETURNTYPE data) {
-					ResponseHolder<RETURNTYPE> responseHolder = new ResponseHolder<>(NETWORK);
-					responseHolder.setData(data);
-					return responseHolder;
-				}
-			})
-			.onErrorReturn(new Func1<Throwable, ResponseHolder<RETURNTYPE>>() {
-				@Override
-				public ResponseHolder<RETURNTYPE> call(Throwable throwable) {
-					ResponseHolder<RETURNTYPE> responseHolder = new ResponseHolder<>(NETWORK);
-					responseHolder.setError(throwable);
-					return responseHolder;
-				}
-			});
-	}
-
-	public void cancelUpdate() {
-		mRealmUpdater.cancel();
+			.filter(returntype -> returntype != null)
+			.doOnNext(returnData -> mRealmUpdater.update(returnData));
 	}
 }
-

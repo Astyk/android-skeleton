@@ -13,7 +13,7 @@ import rx.functions.Func1;
 /**
  * Created by Will on 14/08/2016.
  */
-// TODO: This is now coupled to the Timestamp interface. See if we can find a way to avoid this.
+// TODO: This is now coupled to the Timestamp interface. If we need it without then abstract it.
 public class AllRealmFetcher<RETURNTYPE extends RealmModel & Timestamp> extends RealmFetcher<RETURNTYPE> {
 
 	private Class<RETURNTYPE> mReturnClass;
