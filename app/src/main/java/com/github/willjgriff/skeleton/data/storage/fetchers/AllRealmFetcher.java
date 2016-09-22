@@ -36,6 +36,7 @@ public class AllRealmFetcher<RETURNTYPE extends RealmModel & Timestamp> extends 
 
 		return select(realm).findAllAsync()
 			.asObservable()
+			// This SubscribeOn ObserveOn may not be necessary
 			.subscribeOn(AndroidSchedulers.mainThread())
 			.observeOn(AndroidSchedulers.mainThread())
 			// Ensure data is valid and available
