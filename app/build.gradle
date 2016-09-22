@@ -20,15 +20,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    sourceSets {
-        main {
-            res.srcDirs = [
-                    'src/main/res/structured/navigation',
-                    'src/main/res/structured',
-                    'src/main/res'
-            ]
-        }
-    }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

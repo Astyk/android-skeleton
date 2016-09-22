@@ -4,13 +4,12 @@ import android.support.annotation.NonNull;
 
 import com.github.willjgriff.skeleton.data.NetworkFetchAndUpdateList;
 import com.github.willjgriff.skeleton.data.models.Person;
+import com.github.willjgriff.skeleton.data.network.services.RandomPeopleService;
 import com.github.willjgriff.skeleton.data.responsewrapper.NetworkResponseWrapper;
 import com.github.willjgriff.skeleton.data.responsewrapper.RealmResponseWrapper;
 import com.github.willjgriff.skeleton.data.responsewrapper.ResponseHolder;
-import com.github.willjgriff.skeleton.data.network.services.RandomPeopleService;
 import com.github.willjgriff.skeleton.data.storage.fetchers.AllRealmFetcher;
 import com.github.willjgriff.skeleton.data.storage.fetchers.RealmFetcher;
-import com.github.willjgriff.skeleton.data.storage.updaters.AsyncRealmUpdater;
 import com.github.willjgriff.skeleton.data.storage.updaters.BasicAsyncRealmUpdater;
 import com.github.willjgriff.skeleton.data.storage.updaters.RealmUpdater;
 import com.github.willjgriff.skeleton.data.storage.updaters.methods.RealmUpdateMethod;

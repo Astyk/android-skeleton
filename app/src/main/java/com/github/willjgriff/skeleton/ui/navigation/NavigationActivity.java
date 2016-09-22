@@ -17,8 +17,10 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.github.willjgriff.skeleton.R;
+import com.github.willjgriff.skeleton.data.models.Person;
+import com.github.willjgriff.skeleton.ui.land.LandFragment.PeopleDetailListener;
 
-public class NavigationActivity extends AppCompatActivity implements NavigationToolbarListener {
+public class NavigationActivity extends AppCompatActivity implements NavigationToolbarListener, PeopleDetailListener {
 
 	private DrawerLayout mDrawerLayout;
 	private ActionBarDrawerToggle mDrawerToggle;
@@ -146,4 +148,8 @@ public class NavigationActivity extends AppCompatActivity implements NavigationT
 		getSupportActionBar().setTitle(toolbarTitle);
 	}
 
+	@Override
+	public void openDetailFragment(Person person) {
+		// TODO: Implement this jazz
+	}
 }

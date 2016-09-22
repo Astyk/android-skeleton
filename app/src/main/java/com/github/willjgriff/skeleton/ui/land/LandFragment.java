@@ -17,6 +17,7 @@ import com.github.willjgriff.skeleton.data.models.Person;
 import com.github.willjgriff.skeleton.mvp.RxFragment;
 import com.github.willjgriff.skeleton.ui.ErrorDisplayer;
 import com.github.willjgriff.skeleton.ui.land.di.LandInjector;
+import com.github.willjgriff.skeleton.ui.land.viewholders.PeopleItemViewHolder.PeopleListener;
 import com.github.willjgriff.skeleton.ui.navigation.NavigationFragment;
 import com.github.willjgriff.skeleton.ui.navigation.NavigationToolbarListener;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
@@ -28,13 +29,14 @@ import javax.inject.Inject;
 /**
  * Created by Will on 17/08/2016.
  */
-public class LandFragment extends RxFragment {
+public class LandFragment extends RxFragment implements PeopleListener {
 
 	@Inject
 	LandPresenter mPresenter;
 
 	private PeopleAdapter mPeopleAdapter;
 	private NavigationToolbarListener mToolbarListener;
+	private PeopleDetailListener mPeopleDetailListener;
 	private ProgressBar mProgressBar;
 	private SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -42,6 +44,7 @@ public class LandFragment extends RxFragment {
 	public void onAttach(Context context) {
 		super.onAttach(context);
 		mToolbarListener = (NavigationToolbarListener) context;
+		mPeopleDetailListener = (PeopleDetailListener) context;
 	}
 
 	@Nullable
@@ -142,6 +145,15 @@ public class LandFragment extends RxFragment {
 	}
 
 	private void setPeople(List<Person> people) {
-		mPeopleAdapter.setPeople(people);
+		mPeopleAdapter.setPeople(people, this);
+	}
+
+	@Override
+	public void openPersonDetails(Person person) {
+		mPeopleDetailListener.openDetailFragment(person);
+	}
+
+	public interface PeopleDetailListener {
+		void openDetailFragment(Person person);
 	}
 }
