@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import com.github.willjgriff.skeleton.R;
 import com.github.willjgriff.skeleton.data.models.Person;
 import com.github.willjgriff.skeleton.mvp.RxFragment;
+import com.github.willjgriff.skeleton.ui.ErrorDisplayer;
 import com.github.willjgriff.skeleton.ui.land.di.LandInjector;
 import com.github.willjgriff.skeleton.ui.navigation.NavigationFragment;
 import com.github.willjgriff.skeleton.ui.navigation.NavigationToolbarListener;
@@ -105,7 +106,7 @@ public class LandFragment extends RxFragment {
 		}));
 
 		addSubscription(mPresenter.getNetworkErrors().subscribe(throwable -> {
-			showNetworkError();
+			showNetworkError(throwable);
 			hideNetworkLoading();
 			hideCacheLoading();
 		}));
@@ -129,8 +130,8 @@ public class LandFragment extends RxFragment {
 		mProgressBar.setVisibility(View.INVISIBLE);
 	}
 
-	private void showNetworkError() {
-		Snackbar.make(getView(), R.string.fragment_land_network_error_string, Snackbar.LENGTH_LONG).show();
+	private void showNetworkError(Throwable throwable) {
+		ErrorDisplayer.displayNetworkError(getView(), throwable);
 	}
 
 	private void hideNetworkLoading() {

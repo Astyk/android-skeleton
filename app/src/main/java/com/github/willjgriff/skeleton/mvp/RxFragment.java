@@ -38,5 +38,4 @@ public class RxFragment extends Fragment {
 		mCompositeSubscription.add(subscription);
 	}
 
-
 }

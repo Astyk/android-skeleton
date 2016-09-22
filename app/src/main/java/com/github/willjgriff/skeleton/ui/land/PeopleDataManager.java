@@ -47,7 +47,7 @@ public class PeopleDataManager {
 		// This HAS to be a merge, not a concat, to enable the network trigger to work.
 		return Observable.merge(getPeopleFromCache(), getPeopleFromNetworkTrigger(countPeople))
 			.doOnNext(listResponseHolder -> {
-				if (ResponseHolder.Source.NETWORK == listResponseHolder.getSource()) {
+				if (ResponseHolder.Source.NETWORK == listResponseHolder.getSource() && !listResponseHolder.hasError()) {
 					// TODO: there must be a better way of preventing data coming in the wrong order.
 					mNetworkDataFetched = true;
 				}

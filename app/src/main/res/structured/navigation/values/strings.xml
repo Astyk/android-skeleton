@@ -10,6 +10,9 @@
 
     <!--landing fragment-->
     <string name="fragment_land_cache_error_string">Error loading from cache. Content may not be as expected</string>
-    <string name="fragment_land_network_error_string">Error loading from network. Content may not be as expected</string>
+    <string name="network_error_no_internet_connection">Internet disconnected, the content was not updated</string>
+    <string name="network_error_io_exception">The service could be down, the content was not updated</string>
+    <string name="network_error_non_200_response_code">The service could not deal with this request, the content was not updated</string>
+    <string name="network_error_unknown">An unknown error occurred, the content was not updated</string>
 
 </resources>
