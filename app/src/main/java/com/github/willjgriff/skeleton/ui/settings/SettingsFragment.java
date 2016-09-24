@@ -1,6 +1,6 @@
 package com.github.willjgriff.skeleton.ui.settings;
 
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,13 +9,21 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.willjgriff.skeleton.R;
-import com.github.willjgriff.skeleton.ui.itemdetailtest.ItemDetailActivity;
+import com.github.willjgriff.skeleton.ui.navigation.NavigationToolbarListener;
 
 /**
  * Created by Will on 17/08/2016.
  */
 
 public class SettingsFragment extends Fragment {
+
+	NavigationToolbarListener mToolbarListener;
+
+	@Override
+	public void onAttach(Context context) {
+		super.onAttach(context);
+		mToolbarListener = (NavigationToolbarListener) context;
+	}
 
 	@Nullable
 	@Override
@@ -26,11 +34,6 @@ public class SettingsFragment extends Fragment {
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		view.findViewById(R.id.fragment_settings_open_people).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				getContext().startActivity(new Intent(getContext(), ItemDetailActivity.class));
-			}
-		});
+		mToolbarListener.setToolbarTitle(R.string.fragment_settings_title);
 	}
 }

@@ -1,7 +1,8 @@
-package com.github.willjgriff.skeleton.ui.itemdetailtest;
+package com.github.willjgriff.skeleton.ui.land;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +16,7 @@ import com.github.willjgriff.skeleton.mvp.RxFragment;
  * Created by Will on 22/09/2016.
  */
 
-public class PersonDetailFragment extends RxFragment {
+public class PersonDetailFragment extends Fragment {
 
 	public static final String ARG_PERSON = "com.github.willjgriff.skeleton.ui.itemdetaillist.PersonDetailFragment;ARG_PERSON";
 
@@ -39,7 +40,9 @@ public class PersonDetailFragment extends RxFragment {
 		super.onViewCreated(view, savedInstanceState);
 
 		TextView textView = (TextView) view.findViewById(R.id.fragment_land_details_text);
-		Person person = getArguments().getParcelable(ARG_PERSON);
-		textView.setText(person.getEmail());
+		if (getArguments().getParcelable(ARG_PERSON) != null) {
+			Person person = getArguments().getParcelable(ARG_PERSON);
+			textView.setText(person.getEmail());
+		}
 	}
 }

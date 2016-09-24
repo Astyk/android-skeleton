@@ -5,11 +5,12 @@
     <!--navigation drawer-->
     <string name="activity_navigation_open">Open navigation drawer</string>
     <string name="activity_navigation_close">Close navigation drawer</string>
-    <string name="navigation_land">Landing</string>
-    <string name="navigation_settings">Settings</string>
+    <string name="fragment_people_title">People</string>
+    <string name="fragment_settings_title">Settings</string>
+    <string name="fragment_person_title">Person</string>
 
     <!--landing fragment-->
-    <string name="fragment_land_cache_error_string">Error loading from cache. Content may not be as expected</string>
+    <string name="fragment_people_cache_error_string">Error loading from cache. Content may not be as expected</string>
     <string name="network_error_no_internet_connection">Internet disconnected, the content was not updated</string>
     <string name="network_error_io_exception">The service could be down, the content was not updated</string>
     <string name="network_error_non_200_response_code">The service could not deal with this request, the content was not updated</string>

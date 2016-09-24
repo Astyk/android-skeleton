@@ -4,7 +4,7 @@
     <group android:id="@+id/menu_navigation_top_group" android:checkableBehavior="single">
         <item
             android:id="@+id/navigation_first_fragment"
-            android:title="@string/navigation_land"
+            android:title="@string/fragment_people_title"
             android:checked="true"/>
     </group>
 
@@ -12,7 +12,7 @@
         <item
             android:id="@+id/navigation_settings"
             android:icon="@drawable/ic_settings_grey"
-            android:title="@string/navigation_settings"/>
+            android:title="@string/fragment_settings_title"/>
     </group>
 
 </menu>
