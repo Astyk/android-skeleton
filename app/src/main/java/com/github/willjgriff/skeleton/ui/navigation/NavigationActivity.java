@@ -19,7 +19,6 @@ import android.widget.ProgressBar;
 
 import com.github.willjgriff.skeleton.R;
 import com.github.willjgriff.skeleton.ui.land.LandFragment;
-import com.github.willjgriff.skeleton.ui.land.LandFragment.DetailFragmentListener;
 import com.github.willjgriff.skeleton.ui.settings.SettingsFragment;
 
 public class NavigationActivity extends AppCompatActivity implements NavigationToolbarListener, DetailFragmentListener {
@@ -35,11 +34,6 @@ public class NavigationActivity extends AppCompatActivity implements NavigationT
 
 		setupToolbar();
 		setupNavigationView();
-
-		mDrawerLayout = (DrawerLayout) findViewById(R.id.activity_navigation_drawer);
-		setNavigationToggle(mDrawerLayout);
-
-		mProgressBar = (ProgressBar) findViewById(R.id.activity_navigation_toolbar_progress_bar);
 
 		if (savedInstanceState == null) {
 			switchToNavigationFragment(new LandFragment());
@@ -60,25 +54,27 @@ public class NavigationActivity extends AppCompatActivity implements NavigationT
 
 	private void setupToolbar() {
 		Toolbar toolbar = (Toolbar) findViewById(R.id.activity_navigation_toolbar);
+		mProgressBar = (ProgressBar) findViewById(R.id.activity_navigation_toolbar_progress_bar);
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.activity_navigation_drawer);
+
 		setSupportActionBar(toolbar);
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		setNavigationToggle(mDrawerLayout);
 	}
 
 	private void setupNavigationView() {
 		NavigationView navigationView = (NavigationView) findViewById(R.id.activity_navigation_nav_view);
-		navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-			@Override
-			public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-				switchNavigationItem(item);
-				return false;
-			}
+		navigationView.setNavigationItemSelectedListener(item -> {
+			switchNavigationItem(item);
+			return false;
 		});
 	}
 
 	private void setNavigationToggle(DrawerLayout drawerLayout) {
 		mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
 			R.string.activity_navigation_open, R.string.activity_navigation_close);
+
 		mDrawerToggle.setDrawerIndicatorEnabled(true);
 		drawerLayout.addDrawerListener(mDrawerToggle);
 	}

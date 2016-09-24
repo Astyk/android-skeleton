@@ -5,10 +5,17 @@
     <color name="primary_dark">#0097A7</color>
     <color name="primary_light">#B2EBF2</color>
     <color name="accent">#FF9800</color>
+    <color name="accent_alpha26">#42FF9800</color>
     <color name="primary_text">#212121</color>
     <color name="secondary_text">#757575</color>
     <color name="icons">#FFFFFF</color>
     <color name="divider">#BDBDBD</color>
+
+    <!--Background Colours-->
+    <color name="bg_main">@color/white</color>
+    <color name="bg_secondary">#f7f7f7</color>
+    <color name="bg_selected">#f4f4f4</color>
+    <color name="bg_dark">#818181</color>
 
     <!--Plain Colours-->
     <color name="white">#FFFFFF</color>

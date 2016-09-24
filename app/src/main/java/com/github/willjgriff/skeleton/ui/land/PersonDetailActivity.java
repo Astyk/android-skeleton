@@ -1,0 +1,33 @@
+package com.github.willjgriff.skeleton.ui.land;
+
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+
+import com.github.willjgriff.skeleton.R;
+import com.github.willjgriff.skeleton.data.models.Person;
+
+/**
+ * Created by Will on 24/09/2016.
+ */
+
+public class PersonDetailActivity extends AppCompatActivity {
+
+	public static final String ARG_PERSON_FOR_ACTIVITY = "com.github.willjgriff.skeleton.ui.land.PersonDetailActivity;ARG_PERSON_FOR_ACTIVITY";
+
+	@Override
+	protected void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_person_details);
+
+		if (savedInstanceState == null && getIntent().hasExtra(ARG_PERSON_FOR_ACTIVITY)) {
+			Person person = getIntent().getParcelableExtra(ARG_PERSON_FOR_ACTIVITY);
+			Fragment personDetailsFragment = PersonDetailsFragment.createInstance(person);
+			getSupportFragmentManager()
+				.beginTransaction()
+				.replace(R.id.activity_person_details_container, personDetailsFragment)
+				.commit();
+		}
+	}
+}

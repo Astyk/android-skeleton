@@ -1,10 +1,10 @@
 package com.github.willjgriff.skeleton.ui.land;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,12 +19,15 @@ import com.github.willjgriff.skeleton.mvp.RxFragment;
 import com.github.willjgriff.skeleton.ui.ErrorDisplayer;
 import com.github.willjgriff.skeleton.ui.land.di.LandInjector;
 import com.github.willjgriff.skeleton.ui.land.viewholders.PeopleItemViewHolder.PeopleListener;
+import com.github.willjgriff.skeleton.ui.navigation.DetailFragmentListener;
 import com.github.willjgriff.skeleton.ui.navigation.NavigationToolbarListener;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 
 import java.util.List;
 
 import javax.inject.Inject;
+
+import static com.github.willjgriff.skeleton.ui.land.PersonDetailActivity.ARG_PERSON_FOR_ACTIVITY;
 
 /**
  * Created by Will on 17/08/2016.
@@ -156,17 +159,12 @@ public class LandFragment extends RxFragment implements PeopleListener {
 	public void openPersonDetails(Person person) {
 		// TODO: We could move this logic to the NavigationActivity if we have a secondary activity that accepts a Fragment
 		if (mDetailFragmentListener.isTwoPaneView()) {
-			mDetailFragmentListener.openDetailFragment(PersonDetailFragment.createInstance(person));
+			mDetailFragmentListener.openDetailFragment(PersonDetailsFragment.createInstance(person));
 		} else {
-			// TODO: Start normal person details activity
+			Intent personDetailsIntent = new Intent(getContext(), PersonDetailActivity.class);
+			personDetailsIntent.putExtra(ARG_PERSON_FOR_ACTIVITY, person);
+			startActivity(personDetailsIntent);
 		}
 	}
 
-	public interface DetailFragmentListener {
-		void openDetailFragment(Fragment fragment);
-
-		void closeDetailFragment();
-
-		boolean isTwoPaneView();
-	}
 }
