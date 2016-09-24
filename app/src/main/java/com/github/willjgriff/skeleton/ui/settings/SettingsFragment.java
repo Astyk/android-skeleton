@@ -1,14 +1,15 @@
 package com.github.willjgriff.skeleton.ui.settings;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
-import rx.Observable;
-import rx.Subscriber;
-import rx.functions.Func1;
-import rx.subjects.PublishSubject;
+import com.github.willjgriff.skeleton.R;
+import com.github.willjgriff.skeleton.ui.navigation.NavigationToolbarListener;
 
 /**
  * Created by Will on 17/08/2016.
@@ -16,55 +17,23 @@ import rx.subjects.PublishSubject;
 
 public class SettingsFragment extends Fragment {
 
-	PublishSubject<Void> allTrigger = PublishSubject.create();
-	PublishSubject<Void> networkTrigger = PublishSubject.create();
-
-	Observable<Integer> cache = Observable.from(new Integer[]{1, 2, 3});
-	Observable<Integer> network = Observable.from(new Integer[]{4, 5, 6});
-
-	Observable<Integer> allWithTrigger = Observable.concat(cache, getNetworkTrigger());
+	NavigationToolbarListener mToolbarListener;
 
 	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		allWithTrigger.subscribe(new Subscriber<Integer>() {
-			@Override
-			public void onCompleted() {
-				cache.subscribe(integer -> {
-					Log.i("RXIN", "Integero2: " + integer);
-				});
-			}
-
-			@Override
-			public void onError(Throwable e) {
-
-			}
-
-			@Override
-			public void onNext(Integer integer) {
-				Log.i("RXIN", "Integero: " + integer);
-			}
-		});
-
-		networkTrigger.onNext(null);
+	public void onAttach(Context context) {
+		super.onAttach(context);
+		mToolbarListener = (NavigationToolbarListener) context;
 	}
 
-	private Observable<Integer> getAllTrigger() {
-		return allTrigger.flatMap(new Func1<Void, Observable<Integer>>() {
-			@Override
-			public Observable<Integer> call(Void aVoid) {
-				return allWithTrigger;
-			}
-		});
+	@Nullable
+	@Override
+	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.fragment_settings, container, false);
 	}
 
-	private Observable<Integer> getNetworkTrigger() {
-		return networkTrigger.flatMap(new Func1<Void, Observable<Integer>>() {
-			@Override
-			public Observable<Integer> call(Void aVoid) {
-				return network;
-			}
-		});
+	@Override
+	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		mToolbarListener.setToolbarTitle(R.string.fragment_settings_title);
 	}
 }
