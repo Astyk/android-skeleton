@@ -101,6 +101,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationT
 	private void switchToNavigationFragment(Fragment navigationFragment) {
 		if (isDifferentFragment(navigationFragment)) {
 			switchFragmentInContainer(navigationFragment, R.id.activity_navigation_container);
+			closeDetailFragment();
 		}
 	}
 

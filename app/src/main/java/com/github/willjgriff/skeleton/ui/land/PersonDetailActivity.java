@@ -3,10 +3,13 @@ package com.github.willjgriff.skeleton.ui.land;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 
 import com.github.willjgriff.skeleton.R;
 import com.github.willjgriff.skeleton.data.models.Person;
+import com.github.willjgriff.skeleton.ui.utils.UiUtils;
 
 /**
  * Created by Will on 24/09/2016.
@@ -21,7 +24,9 @@ public class PersonDetailActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_person_details);
 
-		if (savedInstanceState == null && getIntent().hasExtra(ARG_PERSON_FOR_ACTIVITY)) {
+		setupToolbar();
+
+		if (canAddFragment(savedInstanceState)) {
 			Person person = getIntent().getParcelableExtra(ARG_PERSON_FOR_ACTIVITY);
 			Fragment personDetailsFragment = PersonDetailsFragment.createInstance(person);
 			getSupportFragmentManager()
@@ -29,5 +34,18 @@ public class PersonDetailActivity extends AppCompatActivity {
 				.replace(R.id.activity_person_details_container, personDetailsFragment)
 				.commit();
 		}
+	}
+
+	private void setupToolbar() {
+		Toolbar toolbar = (Toolbar) findViewById(R.id.activity_person_details_toolbar);
+		toolbar.setTitle(getString(R.string.fragment_person_title));
+		ViewCompat.setElevation(toolbar, UiUtils.convertDpToPixel(4, this));
+		setSupportActionBar(toolbar);
+		getSupportActionBar().setHomeButtonEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+	}
+
+	private boolean canAddFragment(@Nullable Bundle savedInstanceState) {
+		return savedInstanceState == null && getIntent().hasExtra(ARG_PERSON_FOR_ACTIVITY);
 	}
 }

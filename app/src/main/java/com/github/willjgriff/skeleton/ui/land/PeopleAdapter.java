@@ -32,7 +32,7 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleItemViewHolder> im
 		mPeople = people;
 		mPeopleListener = peopleListener;
 		mSelectedPosition = -1;
-		notifyItemRangeChanged(0, people.size());
+		notifyDataSetChanged();
 	}
 
 	@Override
