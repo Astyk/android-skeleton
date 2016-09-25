@@ -32,7 +32,7 @@ import static com.github.willjgriff.skeleton.ui.land.PersonDetailActivity.ARG_PE
 /**
  * Created by Will on 17/08/2016.
  */
-public class LandFragment extends RxFragment implements PeopleListener {
+public class LandFragment extends RxFragment<LandPresenter> implements PeopleListener {
 
 	@Inject
 	LandPresenter mPresenter;
@@ -50,23 +50,16 @@ public class LandFragment extends RxFragment implements PeopleListener {
 		mDetailFragmentListener = (DetailFragmentListener) context;
 	}
 
-	@Nullable
-	@Override
-	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_land, container, false);
-	}
-
-	@Override
-	public void onDestroy() {
-		mPresenter.cancelUpdate();
-		mToolbarListener.hideNetworkLoadingView();
-		super.onDestroy();
-	}
-
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		LandInjector.INSTANCE.getComponent().inject(this);
+	}
+
+	@Nullable
+	@Override
+	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.fragment_land, container, false);
 	}
 
 	@Override
@@ -124,11 +117,11 @@ public class LandFragment extends RxFragment implements PeopleListener {
 		mPresenter.triggerInitialFetch();
 	}
 
-	public void showCacheLoading() {
+	private void showCacheLoading() {
 		mProgressBar.setVisibility(View.VISIBLE);
 	}
 
-	public void showNetworkLoading() {
+	private void showNetworkLoading() {
 		mToolbarListener.showNetworkLoadingView();
 	}
 
@@ -149,6 +142,17 @@ public class LandFragment extends RxFragment implements PeopleListener {
 
 	private void showNetworkError(Throwable throwable) {
 		ErrorDisplayer.displayNetworkError(getView(), throwable);
+	}
+
+	@Override
+	public void onDestroyView() {
+		mToolbarListener.hideNetworkLoadingView();
+		super.onDestroyView();
+	}
+
+	@Override
+	protected LandPresenter getPresenter() {
+		return mPresenter;
 	}
 
 	private void setPeople(List<Person> people) {

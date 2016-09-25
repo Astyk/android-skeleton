@@ -3,7 +3,6 @@ package com.github.willjgriff.skeleton.ui.navigation;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.NavigationView;
@@ -18,14 +17,25 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.github.willjgriff.skeleton.R;
+import com.github.willjgriff.skeleton.di.ComponentInvalidator;
 import com.github.willjgriff.skeleton.ui.land.LandFragment;
+import com.github.willjgriff.skeleton.ui.land.di.LandInjector;
 import com.github.willjgriff.skeleton.ui.settings.SettingsFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class NavigationActivity extends AppCompatActivity implements NavigationToolbarListener, DetailFragmentListener {
 
 	private DrawerLayout mDrawerLayout;
 	private ActionBarDrawerToggle mDrawerToggle;
 	private ProgressBar mProgressBar;
+
+	private List<ComponentInvalidator> mDaggerInjectors = new ArrayList<ComponentInvalidator>() {
+		{
+			add(LandInjector.INSTANCE);
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +106,9 @@ public class NavigationActivity extends AppCompatActivity implements NavigationT
 		switchToNavigationFragment(navigationFragment);
 		mDrawerLayout.closeDrawers();
 
+		for (ComponentInvalidator injector : mDaggerInjectors) {
+			injector.invalidate();
+		}
 	}
 
 	private void switchToNavigationFragment(Fragment navigationFragment) {
@@ -103,15 +116,6 @@ public class NavigationActivity extends AppCompatActivity implements NavigationT
 			switchFragmentInContainer(navigationFragment, R.id.activity_navigation_container);
 			closeDetailFragment();
 		}
-	}
-
-	private void switchFragmentInContainer(Fragment navigationFragment, @IdRes int container) {
-		getSupportFragmentManager()
-			.beginTransaction()
-			.replace(container,
-				navigationFragment,
-				navigationFragment.getClass().toString())
-			.commit();
 	}
 
 	private boolean isDifferentFragment(Fragment navigationFragment) {
@@ -129,6 +133,11 @@ public class NavigationActivity extends AppCompatActivity implements NavigationT
 		}
 
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public boolean isFinishing() {
+		return super.isFinishing();
 	}
 
 	@Override
@@ -157,11 +166,6 @@ public class NavigationActivity extends AppCompatActivity implements NavigationT
 	}
 
 	@Override
-	public boolean isTwoPaneView() {
-		return findViewById(R.id.activity_navigation_details_container) != null;
-	}
-
-	@Override
 	public void closeDetailFragment() {
 		Fragment detailsFragment = getSupportFragmentManager().findFragmentById(R.id.activity_navigation_details_container);
 		if (detailsFragment != null) {
@@ -170,8 +174,22 @@ public class NavigationActivity extends AppCompatActivity implements NavigationT
 		}
 	}
 
+	@Override
+	public boolean isTwoPaneView() {
+		return findViewById(R.id.activity_navigation_details_container) != null;
+	}
+
 	private void setDetailsContainerVisibility(int visible) {
 		findViewById(R.id.activity_navigation_details_container).setVisibility(visible);
 		findViewById(R.id.activity_navigation_container_divider).setVisibility(visible);
+	}
+
+	private void switchFragmentInContainer(Fragment navigationFragment, @IdRes int container) {
+		getSupportFragmentManager()
+			.beginTransaction()
+			.replace(container,
+				navigationFragment,
+				navigationFragment.getClass().toString())
+			.commit();
 	}
 }
