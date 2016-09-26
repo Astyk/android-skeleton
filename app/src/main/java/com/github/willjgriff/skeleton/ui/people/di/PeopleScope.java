@@ -1,4 +1,4 @@
-package com.github.willjgriff.skeleton.ui.land.di;
+package com.github.willjgriff.skeleton.ui.people.di;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -12,5 +12,5 @@ import javax.inject.Scope;
 @Documented
 @Scope
 @Retention(RetentionPolicy.RUNTIME)
-public @interface LandScope {
+public @interface PeopleScope {
 }

@@ -1,16 +1,17 @@
-package com.github.willjgriff.skeleton.ui.land;
+package com.github.willjgriff.skeleton.ui.people.data;
 
 import android.support.annotation.NonNull;
 
 import com.github.willjgriff.skeleton.data.NetworkFetchAndUpdateList;
 import com.github.willjgriff.skeleton.data.models.Person;
-import com.github.willjgriff.skeleton.data.network.services.RandomPeopleService;
+import com.github.willjgriff.skeleton.data.network.services.PeopleService;
 import com.github.willjgriff.skeleton.data.responsewrapper.NetworkResponseWrapper;
 import com.github.willjgriff.skeleton.data.responsewrapper.RealmResponseWrapper;
 import com.github.willjgriff.skeleton.data.responsewrapper.ResponseHolder;
 import com.github.willjgriff.skeleton.data.storage.fetchers.AllRealmFetcher;
 import com.github.willjgriff.skeleton.data.storage.fetchers.RealmFetcher;
 import com.github.willjgriff.skeleton.data.storage.updaters.BasicAsyncRealmUpdater;
+import com.github.willjgriff.skeleton.data.storage.updaters.RealmSyncUpdater;
 import com.github.willjgriff.skeleton.data.storage.updaters.RealmUpdater;
 import com.github.willjgriff.skeleton.data.storage.updaters.methods.RealmUpdateMethod;
 import com.github.willjgriff.skeleton.data.storage.updaters.methods.ReplaceListRealmUpdateMethod;
@@ -29,13 +30,13 @@ import rx.subjects.PublishSubject;
 public class PeopleDataManager {
 
 	private Realm mRealm;
-	private RandomPeopleService mPeopleService;
+	private PeopleService mPeopleService;
 	private NetworkFetchAndUpdateList<Person> mPeopleNetworkFetchAndUpdateList;
 	private RealmFetcher<Person> mPeopleRealmFetcher;
 	private PublishSubject<Void> mNetworkFetchTrigger;
 	private boolean mNetworkDataFetched = false;
 
-	public PeopleDataManager(@NonNull Realm realm, @NonNull RandomPeopleService peopleService) {
+	public PeopleDataManager(@NonNull Realm realm, @NonNull PeopleService peopleService) {
 		mRealm = realm;
 		mPeopleService = peopleService;
 		mPeopleRealmFetcher = new AllRealmFetcher<>(Person.class);
@@ -56,8 +57,10 @@ public class PeopleDataManager {
 	}
 
 	private Observable<ResponseHolder<List<Person>>> getPeopleFromCache() {
+		// TODO: Fix realm leak occurring somewhere here
 		RealmResponseWrapper<Person> realmResponseWrapper = new RealmResponseWrapper<>();
 		return realmResponseWrapper.wrap(mPeopleRealmFetcher.getAsyncObservable(mRealm));
+//		return Observable.just(new ResponseHolder<>(ResponseHolder.Source.STORAGE));
 	}
 
 	private Observable<ResponseHolder<List<Person>>> getPeopleFromNetworkTrigger(int countPeople) {

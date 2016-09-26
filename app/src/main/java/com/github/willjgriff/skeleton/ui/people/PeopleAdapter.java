@@ -1,4 +1,4 @@
-package com.github.willjgriff.skeleton.ui.land;
+package com.github.willjgriff.skeleton.ui.people;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,9 +7,9 @@ import android.view.ViewGroup;
 
 import com.github.willjgriff.skeleton.R;
 import com.github.willjgriff.skeleton.data.models.Person;
-import com.github.willjgriff.skeleton.ui.land.viewholders.PeopleItemViewHolder;
-import com.github.willjgriff.skeleton.ui.land.viewholders.PeopleItemViewHolder.PeopleListener;
-import com.github.willjgriff.skeleton.ui.land.viewholders.PeopleItemViewHolder.SelectedListener;
+import com.github.willjgriff.skeleton.ui.people.viewholders.PeopleItemViewHolder;
+import com.github.willjgriff.skeleton.ui.people.viewholders.PeopleItemViewHolder.PeopleListener;
+import com.github.willjgriff.skeleton.ui.people.viewholders.PeopleItemViewHolder.SelectedListener;
 
 import java.util.ArrayList;
 import java.util.List;

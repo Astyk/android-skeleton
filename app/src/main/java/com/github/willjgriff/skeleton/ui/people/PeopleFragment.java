@@ -1,4 +1,4 @@
-package com.github.willjgriff.skeleton.ui.land;
+package com.github.willjgriff.skeleton.ui.people;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,8 +17,8 @@ import com.github.willjgriff.skeleton.R;
 import com.github.willjgriff.skeleton.data.models.Person;
 import com.github.willjgriff.skeleton.mvp.RxFragment;
 import com.github.willjgriff.skeleton.ui.ErrorDisplayer;
-import com.github.willjgriff.skeleton.ui.land.di.LandInjector;
-import com.github.willjgriff.skeleton.ui.land.viewholders.PeopleItemViewHolder.PeopleListener;
+import com.github.willjgriff.skeleton.ui.people.di.PeopleInjector;
+import com.github.willjgriff.skeleton.ui.people.viewholders.PeopleItemViewHolder.PeopleListener;
 import com.github.willjgriff.skeleton.ui.navigation.DetailFragmentListener;
 import com.github.willjgriff.skeleton.ui.navigation.NavigationToolbarListener;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
@@ -27,15 +27,15 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import static com.github.willjgriff.skeleton.ui.land.PersonDetailActivity.ARG_PERSON_FOR_ACTIVITY;
+import static com.github.willjgriff.skeleton.ui.people.PersonDetailsActivity.ARG_PERSON_FOR_ACTIVITY;
 
 /**
  * Created by Will on 17/08/2016.
  */
-public class LandFragment extends RxFragment<LandPresenter> implements PeopleListener {
+public class PeopleFragment extends RxFragment<PeoplePresenter> implements PeopleListener {
 
 	@Inject
-	LandPresenter mPresenter;
+	PeoplePresenter mPresenter;
 
 	private PeopleAdapter mPeopleAdapter;
 	private NavigationToolbarListener mToolbarListener;
@@ -53,13 +53,13 @@ public class LandFragment extends RxFragment<LandPresenter> implements PeopleLis
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		LandInjector.INSTANCE.getComponent().inject(this);
+		PeopleInjector.INSTANCE.getComponent().inject(this);
 	}
 
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_land, container, false);
+		return inflater.inflate(R.layout.fragment_people, container, false);
 	}
 
 	@Override
@@ -70,14 +70,14 @@ public class LandFragment extends RxFragment<LandPresenter> implements PeopleLis
 	}
 
 	private void setupView(View view) {
-		RecyclerView peopleRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_land_people);
+		RecyclerView peopleRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_people_recycler_view);
 		mPeopleAdapter = new PeopleAdapter();
 		peopleRecyclerView.setAdapter(mPeopleAdapter);
 		peopleRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
 		mToolbarListener.setToolbarTitle(R.string.fragment_people_title);
-		mProgressBar = (ProgressBar) view.findViewById(R.id.fragment_land_progress_bar);
-		mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_land_swipe_refresh);
+		mProgressBar = (ProgressBar) view.findViewById(R.id.fragment_people_progress_bar);
+		mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_people_swipe_refresh);
 		mSwipeRefreshLayout.setColorSchemeResources(R.color.accent);
 
 		showCacheLoading();
@@ -151,7 +151,7 @@ public class LandFragment extends RxFragment<LandPresenter> implements PeopleLis
 	}
 
 	@Override
-	protected LandPresenter getPresenter() {
+	protected PeoplePresenter getPresenter() {
 		return mPresenter;
 	}
 
@@ -165,7 +165,7 @@ public class LandFragment extends RxFragment<LandPresenter> implements PeopleLis
 		if (mDetailFragmentListener.isTwoPaneView()) {
 			mDetailFragmentListener.openDetailFragment(PersonDetailsFragment.createInstance(person));
 		} else {
-			Intent personDetailsIntent = new Intent(getContext(), PersonDetailActivity.class);
+			Intent personDetailsIntent = new Intent(getContext(), PersonDetailsActivity.class);
 			personDetailsIntent.putExtra(ARG_PERSON_FOR_ACTIVITY, person);
 			startActivity(personDetailsIntent);
 		}

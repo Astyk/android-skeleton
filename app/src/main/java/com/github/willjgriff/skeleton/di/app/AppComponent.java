@@ -1,6 +1,6 @@
 package com.github.willjgriff.skeleton.di.app;
 
-import com.github.willjgriff.skeleton.data.network.services.RandomPeopleService;
+import com.github.willjgriff.skeleton.data.network.services.PeopleService;
 
 import javax.inject.Singleton;
 
@@ -16,5 +16,5 @@ public interface AppComponent {
 
 	Realm providesRealm();
 
-	RandomPeopleService providesRandomPeopleService();
+	PeopleService providesPeopleService();
 }

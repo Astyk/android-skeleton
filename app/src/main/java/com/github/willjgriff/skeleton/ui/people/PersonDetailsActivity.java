@@ -1,4 +1,4 @@
-package com.github.willjgriff.skeleton.ui.land;
+package com.github.willjgriff.skeleton.ui.people;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,9 +15,9 @@ import com.github.willjgriff.skeleton.ui.utils.UiUtils;
  * Created by Will on 24/09/2016.
  */
 
-public class PersonDetailActivity extends AppCompatActivity {
+public class PersonDetailsActivity extends AppCompatActivity {
 
-	public static final String ARG_PERSON_FOR_ACTIVITY = "com.github.willjgriff.skeleton.ui.land.PersonDetailActivity;ARG_PERSON_FOR_ACTIVITY";
+	public static final String ARG_PERSON_FOR_ACTIVITY = "com.github.willjgriff.skeleton.ui.people.PersonDetailActivity;ARG_PERSON_FOR_ACTIVITY";
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {

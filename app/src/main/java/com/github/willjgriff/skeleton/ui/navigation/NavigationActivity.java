@@ -18,8 +18,8 @@ import android.widget.ProgressBar;
 
 import com.github.willjgriff.skeleton.R;
 import com.github.willjgriff.skeleton.di.ComponentInvalidator;
-import com.github.willjgriff.skeleton.ui.land.LandFragment;
-import com.github.willjgriff.skeleton.ui.land.di.LandInjector;
+import com.github.willjgriff.skeleton.ui.people.PeopleFragment;
+import com.github.willjgriff.skeleton.ui.people.di.PeopleInjector;
 import com.github.willjgriff.skeleton.ui.settings.SettingsFragment;
 
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationT
 
 	private List<ComponentInvalidator> mDaggerInjectors = new ArrayList<ComponentInvalidator>() {
 		{
-			add(LandInjector.INSTANCE);
+			add(PeopleInjector.INSTANCE);
 		}
 	};
 
@@ -46,7 +46,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationT
 		setupNavigationView();
 
 		if (savedInstanceState == null) {
-			switchToNavigationFragment(new LandFragment());
+			switchToNavigationFragment(new PeopleFragment());
 		}
 	}
 
@@ -94,13 +94,13 @@ public class NavigationActivity extends AppCompatActivity implements NavigationT
 		item.setChecked(true);
 		switch (item.getItemId()) {
 			case R.id.navigation_first_fragment:
-				navigationFragment = new LandFragment();
+				navigationFragment = new PeopleFragment();
 				break;
 			case R.id.navigation_settings:
 				navigationFragment = new SettingsFragment();
 				break;
 			default:
-				navigationFragment = new LandFragment();
+				navigationFragment = new PeopleFragment();
 		}
 
 		switchToNavigationFragment(navigationFragment);

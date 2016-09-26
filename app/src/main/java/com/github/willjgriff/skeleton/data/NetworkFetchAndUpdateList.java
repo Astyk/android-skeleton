@@ -39,7 +39,7 @@ public class NetworkFetchAndUpdateList<REALMTYPE extends RealmModel> {
 			.observeOn(AndroidSchedulers.mainThread())
 			.filter(listApiResponse -> listApiResponse.getContent() != null)
 			// Unpack content from ApiResponse
-			.map(listApiResponse -> listApiResponse.getContent())
+			.map(ApiResponse::getContent)
 			// Update Realm DB with new data
 			.doOnNext(realmtypes -> mRealmUpdater.update(realmtypes));
 	}

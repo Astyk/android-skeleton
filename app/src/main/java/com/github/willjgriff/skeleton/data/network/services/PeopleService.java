@@ -13,7 +13,7 @@ import rx.Observable;
  * Created by Will on 06/09/2016.
  */
 
-public interface RandomPeopleService {
+public interface PeopleService {
 
 	@GET("./")
 	Observable<ApiResponse<List<Person>>> getPeople(@Query("results") int amount);

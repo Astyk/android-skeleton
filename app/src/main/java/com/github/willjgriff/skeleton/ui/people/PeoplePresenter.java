@@ -1,9 +1,10 @@
-package com.github.willjgriff.skeleton.ui.land;
+package com.github.willjgriff.skeleton.ui.people;
 
 import com.github.willjgriff.skeleton.data.models.Person;
 import com.github.willjgriff.skeleton.data.responsewrapper.ResponseHolder;
 import com.github.willjgriff.skeleton.mvp.BasePresenter;
-import com.github.willjgriff.skeleton.ui.land.di.LandScope;
+import com.github.willjgriff.skeleton.ui.people.data.PeopleDataManager;
+import com.github.willjgriff.skeleton.ui.people.di.PeopleScope;
 
 import java.util.List;
 
@@ -17,8 +18,8 @@ import static com.github.willjgriff.skeleton.data.responsewrapper.ResponseHolder
 /**
  * Created by Will on 19/08/2016.
  */
-@LandScope
-public class LandPresenter implements BasePresenter {
+@PeopleScope
+public class PeoplePresenter implements BasePresenter {
 
 	private PeopleDataManager mPeopleDataManager;
 	private Observable<ResponseHolder<List<Person>>> mPeopleObservable;
@@ -26,7 +27,7 @@ public class LandPresenter implements BasePresenter {
 	private boolean mInitialDataRequestMade;
 
 	@Inject
-	LandPresenter(PeopleDataManager peopleDataManager) {
+	PeoplePresenter(PeopleDataManager peopleDataManager) {
 		mPeopleDataManager = peopleDataManager;
 		setRefreshTrigger();
 	}

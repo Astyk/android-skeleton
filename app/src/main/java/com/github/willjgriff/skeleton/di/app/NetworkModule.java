@@ -1,7 +1,7 @@
 package com.github.willjgriff.skeleton.di.app;
 
 import com.github.willjgriff.skeleton.data.network.ApiRes;
-import com.github.willjgriff.skeleton.data.network.services.RandomPeopleService;
+import com.github.willjgriff.skeleton.data.network.services.PeopleService;
 import com.google.gson.GsonBuilder;
 
 import javax.inject.Singleton;
@@ -38,8 +38,8 @@ public class NetworkModule {
 
 	@Provides
 	@Singleton
-	RandomPeopleService providesRandomPeopleService(Retrofit retrofit) {
-		return retrofit.create(RandomPeopleService.class);
+	PeopleService providesRandomPeopleService(Retrofit retrofit) {
+		return retrofit.create(PeopleService.class);
 	}
 
 }

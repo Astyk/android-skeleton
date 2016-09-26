@@ -9,7 +9,7 @@
     <string name="fragment_settings_title">Settings</string>
     <string name="fragment_person_title">Person</string>
 
-    <!--landing fragment-->
+    <!--people fragment-->
     <string name="fragment_people_cache_error_string">Error loading from cache. Content may not be as expected</string>
     <string name="network_error_no_internet_connection">Internet disconnected, the content was not updated</string>
     <string name="network_error_io_exception">The service could be down, the content was not updated</string>

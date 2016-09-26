@@ -1,4 +1,4 @@
-package com.github.willjgriff.skeleton.ui.land;
+package com.github.willjgriff.skeleton.ui.people;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -38,7 +38,7 @@ public class PersonDetailsFragment extends Fragment {
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		TextView textView = (TextView) view.findViewById(R.id.fragment_land_details_text);
+		TextView textView = (TextView) view.findViewById(R.id.fragment_person_details_text);
 		if (getArguments().getParcelable(ARG_PERSON_FOR_FRAGMENT) != null) {
 			Person person = getArguments().getParcelable(ARG_PERSON_FOR_FRAGMENT);
 			textView.setText(person.getEmail());

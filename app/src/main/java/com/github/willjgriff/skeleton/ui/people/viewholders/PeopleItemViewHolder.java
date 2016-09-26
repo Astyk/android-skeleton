@@ -1,6 +1,5 @@
-package com.github.willjgriff.skeleton.ui.land.viewholders;
+package com.github.willjgriff.skeleton.ui.people.viewholders;
 
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -8,7 +7,6 @@ import android.widget.TextView;
 
 import com.github.willjgriff.skeleton.R;
 import com.github.willjgriff.skeleton.data.models.Person;
-import com.github.willjgriff.skeleton.ui.land.PeopleAdapter;
 
 /**
  * Created by Will on 22/09/2016.
