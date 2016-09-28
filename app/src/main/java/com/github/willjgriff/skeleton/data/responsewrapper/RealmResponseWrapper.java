@@ -18,7 +18,7 @@ public class RealmResponseWrapper<RESPONSETYPE extends RealmModel> {
 	public Observable<ResponseHolder<List<RESPONSETYPE>>> wrap(Observable<RealmResults<RESPONSETYPE>> observable) {
 		return observable
 			// Only take the first emission. More data will be emitted if/when this RealmQuery's data is updated.
-			.first()
+//			.first()
 			// Put data into ResponseHolder, ResponseHolder is necessary to differentiate between
 			// cache and network sourced data and retain any errors.
 			.map(responsetypes -> {
