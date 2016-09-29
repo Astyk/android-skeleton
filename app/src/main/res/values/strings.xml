@@ -6,6 +6,7 @@
     <string name="activity_navigation_open">Open navigation drawer</string>
     <string name="activity_navigation_close">Close navigation drawer</string>
     <string name="fragment_people_title">People</string>
+    <string name="fragment_form_title">Form</string>
     <string name="fragment_settings_title">Settings</string>
     <string name="fragment_person_title">Person</string>
 

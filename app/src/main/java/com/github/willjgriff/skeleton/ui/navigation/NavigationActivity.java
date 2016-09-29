@@ -18,6 +18,7 @@ import android.widget.ProgressBar;
 
 import com.github.willjgriff.skeleton.R;
 import com.github.willjgriff.skeleton.di.ComponentInvalidator;
+import com.github.willjgriff.skeleton.ui.form.FormFragment;
 import com.github.willjgriff.skeleton.ui.people.PeopleFragment;
 import com.github.willjgriff.skeleton.ui.people.di.PeopleInjector;
 import com.github.willjgriff.skeleton.ui.settings.SettingsFragment;
@@ -93,8 +94,11 @@ public class NavigationActivity extends AppCompatActivity implements NavigationT
 		Fragment navigationFragment;
 		item.setChecked(true);
 		switch (item.getItemId()) {
-			case R.id.navigation_first_fragment:
+			case R.id.navigation_people_fragment:
 				navigationFragment = new PeopleFragment();
+				break;
+			case R.id.navigation_form_fragment:
+				navigationFragment = new FormFragment();
 				break;
 			case R.id.navigation_settings:
 				navigationFragment = new SettingsFragment();

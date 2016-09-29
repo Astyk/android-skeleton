@@ -26,7 +26,8 @@ public class SkeletonApplication extends Application {
 		super.onCreate();
 		sApplication = this;
 
-		RealmConfiguration config = new RealmConfiguration.Builder(this).build();
+		Realm.init(this);
+		RealmConfiguration config = new RealmConfiguration.Builder().build();
 		Realm.setDefaultConfiguration(config);
 
 		AppInjector.INSTANCE.init(this);

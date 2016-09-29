@@ -11,13 +11,20 @@ import android.view.ViewGroup;
 
 import com.github.willjgriff.skeleton.R;
 import com.github.willjgriff.skeleton.data.models.Person;
+import com.github.willjgriff.skeleton.data.responsewrapper.ResponseHolder;
 import com.github.willjgriff.skeleton.ui.navigation.NavigationToolbarListener;
+
+import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
 import rx.Observable;
+import rx.Subscriber;
 import rx.Subscription;
 import rx.functions.Action1;
+import rx.functions.Func1;
+
+import static com.github.willjgriff.skeleton.data.responsewrapper.ResponseHolder.Source.STORAGE;
 
 /**
  * Created by Will on 17/08/2016.
@@ -26,7 +33,8 @@ import rx.functions.Action1;
 public class SettingsFragment extends Fragment {
 
 	NavigationToolbarListener mToolbarListener;
-	Person mPerson;
+	Subscription mSubscription;
+	Realm mRealm;
 
 	@Override
 	public void onAttach(Context context) {
@@ -45,16 +53,61 @@ public class SettingsFragment extends Fragment {
 		super.onViewCreated(view, savedInstanceState);
 		mToolbarListener.setToolbarTitle(R.string.fragment_settings_title);
 
-		Realm realm = Realm.getDefaultInstance();
-		Observable<RealmResults<Person>> firstPerson = realm.where(Person.class).findAllAsync().asObservable().first();
-		Subscription subscription = firstPerson.subscribe(new Action1<RealmResults<Person>>() {
+		mRealm = Realm.getDefaultInstance();
+
+		RealmResults<Person> people = mRealm.where(Person.class).findAll();
+		Observable<RealmResults<Person>> firstPerson = people.asObservable();
+//		Observable<ResponseHolder<List<Person>>> firstPerson = realm.where(Person.class).findAllAsync().asObservable()
+//			.first()
+//			.map(new Func1<RealmResults<Person>, ResponseHolder<List<Person>>>() {
+//				@Override
+//				public ResponseHolder<List<Person>> call(RealmResults<Person> persons) {
+//					ResponseHolder<List<Person>> responseHolder = new ResponseHolder<>(STORAGE);
+//					responseHolder.setData(persons);
+//					return responseHolder;
+//				}
+//			})
+//			.onErrorReturn(new Func1<Throwable, ResponseHolder<List<Person>>>() {
+//				@Override
+//				public ResponseHolder<List<Person>> call(Throwable throwable) {
+//					ResponseHolder<List<Person>> responseHolder = new ResponseHolder<>(STORAGE);
+//					responseHolder.setError(throwable);
+//					return responseHolder;
+//				}
+//			});
+
+
+		mSubscription = firstPerson.subscribe(new Subscriber<RealmResults<Person>>() {
 			@Override
-			public void call(RealmResults<Person> persons) {
-				Log.d("RXREALM", "Subscribed to Realm Where");
-				mPerson = persons.get(0);
+			public void onCompleted() {
+
+			}
+
+			@Override
+			public void onError(Throwable e) {
+				Log.d("RXREALM", "Error");
+			}
+
+			@Override
+			public void onNext(RealmResults<Person> persons) {
+				Log.d("RXREALM", "Subscribed to Realm, Person: ");
 			}
 		});
-		subscription.unsubscribe();
-		realm.close();
+//
+//		mSubscription = firstPerson.subscribe(new Action1<ResponseHolder<List<Person>>>() {
+//			@Override
+//			public void call(ResponseHolder<List<Person>> listResponseHolder) {
+//				Log.d("RXREALM", "Subscribed to Realm, Person: ");
+//			}
+//		});
+
+
+	}
+
+	@Override
+	public void onPause() {
+		mSubscription.unsubscribe();
+		mRealm.close();
+		super.onPause();
 	}
 }

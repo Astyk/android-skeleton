@@ -3,9 +3,12 @@
 
     <group android:id="@+id/menu_navigation_top_group" android:checkableBehavior="single">
         <item
-            android:id="@+id/navigation_first_fragment"
+            android:id="@+id/navigation_people_fragment"
             android:title="@string/fragment_people_title"
             android:checked="true"/>
+        <item
+            android:id="@+id/navigation_form_fragment"
+            android:title="@string/fragment_form_title"/>
     </group>
 
     <group android:id="@+id/menu_navigation_bottom_group" android:checkableBehavior="single">

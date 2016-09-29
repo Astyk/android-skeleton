@@ -11,7 +11,6 @@ import com.github.willjgriff.skeleton.data.responsewrapper.ResponseHolder;
 import com.github.willjgriff.skeleton.data.storage.fetchers.AllRealmFetcher;
 import com.github.willjgriff.skeleton.data.storage.fetchers.RealmFetcher;
 import com.github.willjgriff.skeleton.data.storage.updaters.BasicAsyncRealmUpdater;
-import com.github.willjgriff.skeleton.data.storage.updaters.RealmSyncUpdater;
 import com.github.willjgriff.skeleton.data.storage.updaters.RealmUpdater;
 import com.github.willjgriff.skeleton.data.storage.updaters.methods.RealmUpdateMethod;
 import com.github.willjgriff.skeleton.data.storage.updaters.methods.ReplaceListRealmUpdateMethod;
@@ -57,10 +56,8 @@ public class PeopleDataManager {
 	}
 
 	private Observable<ResponseHolder<List<Person>>> getPeopleFromCache() {
-		// TODO: Fix realm leak occurring somewhere here
 		RealmResponseWrapper<Person> realmResponseWrapper = new RealmResponseWrapper<>();
 		return realmResponseWrapper.wrap(mPeopleRealmFetcher.getAsyncObservable(mRealm));
-//		return Observable.just(new ResponseHolder<>(ResponseHolder.Source.STORAGE));
 	}
 
 	private Observable<ResponseHolder<List<Person>>> getPeopleFromNetworkTrigger(int countPeople) {
