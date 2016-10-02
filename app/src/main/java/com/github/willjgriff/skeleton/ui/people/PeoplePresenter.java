@@ -23,8 +23,6 @@ public class PeoplePresenter implements BasePresenter {
 
 	private PeopleDataManager mPeopleDataManager;
 	private Observable<ResponseHolder<List<Person>>> mPeopleObservable;
-	// TODO: Can we get rid of this?
-	private boolean mInitialDataRequestMade;
 
 	@Inject
 	PeoplePresenter(PeopleDataManager peopleDataManager) {
@@ -76,13 +74,6 @@ public class PeoplePresenter implements BasePresenter {
 	@Override
 	public void cancelUpdate() {
 		mPeopleDataManager.closeDataManager();
-	}
-
-	public void triggerInitialFetch() {
-		if (!mInitialDataRequestMade) {
-			mPeopleDataManager.triggerNetworkUpdate();
-			mInitialDataRequestMade = true;
-		}
 	}
 
 	public void triggerRefreshFetch() {

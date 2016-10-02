@@ -61,7 +61,7 @@ public class PeopleDataManager {
 	}
 
 	private Observable<ResponseHolder<List<Person>>> getPeopleFromNetworkTrigger(int countPeople) {
-		return mNetworkFetchTrigger.flatMap(aVoid -> getPeopleFromNetwork(countPeople));
+		return mNetworkFetchTrigger.startWith((Void) null).flatMap(aVoid -> getPeopleFromNetwork(countPeople));
 	}
 
 	private Observable<ResponseHolder<List<Person>>> getPeopleFromNetwork(int countPeople) {

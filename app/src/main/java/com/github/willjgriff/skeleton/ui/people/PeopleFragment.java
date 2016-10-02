@@ -17,10 +17,10 @@ import com.github.willjgriff.skeleton.R;
 import com.github.willjgriff.skeleton.data.models.Person;
 import com.github.willjgriff.skeleton.mvp.RxFragment;
 import com.github.willjgriff.skeleton.ui.ErrorDisplayer;
-import com.github.willjgriff.skeleton.ui.people.di.PeopleInjector;
-import com.github.willjgriff.skeleton.ui.people.viewholders.PeopleItemViewHolder.PeopleListener;
 import com.github.willjgriff.skeleton.ui.navigation.DetailFragmentListener;
 import com.github.willjgriff.skeleton.ui.navigation.NavigationToolbarListener;
+import com.github.willjgriff.skeleton.ui.people.di.PeopleInjector;
+import com.github.willjgriff.skeleton.ui.people.viewholders.PeopleItemViewHolder.PeopleListener;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 
 import java.util.List;
@@ -50,16 +50,16 @@ public class PeopleFragment extends RxFragment<PeoplePresenter> implements Peopl
 		mDetailFragmentListener = (DetailFragmentListener) context;
 	}
 
-	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		PeopleInjector.INSTANCE.getComponent().inject(this);
-	}
-
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.fragment_people, container, false);
+	}
+
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		PeopleInjector.INSTANCE.getComponent().inject(this);
 	}
 
 	@Override
@@ -86,7 +86,8 @@ public class PeopleFragment extends RxFragment<PeoplePresenter> implements Peopl
 
 	private void setupSubscriptions() {
 		RxSwipeRefreshLayout.refreshes(mSwipeRefreshLayout).subscribe(aVoid -> {
-			// TODO: Try to minimise this closing of fragment
+			// TODO: Try to minimise this closing of fragment, we do this as the detail View may no longer
+			// be in sync with the list in a two pane Window.
 			mDetailFragmentListener.closeDetailFragment();
 			mPresenter.triggerRefreshFetch();
 		});
@@ -113,8 +114,8 @@ public class PeopleFragment extends RxFragment<PeoplePresenter> implements Peopl
 			hideCacheLoading();
 		}));
 
+		// TODO: Can this be moved to the NavigationActivity?
 		mDetailFragmentListener.closeDetailFragment();
-		mPresenter.triggerInitialFetch();
 	}
 
 	private void showCacheLoading() {
