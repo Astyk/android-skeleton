@@ -17,26 +17,15 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.github.willjgriff.skeleton.R;
-import com.github.willjgriff.skeleton.di.ComponentInvalidator;
-import com.github.willjgriff.skeleton.ui.form.FormFragment;
 import com.github.willjgriff.skeleton.ui.people.PeopleFragment;
-import com.github.willjgriff.skeleton.ui.people.di.PeopleInjector;
-import com.github.willjgriff.skeleton.ui.settings.SettingsFragment;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class NavigationActivity extends AppCompatActivity implements NavigationToolbarListener, DetailFragmentListener {
 
 	private DrawerLayout mDrawerLayout;
 	private ActionBarDrawerToggle mDrawerToggle;
 	private ProgressBar mProgressBar;
-
-	private List<ComponentInvalidator> mDaggerInjectors = new ArrayList<ComponentInvalidator>() {
-		{
-			add(PeopleInjector.INSTANCE);
-		}
-	};
+	private ComponentsInvalidator mComponentsInvalidator;
+	private NavigationFragmentFactory mFragmentFactory;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +34,9 @@ public class NavigationActivity extends AppCompatActivity implements NavigationT
 
 		setupToolbar();
 		setupNavigationView();
+
+		mComponentsInvalidator = new ComponentsInvalidator();
+		mFragmentFactory = new NavigationFragmentFactory();
 
 		if (savedInstanceState == null) {
 			switchToNavigationFragment(new PeopleFragment());
@@ -91,28 +83,12 @@ public class NavigationActivity extends AppCompatActivity implements NavigationT
 	}
 
 	private void switchNavigationItem(MenuItem item) {
-		Fragment navigationFragment;
 		item.setChecked(true);
-		switch (item.getItemId()) {
-			case R.id.navigation_people_fragment:
-				navigationFragment = new PeopleFragment();
-				break;
-			case R.id.navigation_form_fragment:
-				navigationFragment = new FormFragment();
-				break;
-			case R.id.navigation_settings:
-				navigationFragment = new SettingsFragment();
-				break;
-			default:
-				navigationFragment = new PeopleFragment();
-		}
-
+		Fragment navigationFragment = mFragmentFactory.getFragmentFromId(item.getItemId());
 		switchToNavigationFragment(navigationFragment);
 		mDrawerLayout.closeDrawers();
 
-		for (ComponentInvalidator injector : mDaggerInjectors) {
-			injector.invalidate();
-		}
+		mComponentsInvalidator.invalidateComponents();
 	}
 
 	private void switchToNavigationFragment(Fragment navigationFragment) {
