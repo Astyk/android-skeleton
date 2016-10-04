@@ -14,7 +14,7 @@ import retrofit2.adapter.rxjava.HttpException;
 /**
  * Created by williamgriffiths on 22/09/2016.
  */
-// TODO: I could customise the error messages to the screen / api request made
+// TODO: I could customise the error messages dependant on the screen / api request made
 public class ErrorDisplayer {
 
 	public static void displayNetworkError(View view, Throwable throwable) {

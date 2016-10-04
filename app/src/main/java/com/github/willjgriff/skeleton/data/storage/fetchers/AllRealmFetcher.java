@@ -14,6 +14,7 @@ import rx.functions.Func1;
  * Created by Will on 14/08/2016.
  */
 // TODO: This is now coupled to the Timestamp interface. If we need it without then abstract it.
+// Hopefully we can remove it when we have individual id's coming from the server
 public class AllRealmFetcher<RETURNTYPE extends RealmModel & Timestamp> extends RealmFetcher<RETURNTYPE> {
 
 	private Class<RETURNTYPE> mReturnClass;

@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Created by Will on 19/08/2016.
  */
-// TODO: Consider generalising the selected position behaviour?
+// TODO: Consider abstracting the selected position behaviour for uses in other lists.
 public class PeopleAdapter extends RecyclerView.Adapter<PeopleItemViewHolder> implements SelectedListener {
 
 	private List<Person> mPeople;
