@@ -11,44 +11,36 @@ import com.github.willjgriff.skeleton.data.models.Person;
 /**
  * Created by Will on 22/09/2016.
  */
-//TODO: Consider generalising the selected position and click listener behaviour
 public class PeopleItemViewHolder extends RecyclerView.ViewHolder {
 
-	private LinearLayout mLinearLayout;
-	private TextView mTextView;
+	private TextView mPersonEmail;
 	private PeopleListener mPeopleListener;
-	private SelectedListener mSelectedListener;
+	private ViewHolderSelector mViewHolderSelector;
 
-	public PeopleItemViewHolder(View itemView, PeopleListener peopleListener, SelectedListener selectedListener) {
+	public PeopleItemViewHolder(View itemView, PeopleListener peopleListener, ViewHolderSelector viewHolderSelector) {
 		super(itemView);
-		mLinearLayout = (LinearLayout) itemView.findViewById(R.id.view_people_item_container);
-		mTextView = (TextView) itemView.findViewById(R.id.view_people_item_email);
+		mPersonEmail = (TextView) itemView.findViewById(R.id.view_people_item_email);
 		mPeopleListener = peopleListener;
-		mSelectedListener = selectedListener;
+
+		LinearLayout itemContainer = (LinearLayout) itemView.findViewById(R.id.view_people_item_container);
+		mViewHolderSelector = viewHolderSelector;
+		mViewHolderSelector.setSelectableContainer(itemContainer);
 	}
 
-	public void bindData(Person person, int selectedPosition) {
+	public void bindData(Person person) {
 		if (person.getEmail() != null) {
-			mTextView.setText(person.getEmail());
+			mPersonEmail.setText(person.getEmail());
 		}
 
 		itemView.setOnClickListener(view -> {
 			mPeopleListener.openPersonDetails(person);
-			mSelectedListener.setSelectedItem(getAdapterPosition());
+			mViewHolderSelector.highlightThis(getAdapterPosition());
 		});
 
-		if (getAdapterPosition() == selectedPosition) {
-			mLinearLayout.setSelected(true);
-		} else {
-			mLinearLayout.setSelected(false);
-		}
+		mViewHolderSelector.highlightIfSelected(getAdapterPosition());
 	}
 
 	public interface PeopleListener {
 		void openPersonDetails(Person person);
-	}
-
-	public interface SelectedListener {
-		void setSelectedItem(int position);
 	}
 }

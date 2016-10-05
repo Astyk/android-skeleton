@@ -9,7 +9,9 @@ import com.github.willjgriff.skeleton.R;
 import com.github.willjgriff.skeleton.data.models.Person;
 import com.github.willjgriff.skeleton.ui.people.viewholders.PeopleItemViewHolder;
 import com.github.willjgriff.skeleton.ui.people.viewholders.PeopleItemViewHolder.PeopleListener;
-import com.github.willjgriff.skeleton.ui.people.viewholders.PeopleItemViewHolder.SelectedListener;
+import com.github.willjgriff.skeleton.ui.people.viewholders.SelectorAdapterPosition;
+import com.github.willjgriff.skeleton.ui.people.viewholders.SelectorAdapterPosition.HighlightedListener;
+import com.github.willjgriff.skeleton.ui.people.viewholders.ViewHolderSelector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,33 +19,33 @@ import java.util.List;
 /**
  * Created by Will on 19/08/2016.
  */
-// TODO: Consider abstracting the selected position behaviour for uses in other lists.
-public class PeopleAdapter extends RecyclerView.Adapter<PeopleItemViewHolder> implements SelectedListener {
+public class PeopleAdapter extends RecyclerView.Adapter<PeopleItemViewHolder> implements HighlightedListener {
 
 	private List<Person> mPeople;
 	private PeopleListener mPeopleListener;
-	private int mSelectedPosition;
+	private SelectorAdapterPosition mSelectorAdapterPosition;
 
 	public PeopleAdapter() {
 		mPeople = new ArrayList<>();
+		mSelectorAdapterPosition = new SelectorAdapterPosition(this);
 	}
 
 	public void setPeople(List<Person> people, PeopleListener peopleListener) {
 		mPeople = people;
 		mPeopleListener = peopleListener;
-		mSelectedPosition = -1;
+		mSelectorAdapterPosition.resetHighlightedPosition();
 		notifyDataSetChanged();
 	}
 
 	@Override
 	public PeopleItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_people_item, parent, false);
-		return new PeopleItemViewHolder(itemView, mPeopleListener, this);
+		return new PeopleItemViewHolder(itemView, mPeopleListener, new ViewHolderSelector(mSelectorAdapterPosition));
 	}
 
 	@Override
 	public void onBindViewHolder(PeopleItemViewHolder holder, int position) {
-		holder.bindData(mPeople.get(position), mSelectedPosition);
+		holder.bindData(mPeople.get(position));
 	}
 
 	@Override
@@ -52,10 +54,10 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleItemViewHolder> im
 	}
 
 	@Override
-	public void setSelectedItem(int position) {
-		int previousSelectedPosition = mSelectedPosition;
-		mSelectedPosition = position;
-		notifyItemChanged(mSelectedPosition);
-		notifyItemChanged(previousSelectedPosition);
+	public void notifySelectedItemChanged(int newPosition, int oldPosition) {
+		notifyItemChanged(newPosition);
+		notifyItemChanged(oldPosition);
 	}
+
+
 }
