@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by Will on 03/10/2016.
  */
-
+// TODO: This is probably unnecessary optimisation.
 public class ComponentsInvalidator {
 
 	private List<ComponentInvalidator> mDaggerInjectors = new ArrayList<ComponentInvalidator>() {

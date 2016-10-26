@@ -11,6 +11,7 @@ import java.util.List;
 
 import io.realm.Realm;
 import rx.Observable;
+import rx.functions.Func1;
 import rx.subjects.PublishSubject;
 
 /**
@@ -25,17 +26,16 @@ public class PeopleDataManager {
 	private PublishSubject<Void> mNetworkFetchTrigger;
 	private boolean mNetworkDataFetched = false;
 
-	public PeopleDataManager(@NonNull Realm realm, @NonNull PeopleService peopleService) {
+	public PeopleDataManager(@NonNull Realm realm, @NonNull PeopleDataLoader peopleDataLoader) {
 		mRealm = realm;
+		mPeopleDataLoader = peopleDataLoader;
 		mNetworkFetchTrigger = PublishSubject.create();
-		mPeopleDataLoader = new PeopleDataLoader(realm, peopleService);
 	}
 
 	public Observable<ResponseHolder<List<Person>>> getPeopleObservable(int countPeople) {
 		// This HAS to be a merge, not a concat, to enable the network trigger to work.
-		return Observable.merge(
-			mPeopleDataLoader.getPeopleFromCache(),
-			getPeopleFromNetworkTrigger(countPeople))
+		return getPeopleFromNetworkTrigger(countPeople)
+			.mergeWith(mPeopleDataLoader.getPeopleFromCache())
 			.doOnNext(listResponseHolder -> {
 				if (ResponseHolder.Source.NETWORK == listResponseHolder.getSource() && !listResponseHolder.hasError()) {
 					// TODO: there must be a better way of preventing data coming in the wrong order.
@@ -43,10 +43,10 @@ public class PeopleDataManager {
 				}
 			})
 			.filter(listResponseHolder
-				-> ResponseHolder.Source.STORAGE != listResponseHolder.getSource() || !mNetworkDataFetched);
+				-> !(ResponseHolder.Source.STORAGE == listResponseHolder.getSource() && mNetworkDataFetched));
 	}
 
-	public Observable<ResponseHolder<List<Person>>> getPeopleFromNetworkTrigger(int countPeople) {
+	private Observable<ResponseHolder<List<Person>>> getPeopleFromNetworkTrigger(int countPeople) {
 		return mNetworkFetchTrigger
 			.startWith((Void) null)
 			.flatMap(aVoid -> mPeopleDataLoader.getPeopleFromNetwork(countPeople));

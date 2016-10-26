@@ -1,4 +1,4 @@
-package com.github.willjgriff.skeleton.ui.people.viewholders;
+package com.github.willjgriff.skeleton.ui.utils.list;
 
 /**
  * Created by Will on 05/10/2016.

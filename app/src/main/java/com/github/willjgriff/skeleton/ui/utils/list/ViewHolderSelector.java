@@ -1,4 +1,4 @@
-package com.github.willjgriff.skeleton.ui.people.viewholders;
+package com.github.willjgriff.skeleton.ui.utils.list;
 
 import android.view.View;
 

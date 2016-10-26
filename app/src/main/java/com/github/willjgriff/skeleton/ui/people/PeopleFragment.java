@@ -15,11 +15,13 @@ import android.widget.ProgressBar;
 
 import com.github.willjgriff.skeleton.R;
 import com.github.willjgriff.skeleton.data.models.Person;
+import com.github.willjgriff.skeleton.di.app.AppInjector;
 import com.github.willjgriff.skeleton.mvp.RxFragment;
 import com.github.willjgriff.skeleton.ui.ErrorDisplayer;
 import com.github.willjgriff.skeleton.ui.navigation.DetailFragmentListener;
 import com.github.willjgriff.skeleton.ui.navigation.NavigationToolbarListener;
-import com.github.willjgriff.skeleton.ui.people.di.PeopleInjector;
+import com.github.willjgriff.skeleton.ui.people.di.DaggerPeopleComponent;
+import com.github.willjgriff.skeleton.ui.people.di.PeopleModule;
 import com.github.willjgriff.skeleton.ui.people.viewholders.PeopleItemViewHolder.PeopleListener;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 
@@ -59,7 +61,11 @@ public class PeopleFragment extends RxFragment<PeoplePresenter> implements Peopl
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		PeopleInjector.INSTANCE.getComponent().inject(this);
+		DaggerPeopleComponent.builder()
+			.appComponent(AppInjector.INSTANCE.getComponent())
+			.peopleModule(new PeopleModule())
+			.build()
+			.inject(this);
 	}
 
 	@Override
@@ -70,25 +76,16 @@ public class PeopleFragment extends RxFragment<PeoplePresenter> implements Peopl
 	}
 
 	private void setupView(View view) {
-		RecyclerView peopleRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_people_recycler_view);
-		mPeopleAdapter = new PeopleAdapter();
-		peopleRecyclerView.setAdapter(mPeopleAdapter);
-		peopleRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
 		mToolbarListener.setToolbarTitle(R.string.fragment_people_title);
 		mProgressBar = (ProgressBar) view.findViewById(R.id.fragment_people_progress_bar);
-		mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_people_swipe_refresh);
-		mSwipeRefreshLayout.setColorSchemeResources(R.color.accent);
 
+		setupRecyclerView(view);
 		showCacheLoading();
 		showNetworkLoading();
 	}
 
 	private void setupSubscriptions() {
 		RxSwipeRefreshLayout.refreshes(mSwipeRefreshLayout).subscribe(aVoid -> {
-			// TODO: Try to minimise this closing of fragment, we do this as the detail View may no longer
-			// be in sync with the list in a two pane Window.
-			mDetailFragmentListener.closeDetailFragment();
 			mPresenter.triggerRefreshFetch();
 		});
 
@@ -99,6 +96,9 @@ public class PeopleFragment extends RxFragment<PeoplePresenter> implements Peopl
 		}));
 
 		addSubscription(mPresenter.getNetworkLoaded().subscribe(aBoolean -> {
+			// TODO: We do this as the detail View may no longer be in sync with the list in a two pane Window.
+			// Can this be abstracted? (I guess with a list-detail Fragment abstraction and base subscriptions)
+			mDetailFragmentListener.closeDetailFragment();
 			hideNetworkLoading();
 			hideCacheLoading();
 		}));
@@ -113,9 +113,16 @@ public class PeopleFragment extends RxFragment<PeoplePresenter> implements Peopl
 			hideNetworkLoading();
 			hideCacheLoading();
 		}));
+	}
 
-		// TODO: Can this be moved to the NavigationActivity?
-		mDetailFragmentListener.closeDetailFragment();
+	private void setupRecyclerView(View view) {
+		RecyclerView peopleRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_people_recycler_view);
+		mPeopleAdapter = new PeopleAdapter();
+		peopleRecyclerView.setAdapter(mPeopleAdapter);
+		peopleRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+		mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_people_swipe_refresh);
+		mSwipeRefreshLayout.setColorSchemeResources(R.color.accent);
 	}
 
 	private void showCacheLoading() {

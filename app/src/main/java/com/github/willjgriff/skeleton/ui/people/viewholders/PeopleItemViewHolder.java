@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.github.willjgriff.skeleton.R;
 import com.github.willjgriff.skeleton.data.models.Person;
+import com.github.willjgriff.skeleton.ui.utils.list.ViewHolderSelector;
 
 /**
  * Created by Will on 22/09/2016.

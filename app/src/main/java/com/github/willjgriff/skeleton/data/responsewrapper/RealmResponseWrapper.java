@@ -18,9 +18,7 @@ public class RealmResponseWrapper<RESPONSETYPE extends RealmModel> {
 	public Observable<ResponseHolder<List<RESPONSETYPE>>> wrap(Observable<RealmResults<RESPONSETYPE>> observable) {
 		return observable
 			// Only take the first emission. More data will be emitted if/when this RealmQuery's data is updated.
-			// TODO: Currently causing a Realm leak. Still trying to fix. It isn't strictly necessary to use anyway.
-			// See: http://stackoverflow.com/questions/39758862/possible-realm-memory-leak-in-android-when-creating-observable-from-where-clause
-//			.first()
+			.first()
 			// Put data into ResponseHolder, ResponseHolder is necessary to differentiate between
 			// cache and network sourced data and retain any errors.
 			.map(responsetypes -> {

@@ -9,9 +9,9 @@ import com.github.willjgriff.skeleton.R;
 import com.github.willjgriff.skeleton.data.models.Person;
 import com.github.willjgriff.skeleton.ui.people.viewholders.PeopleItemViewHolder;
 import com.github.willjgriff.skeleton.ui.people.viewholders.PeopleItemViewHolder.PeopleListener;
-import com.github.willjgriff.skeleton.ui.people.viewholders.SelectorAdapterPosition;
-import com.github.willjgriff.skeleton.ui.people.viewholders.SelectorAdapterPosition.HighlightedListener;
-import com.github.willjgriff.skeleton.ui.people.viewholders.ViewHolderSelector;
+import com.github.willjgriff.skeleton.ui.utils.list.SelectorAdapterPosition;
+import com.github.willjgriff.skeleton.ui.utils.list.SelectorAdapterPosition.HighlightedListener;
+import com.github.willjgriff.skeleton.ui.utils.list.ViewHolderSelector;
 
 import java.util.ArrayList;
 import java.util.List;
