@@ -4,12 +4,12 @@ apply plugin: 'realm-android'
 apply plugin: 'me.tatarka.retrolambda'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.0"
     defaultConfig {
         applicationId "com.github.willjgriff.skeleton"
         minSdkVersion 16
-        targetSdkVersion 24
+        targetSdkVersion 25
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -25,10 +25,16 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    // Necessary for including RxJava (contained insider RxJava binding libs) and RxJava2 at the same time
+//    packagingOptions {
+//        exclude 'META-INF/rxjava.properties'
+//    }
+
 }
 
 ext {
-    supportLib  = '24.2.0'
+    supportLib  = '25.0.0'
     constraint  = '1.0.0-alpha4'
     picasso     = '2.5.2'
     dagger      = '2.6'
@@ -36,6 +42,8 @@ ext {
     retrofit    = '2.1.0'
     rxJava      = '1.2.0'
     rxAndroid   = '1.2.1'
+//    rxJava      = '2.0.0'
+//    rxAndroid   = '2.0.0'
     rxBindings  = '0.4.0'
 
     junit       = '4.12'
@@ -47,7 +55,6 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile "com.android.support:appcompat-v7:${supportLib}"
     compile "com.android.support:design:${supportLib}"
-    compile "com.android.support:recyclerview-v7:${supportLib}"
     compile "com.squareup.picasso:picasso:${picasso}"
 
     compile "com.squareup.retrofit2:retrofit:${retrofit}"
@@ -55,6 +62,8 @@ dependencies {
     compile "com.squareup.retrofit2:adapter-rxjava:${retrofit}"
     compile "io.reactivex:rxjava:${rxJava}"
     compile "io.reactivex:rxandroid:${rxAndroid}"
+//    compile "io.reactivex.rxjava2:rxjava:${rxJava}"
+//    compile "io.reactivex.rxjava2:rxandroid:${rxAndroid}"
 
     // Rx Bindings, remove unused ones
     compile "com.jakewharton.rxbinding:rxbinding:${rxBindings}"
