@@ -170,12 +170,10 @@ public class PeopleFragment extends RxFragment<PeoplePresenter> implements Peopl
 	@Override
 	public void openPersonDetails(Person person) {
 		// TODO: We could move this logic to the NavigationActivity if we have a secondary activity that accepts a Fragment
-		if (mDetailFragmentListener.isTwoPaneView()) {
+		if (mDetailFragmentListener.twoPaneViewEnabled()) {
 			mDetailFragmentListener.openDetailFragment(PersonDetailsFragment.createInstance(person));
 		} else {
-			Intent personDetailsIntent = new Intent(getContext(), PersonDetailsActivity.class);
-			personDetailsIntent.putExtra(ARG_PERSON_FOR_ACTIVITY, person);
-			startActivity(personDetailsIntent);
+			startActivity(PersonDetailsActivity.newInstance(getContext(), person));
 		}
 	}
 

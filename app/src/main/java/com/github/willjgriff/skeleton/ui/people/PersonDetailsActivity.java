@@ -1,5 +1,7 @@
 package com.github.willjgriff.skeleton.ui.people;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,6 +20,12 @@ import com.github.willjgriff.skeleton.ui.utils.UiUtils;
 public class PersonDetailsActivity extends AppCompatActivity {
 
 	public static final String ARG_PERSON_FOR_ACTIVITY = "com.github.willjgriff.skeleton.ui.people.PersonDetailActivity;ARG_PERSON_FOR_ACTIVITY";
+
+	public static Intent newInstance(Context context, Person person) {
+		Intent personDetailsIntent = new Intent(context, PersonDetailsActivity.class);
+		personDetailsIntent.putExtra(ARG_PERSON_FOR_ACTIVITY, person);
+		return personDetailsIntent;
+	}
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {

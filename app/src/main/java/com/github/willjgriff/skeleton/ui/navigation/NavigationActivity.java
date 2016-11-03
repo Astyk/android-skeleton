@@ -155,13 +155,16 @@ public class NavigationActivity extends AppCompatActivity implements NavigationT
 	}
 
 	@Override
-	public boolean isTwoPaneView() {
-		return findViewById(R.id.activity_navigation_details_container) != null;
+	public boolean twoPaneViewEnabled() {
+		return findViewById(R.id.activity_navigation_details_container) != null
+			&& findViewById(R.id.activity_navigation_container_divider) != null;
 	}
 
 	private void setDetailsContainerVisibility(int visible) {
-		findViewById(R.id.activity_navigation_details_container).setVisibility(visible);
-		findViewById(R.id.activity_navigation_container_divider).setVisibility(visible);
+		if (twoPaneViewEnabled()) {
+			findViewById(R.id.activity_navigation_details_container).setVisibility(visible);
+			findViewById(R.id.activity_navigation_container_divider).setVisibility(visible);
+		}
 	}
 
 	private void switchFragmentInContainer(Fragment navigationFragment, @IdRes int container) {

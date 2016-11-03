@@ -27,13 +27,7 @@ public class PeoplePresenter implements BasePresenter {
 	@Inject
 	PeoplePresenter(PeopleDataManager peopleDataManager) {
 		mPeopleDataManager = peopleDataManager;
-		setRefreshTrigger();
-	}
-
-	public void setRefreshTrigger() {
-		if (mPeopleObservable == null) {
-			mPeopleObservable = mPeopleDataManager.getPeopleObservable(20).replay(1).autoConnect();
-		}
+		mPeopleObservable = mPeopleDataManager.getPeopleObservable(20);
 	}
 
 	public Observable<List<Person>> getPeopleList() {

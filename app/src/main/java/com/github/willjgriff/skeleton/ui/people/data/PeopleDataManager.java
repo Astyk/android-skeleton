@@ -33,7 +33,9 @@ public class PeopleDataManager {
 	public Observable<ResponseHolder<List<Person>>> getPeopleObservable(int countPeople) {
 		return Observable
 			.merge(getPeopleFromNetworkTrigger(countPeople), mPeopleDataLoader.getPeopleFromCache())
-			.compose(new TakeUntilNetwork<>());
+			.compose(new TakeUntilNetwork<>())
+			.replay(1)
+			.autoConnect();
 	}
 
 	private Observable<ResponseHolder<List<Person>>> getPeopleFromNetworkTrigger(int countPeople) {

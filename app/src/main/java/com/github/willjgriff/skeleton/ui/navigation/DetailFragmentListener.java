@@ -11,5 +11,5 @@ public interface DetailFragmentListener {
 
 	void closeDetailFragment();
 
-	boolean isTwoPaneView();
+	boolean twoPaneViewEnabled();
 }
