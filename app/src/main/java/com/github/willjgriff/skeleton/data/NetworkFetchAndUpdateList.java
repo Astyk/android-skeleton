@@ -39,6 +39,7 @@ public class NetworkFetchAndUpdateList<REALMTYPE extends RealmModel> {
 			.observeOn(AndroidSchedulers.mainThread())
 			.filter(listApiResponse -> listApiResponse.getContent() != null)
 			// Unpack content from ApiResponse
+			// TODO: Use a custom Retrofit Adapter for this...
 			.map(ApiResponse::getContent)
 			// Update Realm DB with new data
 			.doOnNext(realmtypes -> mRealmUpdater.update(realmtypes));

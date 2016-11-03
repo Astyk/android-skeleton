@@ -5,8 +5,8 @@ import android.support.annotation.NonNull;
 import com.github.willjgriff.skeleton.data.NetworkFetchAndUpdateList;
 import com.github.willjgriff.skeleton.data.models.Person;
 import com.github.willjgriff.skeleton.data.network.services.PeopleService;
-import com.github.willjgriff.skeleton.data.responsewrapper.NetworkResponseWrapper;
-import com.github.willjgriff.skeleton.data.responsewrapper.RealmResponseWrapper;
+import com.github.willjgriff.skeleton.data.responsewrapper.NetworkResponseTransformer;
+import com.github.willjgriff.skeleton.data.responsewrapper.RealmResponseTransformer;
 import com.github.willjgriff.skeleton.data.responsewrapper.ResponseHolder;
 import com.github.willjgriff.skeleton.data.storage.fetchers.AllRealmFetcher;
 import com.github.willjgriff.skeleton.data.storage.fetchers.RealmFetcher;
@@ -36,8 +36,7 @@ public class PeopleDataLoader {
 	}
 
 	public Observable<ResponseHolder<List<Person>>> getPeopleFromCache() {
-		RealmResponseWrapper<Person> realmResponseWrapper = new RealmResponseWrapper<>();
-		return realmResponseWrapper.wrap(mPeopleRealmFetcher.getAsyncObservable(mRealm));
+		return mPeopleRealmFetcher.getAsyncObservable(mRealm).compose(new RealmResponseTransformer<>());
 	}
 
 	public Observable<ResponseHolder<List<Person>>> getPeopleFromNetwork(int countPeople) {
@@ -46,7 +45,6 @@ public class PeopleDataLoader {
 		NetworkFetchAndUpdateList<Person> peopleNetworkFetchAndUpdateList = new NetworkFetchAndUpdateList<>(
 			mPeopleService.getPeople(countPeople), realmAsyncUpdater);
 
-		NetworkResponseWrapper<Person> networkResponseWrapper = new NetworkResponseWrapper<>();
-		return networkResponseWrapper.wrap(peopleNetworkFetchAndUpdateList.getNetworkObservable());
+		return peopleNetworkFetchAndUpdateList.getNetworkObservable().compose(new NetworkResponseTransformer<>());
 	}
 }

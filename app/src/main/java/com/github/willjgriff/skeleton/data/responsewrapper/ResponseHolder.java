@@ -22,8 +22,9 @@ public class ResponseHolder<RETURNTYPE> {
 		return mData;
 	}
 
-	public void setData(RETURNTYPE data) {
+	public ResponseHolder<RETURNTYPE> setData(RETURNTYPE data) {
 		mData = data;
+		return this;
 	}
 
 	public boolean hasData() {
@@ -34,8 +35,9 @@ public class ResponseHolder<RETURNTYPE> {
 		return mError;
 	}
 
-	public void setError(Throwable error) {
+	public ResponseHolder<RETURNTYPE> setError(Throwable error) {
 		mError = error;
+		return this;
 	}
 
 	public boolean hasError() {
