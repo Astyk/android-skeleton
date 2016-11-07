@@ -57,7 +57,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationT
 
 	private void setupToolbar() {
 		Toolbar toolbar = (Toolbar) findViewById(R.id.activity_navigation_toolbar);
-		mProgressBar = (ProgressBar) findViewById(R.id.activity_navigation_toolbar_progress_bar);
+		mProgressBar = (ProgressBar) findViewById(R.id.toolbar_progress_bar);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.activity_navigation_drawer);
 
 		setSupportActionBar(toolbar);

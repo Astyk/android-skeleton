@@ -1,7 +1,6 @@
 package com.github.willjgriff.skeleton.ui.people;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -28,8 +27,6 @@ import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import static com.github.willjgriff.skeleton.ui.people.PersonDetailsActivity.ARG_PERSON_FOR_ACTIVITY;
 
 /**
  * Created by Will on 17/08/2016.
@@ -173,7 +170,7 @@ public class PeopleFragment extends RxFragment<PeoplePresenter> implements Peopl
 		if (mDetailFragmentListener.twoPaneViewEnabled()) {
 			mDetailFragmentListener.openDetailFragment(PersonDetailsFragment.createInstance(person));
 		} else {
-			startActivity(PersonDetailsActivity.newInstance(getContext(), person));
+			startActivity(PersonDetailsActivity.getIntent(getContext(), person));
 		}
 	}
 

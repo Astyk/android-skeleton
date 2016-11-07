@@ -16,6 +16,7 @@
         android:orientation="vertical">
 
         <include
+            android:id="@+id/activity_navigation_toolbar"
             layout="@layout/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
@@ -56,6 +57,6 @@
         app:itemTextColor="@color/secondary_text"
         app:itemTextAppearance="@style/Text.Subtitle"
         app:menu="@menu/menu_navigation"
-        app:headerLayout="@layout/activity_navigation_header"/>
+        app:headerLayout="@layout/activity_navigation_drawer_header"/>
 
 </android.support.v4.widget.DrawerLayout>
