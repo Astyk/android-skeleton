@@ -1,11 +1,10 @@
 package com.github.willjgriff.skeleton.data.storage.updaters;
 
-import android.util.Log;
-
 import com.github.willjgriff.skeleton.data.storage.updaters.methods.RealmUpdateMethod;
 
 import io.realm.Realm;
 import io.realm.RealmAsyncTask;
+import timber.log.Timber;
 
 /**
  * Created by Will on 11/09/2016.
@@ -24,13 +23,13 @@ public class BasicAsyncRealmUpdater<UPDATETYPE> extends AsyncRealmUpdater<UPDATE
 		mRealmAsyncTask = mRealm.executeTransactionAsync(realm -> {
 			mRealmUpdateMethod.updateRealm(realm, updatedData);
 		}, error -> {
-			Log.e("REALM", "Error updating Realm", error);
+			Timber.e(error, "Error updating Realm");
 		});
 	}
 
 	@Override
 	public void cancel() {
-		if(mRealmAsyncTask != null) {
+		if (mRealmAsyncTask != null) {
 			mRealmAsyncTask.cancel();
 			mRealmAsyncTask = null;
 		}

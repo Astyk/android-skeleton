@@ -102,7 +102,6 @@ public class PeopleFragment extends RxFragment<PeoplePresenter> implements Peopl
 		}));
 
 		addSubscription(mPresenter.getStorageErrors().subscribe(throwable -> {
-			Log.d("STORAGEERROR", "Error loading from Storage", throwable);
 			showStorageError();
 			hideStorageLoading();
 		}));

@@ -1,6 +1,7 @@
 package com.github.willjgriff.skeleton.data.utils.response;
 
 import rx.Observable;
+import timber.log.Timber;
 
 import static com.github.willjgriff.skeleton.data.utils.response.ResponseHolder.Source.NETWORK;
 
@@ -18,6 +19,9 @@ public class NetworkResponseTransformer<RESPONSETYPE> implements Observable.Tran
 			.map(responseData -> new ResponseHolder<RESPONSETYPE>(NETWORK).setData(responseData))
 			// Put any error into ResponseHolder so it is passed to onNext like
 			// any other response. Then the error can be relayed to the user.
-			.onErrorReturn(throwable -> new ResponseHolder<RESPONSETYPE>(NETWORK).setError(throwable));
+			.onErrorReturn(throwable -> {
+				Timber.e(throwable, "Error getting data from Network");
+				return new ResponseHolder<RESPONSETYPE>(NETWORK).setError(throwable);
+			});
 	}
 }

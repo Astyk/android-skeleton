@@ -8,7 +8,6 @@ import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 
 /**
  * Created by Will on 14/08/2016.
@@ -29,12 +28,13 @@ public class AllRealmFetcher<RETURNTYPE extends RealmModel & Timestamp> extends 
 
 	@Override
 	public RealmResults<RETURNTYPE> fetchCurrentData(Realm realm) {
-		return select(realm).lessThan(Timestamp.TIMESTAMP_FIELD, System.currentTimeMillis()).findAll();
+		// TODO: Observe if we need to use the Timestamp for deleting data.
+//		return select(realm).lessThan(Timestamp.TIMESTAMP_FIELD, System.currentTimeMillis()).findAll();
+		return select(realm).findAll();
 	}
 
 	@Override
 	public Observable<RealmResults<RETURNTYPE>> getAsyncObservable(Realm realm) {
-
 		return select(realm).findAllAsync()
 			.asObservable()
 			// This SubscribeOn ObserveOn may not be necessary
