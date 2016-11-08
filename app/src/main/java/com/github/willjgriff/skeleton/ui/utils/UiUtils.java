@@ -12,6 +12,9 @@ import android.view.inputmethod.InputMethodManager;
 
 public class UiUtils {
 
+	// TODO: This should be sourced somewhere more common and kept in sync with the two pane layout width
+	private static final int TWO_PANE_SCREEN_WIDTH_DP = 600;
+
 	public static float convertDpToPixel(float dp, Context context) {
 		Resources resources = context.getResources();
 		DisplayMetrics metrics = resources.getDisplayMetrics();
@@ -24,5 +27,11 @@ public class UiUtils {
 				context.getSystemService(Context.INPUT_METHOD_SERVICE);
 			inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
 		}
+	}
+
+	public static boolean isTwoPaneMode(Context context) {
+		int widthPixels = context.getResources().getDisplayMetrics().widthPixels;
+		float density  = context.getResources().getDisplayMetrics().density;
+		return (widthPixels / density) >= TWO_PANE_SCREEN_WIDTH_DP;
 	}
 }

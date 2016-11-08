@@ -2,7 +2,6 @@ package com.github.willjgriff.skeleton.ui.navigation;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.NavigationView;
@@ -25,7 +24,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationT
 	private ActionBarDrawerToggle mDrawerToggle;
 	private ProgressBar mProgressBar;
 	private ComponentsInvalidator mComponentsInvalidator;
-	private NavigationFragmentFactory mFragmentFactory;
+	private NavigationRouter mNavigationRouter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +35,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationT
 		setupNavigationView();
 
 		mComponentsInvalidator = new ComponentsInvalidator();
-		mFragmentFactory = new NavigationFragmentFactory();
+		mNavigationRouter = new NavigationRouter(getSupportFragmentManager());
 
 		if (savedInstanceState == null) {
 			switchToNavigationFragment(new PeopleFragment());
@@ -70,6 +69,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationT
 		NavigationView navigationView = (NavigationView) findViewById(R.id.activity_navigation_nav_view);
 		navigationView.setNavigationItemSelectedListener(item -> {
 			switchNavigationItem(item);
+			mDrawerLayout.closeDrawers();
 			return false;
 		});
 	}
@@ -77,30 +77,22 @@ public class NavigationActivity extends AppCompatActivity implements NavigationT
 	private void setNavigationToggle(DrawerLayout drawerLayout) {
 		mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
 			R.string.activity_navigation_open, R.string.activity_navigation_close);
-
 		mDrawerToggle.setDrawerIndicatorEnabled(true);
 		drawerLayout.addDrawerListener(mDrawerToggle);
 	}
 
 	private void switchNavigationItem(MenuItem item) {
 		item.setChecked(true);
-		Fragment navigationFragment = mFragmentFactory.getFragmentFromId(item.getItemId());
+		Fragment navigationFragment = NavigationFragmentFactory.getFragmentFromId(item.getItemId());
 		switchToNavigationFragment(navigationFragment);
-		mDrawerLayout.closeDrawers();
-
 		mComponentsInvalidator.invalidateComponents();
 	}
 
 	private void switchToNavigationFragment(Fragment navigationFragment) {
-		if (isDifferentFragment(navigationFragment)) {
-			switchFragmentInContainer(navigationFragment, R.id.activity_navigation_container);
+		if (mNavigationRouter.isDifferentFragment(navigationFragment)) {
+			mNavigationRouter.switchFragmentInContainer(navigationFragment, R.id.activity_navigation_container);
 			closeDetailFragment();
 		}
-	}
-
-	private boolean isDifferentFragment(Fragment navigationFragment) {
-		Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.activity_navigation_container);
-		return currentFragment == null || !currentFragment.getTag().equals(navigationFragment.getClass().toString());
 	}
 
 	@Override
@@ -113,11 +105,6 @@ public class NavigationActivity extends AppCompatActivity implements NavigationT
 		}
 
 		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
-	public boolean isFinishing() {
-		return super.isFinishing();
 	}
 
 	@Override
@@ -142,16 +129,13 @@ public class NavigationActivity extends AppCompatActivity implements NavigationT
 	@Override
 	public void openDetailFragment(Fragment fragment) {
 		setDetailsContainerVisibility(View.VISIBLE);
-		switchFragmentInContainer(fragment, R.id.activity_navigation_details_container);
+		mNavigationRouter.switchFragmentInContainer(fragment, R.id.activity_navigation_details_container);
 	}
 
 	@Override
 	public void closeDetailFragment() {
-		Fragment detailsFragment = getSupportFragmentManager().findFragmentById(R.id.activity_navigation_details_container);
-		if (detailsFragment != null) {
-			getSupportFragmentManager().beginTransaction().remove(detailsFragment).commit();
-			setDetailsContainerVisibility(View.GONE);
-		}
+		mNavigationRouter.removeDetailFragment();
+		setDetailsContainerVisibility(View.GONE);
 	}
 
 	@Override
@@ -165,14 +149,5 @@ public class NavigationActivity extends AppCompatActivity implements NavigationT
 			findViewById(R.id.activity_navigation_details_container).setVisibility(visible);
 			findViewById(R.id.activity_navigation_container_divider).setVisibility(visible);
 		}
-	}
-
-	private void switchFragmentInContainer(Fragment navigationFragment, @IdRes int container) {
-		getSupportFragmentManager()
-			.beginTransaction()
-			.replace(container,
-				navigationFragment,
-				navigationFragment.getClass().toString())
-			.commit();
 	}
 }

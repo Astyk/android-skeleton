@@ -14,7 +14,7 @@ import com.github.willjgriff.skeleton.ui.settings.SettingsFragment;
 
 public class NavigationFragmentFactory {
 
-	public Fragment getFragmentFromId(@IdRes int navigationFragmentId) {
+	public static Fragment getFragmentFromId(@IdRes int navigationFragmentId) {
 		Fragment navigationFragment;
 
 		switch (navigationFragmentId) {

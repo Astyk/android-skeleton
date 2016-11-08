@@ -2,6 +2,8 @@ package com.github.willjgriff.skeleton.ui.utils.list;
 
 import android.view.View;
 
+import com.github.willjgriff.skeleton.ui.utils.UiUtils;
+
 /**
  * Created by Will on 05/10/2016.
  */
@@ -19,7 +21,9 @@ public class ViewHolderSelector {
 	}
 
 	public void highlightThis(int adapterPosition) {
-		mSelectorAdapterPosition.setHighlightedPosition(adapterPosition);
+		if (UiUtils.isTwoPaneMode(mItemContainer.getContext())) {
+			mSelectorAdapterPosition.setHighlightedPosition(adapterPosition);
+		}
 	}
 
 	public void highlightIfSelected(int adapterPosition) {
