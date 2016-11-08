@@ -1,4 +1,4 @@
-package com.github.willjgriff.skeleton.ui;
+package com.github.willjgriff.skeleton.ui.utils;
 
 import android.content.Context;
 import android.support.design.widget.Snackbar;

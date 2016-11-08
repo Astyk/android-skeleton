@@ -13,6 +13,8 @@ import io.realm.annotations.PrimaryKey;
 /**
  * Created by Will on 06/09/2016.
  */
+// TODO: Consider making this Cleaner by having a single Person POJO
+// and NetworkPerson and StoragePerson which have mappers to them.
 public class Person extends RealmObject implements Timestamp, Parcelable {
 
 	private long timestamp;

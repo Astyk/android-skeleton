@@ -1,8 +1,9 @@
 package com.github.willjgriff.skeleton.ui.people.di;
 
-import com.github.willjgriff.skeleton.data.dataloaders.PeopleDataLoader;
+import com.github.willjgriff.skeleton.ui.people.data.datasources.PeopleNetworkDataSource;
 import com.github.willjgriff.skeleton.data.network.services.PeopleService;
-import com.github.willjgriff.skeleton.ui.people.data.PeopleDataManager;
+import com.github.willjgriff.skeleton.ui.people.data.PeopleRepository;
+import com.github.willjgriff.skeleton.ui.people.data.datasources.PeopleStorageDataSource;
 
 import javax.inject.Named;
 
@@ -16,7 +17,7 @@ import io.realm.Realm;
 @Module
 public class PeopleModule {
 
-	// TODO: This feels like a bit of a hack. It allows me to create a new Realm
+	// TODO: The Named annotation feels like a bit of a hack. It allows me to create a new Realm
 	// instance for each module but use the same Realm within a module. The alternative
 	// is not injecting the Realm instance at all and creating it whenever needed.
 	@Provides
@@ -28,13 +29,20 @@ public class PeopleModule {
 
 	@Provides
 	@PeopleScope
-	PeopleDataLoader providesPeopleDataLoader(@Named("people_realm") Realm realm, PeopleService peopleService) {
-		return new PeopleDataLoader(realm, peopleService);
+	PeopleStorageDataSource providesPeopleStorageDataSource(@Named("people_realm") Realm realm) {
+		return new PeopleStorageDataSource(realm);
 	}
 
 	@Provides
 	@PeopleScope
-	PeopleDataManager providesPeopleDataManager(@Named("people_realm") Realm realm, PeopleDataLoader peopleDataLoader) {
-		return new PeopleDataManager(realm, peopleDataLoader);
+	PeopleNetworkDataSource providesPeopleNetworkDataSource(PeopleService peopleService) {
+		return new PeopleNetworkDataSource(peopleService);
+	}
+
+	@Provides
+	@PeopleScope
+	PeopleRepository providesPeopleRepository(PeopleStorageDataSource peopleStorageDataSource,
+	                                          PeopleNetworkDataSource peopleNetworkDataSource) {
+		return new PeopleRepository(peopleStorageDataSource, peopleNetworkDataSource);
 	}
 }

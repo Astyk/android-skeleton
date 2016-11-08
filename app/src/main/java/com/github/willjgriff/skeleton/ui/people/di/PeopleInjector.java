@@ -6,7 +6,7 @@ import com.github.willjgriff.skeleton.di.app.AppInjector;
 /**
  * Created by Will on 21/08/2016.
  */
-
+// TODO: Remove if remains unused.
 public enum PeopleInjector implements ComponentInvalidator {
 
 	INSTANCE;

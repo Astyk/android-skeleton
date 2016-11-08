@@ -1,8 +1,8 @@
-package com.github.willjgriff.skeleton.data.responsewrapper;
+package com.github.willjgriff.skeleton.data.utils.response;
 
 import rx.Observable;
 
-import static com.github.willjgriff.skeleton.data.responsewrapper.ResponseHolder.Source.NETWORK;
+import static com.github.willjgriff.skeleton.data.utils.response.ResponseHolder.Source.NETWORK;
 
 /**
  * Created by Will on 03/11/2016.

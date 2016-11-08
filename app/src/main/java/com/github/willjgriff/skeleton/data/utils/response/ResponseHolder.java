@@ -1,4 +1,4 @@
-package com.github.willjgriff.skeleton.data.responsewrapper;
+package com.github.willjgriff.skeleton.data.utils.response;
 
 /**
  * Created by Will on 10/09/2016.

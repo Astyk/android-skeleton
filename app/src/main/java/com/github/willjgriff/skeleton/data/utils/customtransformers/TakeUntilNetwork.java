@@ -1,6 +1,6 @@
-package com.github.willjgriff.skeleton.data.customtransformers;
+package com.github.willjgriff.skeleton.data.utils.customtransformers;
 
-import com.github.willjgriff.skeleton.data.responsewrapper.ResponseHolder;
+import com.github.willjgriff.skeleton.data.utils.response.ResponseHolder;
 
 import rx.Observable;
 

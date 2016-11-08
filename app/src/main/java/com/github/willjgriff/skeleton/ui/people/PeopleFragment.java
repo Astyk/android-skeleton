@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,7 @@ import com.github.willjgriff.skeleton.R;
 import com.github.willjgriff.skeleton.data.models.Person;
 import com.github.willjgriff.skeleton.di.app.AppInjector;
 import com.github.willjgriff.skeleton.mvp.RxFragment;
-import com.github.willjgriff.skeleton.ui.ErrorDisplayer;
+import com.github.willjgriff.skeleton.ui.utils.ErrorDisplayer;
 import com.github.willjgriff.skeleton.ui.navigation.DetailFragmentListener;
 import com.github.willjgriff.skeleton.ui.navigation.NavigationToolbarListener;
 import com.github.willjgriff.skeleton.ui.people.di.DaggerPeopleComponent;
@@ -77,7 +78,7 @@ public class PeopleFragment extends RxFragment<PeoplePresenter> implements Peopl
 		mProgressBar = (ProgressBar) view.findViewById(R.id.fragment_people_progress_bar);
 
 		setupRecyclerView(view);
-		showCacheLoading();
+		showStorageLoading();
 		showNetworkLoading();
 	}
 
@@ -88,8 +89,8 @@ public class PeopleFragment extends RxFragment<PeoplePresenter> implements Peopl
 
 		addSubscription(mPresenter.getPeopleList().subscribe(this::setPeople));
 
-		addSubscription(mPresenter.getCacheLoaded().subscribe(aBoolean -> {
-			hideCacheLoading();
+		addSubscription(mPresenter.getStorageLoaded().subscribe(aBoolean -> {
+			hideStorageLoading();
 		}));
 
 		addSubscription(mPresenter.getNetworkLoaded().subscribe(aBoolean -> {
@@ -97,18 +98,19 @@ public class PeopleFragment extends RxFragment<PeoplePresenter> implements Peopl
 			// Can this be abstracted? (I guess with a list-detail Fragment abstraction and base subscriptions)
 			mDetailFragmentListener.closeDetailFragment();
 			hideNetworkLoading();
-			hideCacheLoading();
+			hideStorageLoading();
 		}));
 
-		addSubscription(mPresenter.getCacheErrors().subscribe(throwable -> {
-			showCacheError();
-			hideCacheLoading();
+		addSubscription(mPresenter.getStorageErrors().subscribe(throwable -> {
+			Log.d("STORAGEERROR", "Error loading from Storage", throwable);
+			showStorageError();
+			hideStorageLoading();
 		}));
 
 		addSubscription(mPresenter.getNetworkErrors().subscribe(throwable -> {
 			showNetworkError(throwable);
 			hideNetworkLoading();
-			hideCacheLoading();
+			hideStorageLoading();
 		}));
 	}
 
@@ -122,7 +124,7 @@ public class PeopleFragment extends RxFragment<PeoplePresenter> implements Peopl
 		mSwipeRefreshLayout.setColorSchemeResources(R.color.accent);
 	}
 
-	private void showCacheLoading() {
+	private void showStorageLoading() {
 		mProgressBar.setVisibility(View.VISIBLE);
 	}
 
@@ -130,7 +132,7 @@ public class PeopleFragment extends RxFragment<PeoplePresenter> implements Peopl
 		mToolbarListener.showNetworkLoadingView();
 	}
 
-	private void hideCacheLoading() {
+	private void hideStorageLoading() {
 		mProgressBar.setVisibility(View.INVISIBLE);
 	}
 
@@ -141,8 +143,8 @@ public class PeopleFragment extends RxFragment<PeoplePresenter> implements Peopl
 		}
 	}
 
-	private void showCacheError() {
-		Snackbar.make(getView(), R.string.fragment_people_cache_error_string, Snackbar.LENGTH_LONG).show();
+	private void showStorageError() {
+		Snackbar.make(getView(), R.string.fragment_people_storage_error_string, Snackbar.LENGTH_LONG).show();
 	}
 
 	private void showNetworkError(Throwable throwable) {

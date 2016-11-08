@@ -8,10 +8,12 @@
     <string name="fragment_people_title">People</string>
     <string name="fragment_form_title">Form</string>
     <string name="fragment_settings_title">Settings</string>
+
+    <!--person details-->
     <string name="fragment_person_title">Person</string>
 
     <!--people fragment-->
-    <string name="fragment_people_cache_error_string">Error loading from cache. Content may not be as expected</string>
+    <string name="fragment_people_storage_error_string">Error loading from storage. Content may not be as expected</string>
     <string name="network_error_no_internet_connection">Internet disconnected, the content was not updated</string>
     <string name="network_error_io_exception">The service could be down, the content was not updated</string>
     <string name="network_error_non_200_response_code">The service could not deal with this request, the content was not updated</string>
