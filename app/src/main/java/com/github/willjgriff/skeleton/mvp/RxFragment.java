@@ -12,7 +12,7 @@ import rx.subscriptions.CompositeSubscription;
  * Created by Will on 15/09/2016.
  */
 
-public abstract class RxFragment<PRESENTER extends BasePresenter> extends Fragment {
+public abstract class RxFragment<PRESENTER extends RxPresenter> extends Fragment {
 
 	private CompositeSubscription mCompositeSubscription;
 
@@ -43,7 +43,7 @@ public abstract class RxFragment<PRESENTER extends BasePresenter> extends Fragme
 
 	@Override
 	public void onDestroy() {
-		getPresenter().cancelUpdate();
+		getPresenter().close();
 		super.onDestroy();
 	}
 

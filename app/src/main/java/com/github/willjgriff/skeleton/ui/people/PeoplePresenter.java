@@ -2,7 +2,7 @@ package com.github.willjgriff.skeleton.ui.people;
 
 import com.github.willjgriff.skeleton.data.models.Person;
 import com.github.willjgriff.skeleton.data.utils.response.ResponseHolder;
-import com.github.willjgriff.skeleton.mvp.BasePresenter;
+import com.github.willjgriff.skeleton.mvp.RxPresenter;
 import com.github.willjgriff.skeleton.ui.people.data.PeopleRepository;
 import com.github.willjgriff.skeleton.ui.people.di.PeopleScope;
 
@@ -19,7 +19,7 @@ import static com.github.willjgriff.skeleton.data.utils.response.ResponseHolder.
  * Created by Will on 19/08/2016.
  */
 @PeopleScope
-public class PeoplePresenter implements BasePresenter {
+public class PeoplePresenter implements RxPresenter {
 
 	private PeopleRepository mPeopleRepository;
 	private Observable<ResponseHolder<List<Person>>> mPeopleObservable;
@@ -66,7 +66,7 @@ public class PeoplePresenter implements BasePresenter {
 	}
 
 	@Override
-	public void cancelUpdate() {
+	public void close() {
 		mPeopleRepository.closeDataManager();
 	}
 
