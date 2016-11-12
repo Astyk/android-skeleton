@@ -13,7 +13,7 @@ public abstract class BaseMvpPresenter<VIEW> implements MvpPresenter<VIEW> {
 	private CompositeSubscription mCompositeSubscription;
 
 	@Override
-	public void bindView(VIEW mvpView) {
+	public final void bindView(VIEW mvpView) {
 		mMvpView = mvpView;
 		mCompositeSubscription = new CompositeSubscription();
 		viewReady();
@@ -28,7 +28,7 @@ public abstract class BaseMvpPresenter<VIEW> implements MvpPresenter<VIEW> {
 	protected abstract void viewReady();
 
 	@Override
-	public void unbindView() {
+	public final void unbindView() {
 		mCompositeSubscription.unsubscribe();
 		mMvpView = null;
 	}

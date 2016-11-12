@@ -8,7 +8,7 @@ import dagger.Component;
 /**
  * Created by Will on 19/08/2016.
  */
-@PeopleScope
+@FragmentScope
 @Component(modules = PeopleModule.class, dependencies = AppComponent.class)
 public interface PeopleComponent {
 

@@ -37,4 +37,8 @@ public class ErrorDisplayer {
 		}
 		return context.getString(R.string.network_error_unknown);
 	}
+
+	public static void displayStorageError(View view) {
+		Snackbar.make(view, R.string.fragment_people_storage_error_string, Snackbar.LENGTH_LONG).show();
+	}
 }

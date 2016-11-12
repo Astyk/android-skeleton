@@ -3,9 +3,6 @@ package com.github.willjgriff.skeleton.mvp;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 /**
  * Created by Will on 12/11/2016.
@@ -17,21 +14,30 @@ public abstract class BaseMvpFragment<VIEW, PRESENTER extends MvpPresenter<VIEW>
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
+
+		// This approach seems to work, even when putting this Fragment into the BackStack, contrary
+		// to the Android doc on setRetainInstance(). See here for why the doc may be incorrect:
+		// https://www.reddit.com/r/androiddev/comments/34fb2m/retaininstancetrue_behavior_changed_in/
+		// It could effect a Fragments lifecycle callbacks when it is in the BackStack, specifically
+		// savedInstanceState may not be passed to onCreateView() upon recreation eg on orientation
+		// change. I should keep an eye on this approach and review it when the SDK is updated.
 		setRetainInstance(true);
+
 		super.onCreate(savedInstanceState);
 	}
 
-	@Nullable
+	// The callbacks used shouldn't matter, if using onViewCreated() and
+	// onDestroyView() though we must use onCreateView() to bind views
 	@Override
-	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+	public void onStart() {
+		super.onStart();
 		getPresenter().bindView(getMvpView());
-		return super.onCreateView(inflater, container, savedInstanceState);
 	}
 
 	@Override
-	public void onDestroyView() {
+	public void onStop() {
 		getPresenter().unbindView();
-		super.onDestroyView();
+		super.onStop();
 	}
 
 	@Override

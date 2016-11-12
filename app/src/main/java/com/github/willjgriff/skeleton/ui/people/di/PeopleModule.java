@@ -21,26 +21,26 @@ public class PeopleModule {
 	// instance for each module but use the same Realm within a module. The alternative
 	// is not injecting the Realm instance at all and creating it whenever needed.
 	@Provides
-	@PeopleScope
+	@FragmentScope
 	@Named("people_realm")
 	Realm providesRealm(Realm realm) {
 		return realm;
 	}
 
 	@Provides
-	@PeopleScope
+	@FragmentScope
 	PeopleStorageDataSource providesPeopleStorageDataSource(@Named("people_realm") Realm realm) {
 		return new PeopleStorageDataSource(realm);
 	}
 
 	@Provides
-	@PeopleScope
+	@FragmentScope
 	PeopleNetworkDataSource providesPeopleNetworkDataSource(PeopleService peopleService) {
 		return new PeopleNetworkDataSource(peopleService);
 	}
 
 	@Provides
-	@PeopleScope
+	@FragmentScope
 	PeopleRepository providesPeopleRepository(PeopleStorageDataSource peopleStorageDataSource,
 	                                          PeopleNetworkDataSource peopleNetworkDataSource) {
 		return new PeopleRepository(peopleStorageDataSource, peopleNetworkDataSource);
