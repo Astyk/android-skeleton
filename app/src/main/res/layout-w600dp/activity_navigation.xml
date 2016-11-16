@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--TODO: The parent layout folders width in DP should be increased-->
-<!--for prod. It's left small for debugging purposes.-->
+<!--TODO: The parent layout folders width in DP should be increased for prod. -->
+<!--It's left small for debugging purposes. Also update UiUtils two pane screen width-->
 <android.support.v4.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"

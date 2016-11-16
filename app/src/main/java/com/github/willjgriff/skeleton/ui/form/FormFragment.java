@@ -4,8 +4,8 @@ import android.content.Context;
 
 import com.github.willjgriff.skeleton.R;
 import com.github.willjgriff.skeleton.mvp.BaseMvpFragment;
-import com.github.willjgriff.skeleton.ui.form.mvp.FormView;
 import com.github.willjgriff.skeleton.ui.form.mvp.FormPresenter;
+import com.github.willjgriff.skeleton.ui.form.mvp.FormView;
 import com.github.willjgriff.skeleton.ui.navigation.NavigationToolbarListener;
 
 /**

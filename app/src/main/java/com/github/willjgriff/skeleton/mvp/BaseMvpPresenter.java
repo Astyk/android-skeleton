@@ -20,7 +20,7 @@ public abstract class BaseMvpPresenter<VIEW> implements MvpPresenter<VIEW> {
 	}
 
 	/**
-	 * Must be used with {@link BaseMvpPresenter#addSubscription} to ensure view updates
+	 * Should be used with {@link BaseMvpPresenter#addSubscription} to ensure view updates
 	 * are only attempted between {@link BaseMvpPresenter#bindView(Object)} and
 	 * {@link BaseMvpPresenter#unbindView()} alternatively check {@link BaseMvpPresenter#getView()}
 	 * != null before using, although question the setup if this needs to be done.
