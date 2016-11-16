@@ -1,7 +1,5 @@
 package com.github.willjgriff.skeleton.data.models.cleanperson;
 
-import com.github.willjgriff.skeleton.data.models.Person;
-
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import rx.functions.Func1;

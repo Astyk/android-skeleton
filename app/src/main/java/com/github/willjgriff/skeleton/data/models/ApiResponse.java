@@ -10,10 +10,6 @@ import java.util.List;
  */
 public class ApiResponse<CONTENTTYPE> {
 
-//	@Expose
-//	@SerializedName("info")
-//	private Info info;
-
 	@Expose
 	@SerializedName("results")
 	private CONTENTTYPE content;

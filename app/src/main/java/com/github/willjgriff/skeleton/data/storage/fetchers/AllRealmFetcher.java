@@ -1,7 +1,5 @@
 package com.github.willjgriff.skeleton.data.storage.fetchers;
 
-import com.github.willjgriff.skeleton.data.models.helpers.Timestamp;
-
 import io.realm.Realm;
 import io.realm.RealmModel;
 import io.realm.RealmQuery;
@@ -12,9 +10,7 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by Will on 14/08/2016.
  */
-// TODO: This is now coupled to the Timestamp interface. If we need it without then abstract it.
-// Hopefully we can remove it when we have individual id's coming from the server
-public class AllRealmFetcher<RETURNTYPE extends RealmModel & Timestamp> extends RealmFetcher<RETURNTYPE> {
+public class AllRealmFetcher<RETURNTYPE extends RealmModel> extends RealmFetcher<RETURNTYPE> {
 
 	private Class<RETURNTYPE> mReturnClass;
 
@@ -28,8 +24,6 @@ public class AllRealmFetcher<RETURNTYPE extends RealmModel & Timestamp> extends 
 
 	@Override
 	public RealmResults<RETURNTYPE> fetchCurrentData(Realm realm) {
-		// TODO: Observe if we need to use the Timestamp for deleting data.
-//		return select(realm).lessThan(Timestamp.TIMESTAMP_FIELD, System.currentTimeMillis()).findAll();
 		return select(realm).findAll();
 	}
 

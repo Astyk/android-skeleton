@@ -3,7 +3,6 @@ package com.github.willjgriff.skeleton.data.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.github.willjgriff.skeleton.data.models.helpers.Timestamp;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -13,11 +12,9 @@ import io.realm.annotations.PrimaryKey;
 /**
  * Created by Will on 06/09/2016.
  */
-// TODO: Consider making this Cleaner by having a single Person POJO
-// and NetworkPerson and StoragePerson which have mappers to them.
-public class Person extends RealmObject implements Timestamp, Parcelable {
-
-	private long timestamp;
+// TODO: Consider making this Cleaner by having a single DomainPerson
+// and NetworkPerson and StoragePerson which have mappers to / from them.
+public class Person extends RealmObject implements Parcelable {
 
 	@PrimaryKey
 	@Expose
@@ -27,27 +24,16 @@ public class Person extends RealmObject implements Timestamp, Parcelable {
 	public Person() {
 	}
 
+	protected Person(Parcel in) {
+		email = in.readString();
+	}
+
 	public String getEmail() {
 		return email;
 	}
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	@Override
-	public void setTimestamp(long timestamp) {
-		this.timestamp = timestamp;
-	}
-
-	@Override
-	public long getTimestamp() {
-		return timestamp;
-	}
-
-	protected Person(Parcel in) {
-		timestamp = in.readLong();
-		email = in.readString();
 	}
 
 	public static final Creator<Person> CREATOR = new Creator<Person>() {
@@ -69,7 +55,6 @@ public class Person extends RealmObject implements Timestamp, Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel parcel, int i) {
-		parcel.writeLong(timestamp);
 		parcel.writeString(email);
 	}
 }
