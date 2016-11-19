@@ -44,8 +44,8 @@ public class PeoplePresenter extends BaseMvpPresenter<PeopleView> {
 		}));
 
 		addSubscription(getNetworkLoaded().subscribe(aBoolean -> {
-			// TODO: We do this as the detail View may no longer be in sync with the list in a two pane Window.
-			// Can this be abstracted? (I guess with a list-detail Fragment abstraction and base subscriptions)
+			// This is necessary as after the network has loaded the detail
+			// View may no longer be in sync with the list in a two pane Window.
 			getView().closeDetailFrament();
 			getView().hideNetworkLoading();
 			getView().hideStorageLoading();

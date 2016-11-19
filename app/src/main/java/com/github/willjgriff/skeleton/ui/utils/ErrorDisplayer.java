@@ -5,7 +5,7 @@ import android.support.design.widget.Snackbar;
 import android.view.View;
 
 import com.github.willjgriff.skeleton.R;
-import com.github.willjgriff.skeleton.data.network.utils.Connectivity;
+import com.github.willjgriff.skeleton.data.network.utils.ConnectivityUtils;
 
 import java.io.IOException;
 
@@ -14,7 +14,7 @@ import retrofit2.adapter.rxjava.HttpException;
 /**
  * Created by williamgriffiths on 22/09/2016.
  */
-// TODO: I could customise the error messages dependant on the screen / api request made
+// TODO: The error messages could be customised dependant on the screen / api request made
 public class ErrorDisplayer {
 
 	public static void displayNetworkError(View view, Throwable throwable) {
@@ -24,7 +24,7 @@ public class ErrorDisplayer {
 	}
 
 	private static String getErrorMessage(Context context, Throwable throwable) {
-		if (!Connectivity.isConnected(context)) {
+		if (!ConnectivityUtils.isConnected(context)) {
 			return context.getString(R.string.network_error_no_internet_connection);
 
 		} else if (throwable instanceof IOException) {

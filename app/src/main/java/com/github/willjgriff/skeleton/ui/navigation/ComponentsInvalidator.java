@@ -9,8 +9,8 @@ import java.util.List;
 /**
  * Created by Will on 03/10/2016.
  *
- * TODO: Maintaining and invalidating components is probably unnecessary optimisation. The
- * alternative being to not keep components in a Singleton at all and let them be GC'd.
+ * TODO: Remove if unused. Maintaining and invalidating components is probably unnecessary optimisation.
+ * The alternative being to not keep components in a Singleton at all and let them be GC'd.
  */
 public class ComponentsInvalidator {
 

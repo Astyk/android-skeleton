@@ -1,4 +1,4 @@
-package com.github.willjgriff.skeleton.data.network;
+package com.github.willjgriff.skeleton.data.network.utils;
 
 import android.support.annotation.DrawableRes;
 import android.widget.ImageView;

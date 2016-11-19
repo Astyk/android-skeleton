@@ -2,15 +2,14 @@ package com.github.willjgriff.skeleton.ui.people.data;
 
 import android.support.annotation.NonNull;
 
-import com.github.willjgriff.skeleton.data.utils.customtransformers.TakeUntilNetwork;
 import com.github.willjgriff.skeleton.data.models.Person;
+import com.github.willjgriff.skeleton.data.utils.customtransformers.TakeUntilNetwork;
 import com.github.willjgriff.skeleton.data.utils.response.ResponseHolder;
 import com.github.willjgriff.skeleton.ui.people.data.datasources.PeopleNetworkDataSource;
 import com.github.willjgriff.skeleton.ui.people.data.datasources.PeopleStorageDataSource;
 
 import java.util.List;
 
-import io.realm.Realm;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
@@ -46,10 +45,10 @@ public class PeopleRepository {
 
 	private Observable<ResponseHolder<List<Person>>> getPeopleFromNetwork(int countPeople) {
 		return mPeopleNetworkDataSource.getPeopleFromNetwork(countPeople).doOnNext(listResponseHolder -> {
-				if (listResponseHolder.hasData()) {
-					mPeopleStorageDataSource.savePeopleToStorage(listResponseHolder.getData());
-				}
-			});
+			if (listResponseHolder.hasData()) {
+				mPeopleStorageDataSource.savePeopleToStorage(listResponseHolder.getData());
+			}
+		});
 	}
 
 	public void triggerNetworkUpdate() {

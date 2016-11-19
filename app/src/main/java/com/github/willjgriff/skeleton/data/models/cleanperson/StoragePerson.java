@@ -28,7 +28,7 @@ public class StoragePerson extends RealmObject {
 		this.email = email;
 	}
 
-	public class ConvertToDomain implements Func1<StoragePerson, DomainPerson> {
+	public static class ConvertToDomain implements Func1<StoragePerson, DomainPerson> {
 		@Override
 		public DomainPerson call(StoragePerson storagePerson) {
 			DomainPerson domainPerson = new DomainPerson();

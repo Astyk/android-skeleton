@@ -12,8 +12,7 @@ import io.realm.annotations.PrimaryKey;
 /**
  * Created by Will on 06/09/2016.
  */
-// TODO: Consider making this Cleaner by having a single DomainPerson
-// and NetworkPerson and StoragePerson which have mappers to / from them.
+// TODO: Consider using models in cleanperson
 public class Person extends RealmObject implements Parcelable {
 
 	@PrimaryKey

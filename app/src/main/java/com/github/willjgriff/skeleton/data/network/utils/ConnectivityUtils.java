@@ -7,7 +7,7 @@ import android.net.NetworkInfo;
 /**
  * Created by williamgriffiths on 22/09/2016.
  */
-public class Connectivity {
+public class ConnectivityUtils {
 
 	/**
 	 * Check if there is any connectivity.

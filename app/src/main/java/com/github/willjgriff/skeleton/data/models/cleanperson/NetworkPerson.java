@@ -17,7 +17,7 @@ public class NetworkPerson {
 		return email;
 	}
 
-	public class ConvertToDomain implements Func1<NetworkPerson, DomainPerson> {
+	public static class ConvertToDomain implements Func1<NetworkPerson, DomainPerson> {
 		@Override
 		public DomainPerson call(NetworkPerson networkPerson) {
 			DomainPerson domainPerson = new DomainPerson();

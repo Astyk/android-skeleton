@@ -17,7 +17,7 @@ import io.realm.Realm;
 @Module
 public class PeopleModule {
 
-	// TODO: The Named annotation feels like a bit of a hack. It allows me to create a new Realm
+	// Adding a Named annotation to the provided Realm allows me to create a new Realm
 	// instance for each module but use the same Realm within a module. The alternative
 	// is not injecting the Realm instance at all and creating it whenever needed.
 	@Provides

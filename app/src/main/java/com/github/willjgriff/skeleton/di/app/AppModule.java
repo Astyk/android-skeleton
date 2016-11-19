@@ -20,7 +20,7 @@ public class AppModule {
 		mApplication = application;
 	}
 
-	// TODO: I don't actually need this yet. Remove this once I do, otherwise remove.
+	// TODO: I don't actually need this yet. Remove if remains unused.
 	// Note Dagger knows this and marks this modules construction as deprecated.
 	@Provides
 	@Singleton

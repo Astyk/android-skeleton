@@ -17,9 +17,9 @@ import rx.schedulers.Schedulers;
  */
 public class ListNetworkFetch<RESPONSETYPE> {
 
-	private Observable<ApiResponse<List<RESPONSETYPE>>> mRetrofitObservable;
+	private Observable<List<RESPONSETYPE>> mRetrofitObservable;
 
-	public ListNetworkFetch(@NonNull Observable<ApiResponse<List<RESPONSETYPE>>> networkCall) {
+	public ListNetworkFetch(@NonNull Observable<List<RESPONSETYPE>> networkCall) {
 		mRetrofitObservable = networkCall;
 	}
 
@@ -28,9 +28,7 @@ public class ListNetworkFetch<RESPONSETYPE> {
 		return mRetrofitObservable
 			.subscribeOn(Schedulers.io())
 			.observeOn(AndroidSchedulers.mainThread())
-			.filter(listApiResponse -> listApiResponse.getContent() != null)
-			// TODO: Use a custom Retrofit Adapter for this I think...
-			.map(ApiResponse::getContent);
+			.filter(listApiResponse -> listApiResponse != null);
 	}
 
 }

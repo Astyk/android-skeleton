@@ -2,6 +2,7 @@ package com.github.willjgriff.skeleton.di.app;
 
 import com.github.willjgriff.skeleton.data.network.ApiRes;
 import com.github.willjgriff.skeleton.data.network.services.PeopleService;
+import com.github.willjgriff.skeleton.data.network.BodyExtractorTypeAdapterFactory;
 import com.google.gson.GsonBuilder;
 
 import javax.inject.Singleton;
@@ -22,7 +23,9 @@ public class NetworkModule {
 	@Singleton
 	GsonConverterFactory providesGsonConverterFactory() {
 		GsonBuilder gsonBuilder = new GsonBuilder();
+		// TODO: If we have to use this, consider a cleaner approach to structuring models.
 		gsonBuilder.excludeFieldsWithoutExposeAnnotation();
+		gsonBuilder.registerTypeAdapterFactory(new BodyExtractorTypeAdapterFactory());
 		return GsonConverterFactory.create(gsonBuilder.create());
 	}
 
