@@ -19,12 +19,12 @@ public class RealmResponseTransformer<RESPONSETYPE> implements Observable.Transf
 			.first()
 			// Put data into ResponseHolder, ResponseHolder is necessary to differentiate between
 			// storage and network sourced data and retain any errors.
-			.map(responseData -> new ResponseHolder<RESPONSETYPE>(STORAGE).setData(responseData))
+			.map(responseData -> new ResponseHolder<RESPONSETYPE>(STORAGE).setData(responseData));
 			// Put any error into ResponseHolder so it is passed to onNext like any other response.
 			// Then the error can be relayed to the user.
-			.onErrorReturn(throwable -> {
-				Timber.e(throwable, "Error getting data from Storage");
-				return new ResponseHolder<RESPONSETYPE>(STORAGE).setError(throwable);
-			});
+//			.onErrorReturn(throwable -> {
+//				Timber.e(throwable, "Error getting data from Storage");
+//				return new ResponseHolder<RESPONSETYPE>(STORAGE).setError(throwable);
+//			});
 	}
 }

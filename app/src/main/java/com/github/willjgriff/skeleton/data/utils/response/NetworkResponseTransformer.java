@@ -16,12 +16,12 @@ public class NetworkResponseTransformer<RESPONSETYPE> implements Observable.Tran
 		return observable
 			// Put data into ResponseHolder, ResponseHolder is necessary to differentiate
 			// between storage and network sourced data and retain any errors.
-			.map(responseData -> new ResponseHolder<RESPONSETYPE>(NETWORK).setData(responseData))
+			.map(responseData -> new ResponseHolder<RESPONSETYPE>(NETWORK).setData(responseData));
 			// Put any error into ResponseHolder so it is passed to onNext like
 			// any other response. Then the error can be relayed to the user.
-			.onErrorReturn(throwable -> {
-				Timber.e(throwable, "Error getting data from Network");
-				return new ResponseHolder<RESPONSETYPE>(NETWORK).setError(throwable);
-			});
+//			.onErrorReturn(throwable -> {
+//				Timber.e(throwable, "Error getting data from Network");
+//				return new ResponseHolder<RESPONSETYPE>(NETWORK).setError(throwable);
+//			});
 	}
 }

@@ -13,7 +13,6 @@ import javax.inject.Inject;
 import rx.Observable;
 
 import static com.github.willjgriff.skeleton.data.utils.response.ResponseHolder.Source.NETWORK;
-import static com.github.willjgriff.skeleton.data.utils.response.ResponseHolder.Source.STORAGE;
 
 /**
  * Created by Will on 19/08/2016.
@@ -27,7 +26,7 @@ public class PeoplePresenter extends BaseMvpPresenter<PeopleView> {
 	@Inject
 	PeoplePresenter(PeopleRepository peopleRepository) {
 		mPeopleRepository = peopleRepository;
-		mPeopleObservable = mPeopleRepository.getPeopleObservable(20);
+		mPeopleObservable =  mPeopleRepository.getPeopleObservable(20);
 	}
 
 	@Override
@@ -36,11 +35,10 @@ public class PeoplePresenter extends BaseMvpPresenter<PeopleView> {
 		getView().showNetworkLoading();
 
 		addSubscription(getPeopleList().subscribe(persons -> {
+			getView().hideDataLoading();
 			getView().setPeople(persons);
-		}));
-
-		addSubscription(getStorageLoaded().subscribe(aBoolean -> {
-			getView().hideStorageLoading();
+		}, throwable -> {
+			getView().handleError(throwable);
 		}));
 
 		addSubscription(getNetworkLoaded().subscribe(aBoolean -> {
@@ -48,33 +46,16 @@ public class PeoplePresenter extends BaseMvpPresenter<PeopleView> {
 			// Can this be abstracted? (I guess with a list-detail Fragment abstraction and base subscriptions)
 			getView().closeDetailFrament();
 			getView().hideNetworkLoading();
-			getView().hideStorageLoading();
-		}));
-
-		addSubscription(getStorageErrors().subscribe(throwable -> {
-			getView().showStorageError();
-			getView().hideStorageLoading();
-		}));
-
-		addSubscription(getNetworkErrors().subscribe(throwable -> {
-			getView().showNetworkError(throwable);
+		}, throwable -> {
 			getView().hideNetworkLoading();
-			getView().hideStorageLoading();
 		}));
 	}
 
 	private Observable<List<Person>> getPeopleList() {
 		return mPeopleObservable
 			.filter(ResponseHolder::hasData)
-			.map(ResponseHolder::getData);
-	}
-
-	private Observable<Boolean> getStorageLoaded() {
-		return mPeopleObservable
-			.filter(ResponseHolder::hasData)
-			.filter(listResponseHolder -> listResponseHolder.getData().size() > 0)
-			.filter(listResponseHolder -> listResponseHolder.getSource() == STORAGE)
-			.map(listResponseHolder -> false);
+			.map(ResponseHolder::getData)
+			.filter(persons -> persons.size() > 0);
 	}
 
 	private Observable<Boolean> getNetworkLoaded() {
@@ -82,20 +63,6 @@ public class PeoplePresenter extends BaseMvpPresenter<PeopleView> {
 			.filter(ResponseHolder::hasData)
 			.filter(listResponseHolder -> listResponseHolder.getSource() == NETWORK)
 			.map(listResponseHolder -> false);
-	}
-
-	private Observable<Throwable> getStorageErrors() {
-		return mPeopleObservable
-			.filter(ResponseHolder::hasError)
-			.filter(listResponseHolder -> listResponseHolder.getSource() == STORAGE)
-			.map(ResponseHolder::getError);
-	}
-
-	private Observable<Throwable> getNetworkErrors() {
-		return mPeopleObservable
-			.filter(ResponseHolder::hasError)
-			.filter(listResponseHolder -> listResponseHolder.getSource() == NETWORK)
-			.map(ResponseHolder::getError);
 	}
 
 	@Override

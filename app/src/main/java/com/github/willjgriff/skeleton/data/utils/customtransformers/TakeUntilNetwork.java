@@ -18,7 +18,7 @@ public class TakeUntilNetwork<RESPONSEHOLDER extends ResponseHolder> implements 
 	public Observable<RESPONSEHOLDER> call(Observable<RESPONSEHOLDER> observable) {
 		return observable
 			.doOnNext(responseholder -> {
-				if (ResponseHolder.Source.NETWORK == responseholder.getSource() && !responseholder.hasError()) {
+				if (ResponseHolder.Source.NETWORK == responseholder.getSource()) {
 					mNetworkDataFetched = true;
 				}
 			})

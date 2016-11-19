@@ -2,6 +2,7 @@ package com.github.willjgriff.skeleton.ui.utils;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -21,17 +22,15 @@ public class UiUtils {
 		return dp * (metrics.densityDpi / 160f);
 	}
 
-	public static void hideSoftKeyboard(View view, Context context) {
-		if (view != null) {
-			InputMethodManager inputMethodManager = (InputMethodManager)
-				context.getSystemService(Context.INPUT_METHOD_SERVICE);
-			inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-		}
+	public static void hideSoftKeyboard(@NonNull View view, @NonNull Context context) {
+		InputMethodManager inputMethodManager = (InputMethodManager)
+			context.getSystemService(Context.INPUT_METHOD_SERVICE);
+		inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
 	}
 
 	public static boolean isTwoPaneMode(Context context) {
 		int widthPixels = context.getResources().getDisplayMetrics().widthPixels;
-		float density  = context.getResources().getDisplayMetrics().density;
+		float density = context.getResources().getDisplayMetrics().density;
 		return (widthPixels / density) >= TWO_PANE_SCREEN_WIDTH_DP;
 	}
 }

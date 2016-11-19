@@ -12,17 +12,15 @@ public interface PeopleView {
 
 	void setPeople(List<Person> persons);
 
-	void hideStorageLoading();
+	void hideDataLoading();
 
 	void hideNetworkLoading();
 
 	void closeDetailFrament();
 
-	void showStorageError();
-
-	void showNetworkError(Throwable throwable);
-
 	void showStorageLoading();
 
 	void showNetworkLoading();
+
+	void handleError(Throwable throwable);
 }

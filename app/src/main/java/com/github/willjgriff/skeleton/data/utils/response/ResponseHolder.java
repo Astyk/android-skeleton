@@ -7,7 +7,6 @@ package com.github.willjgriff.skeleton.data.utils.response;
 public class ResponseHolder<RETURNTYPE> {
 
 	private RETURNTYPE mData;
-	private Throwable mError;
 	private Source mSource;
 
 	public ResponseHolder(Source source) {
@@ -29,19 +28,6 @@ public class ResponseHolder<RETURNTYPE> {
 
 	public boolean hasData() {
 		return mData != null;
-	}
-
-	public Throwable getError() {
-		return mError;
-	}
-
-	public ResponseHolder<RETURNTYPE> setError(Throwable error) {
-		mError = error;
-		return this;
-	}
-
-	public boolean hasError() {
-		return mError != null;
 	}
 
 	public enum Source {

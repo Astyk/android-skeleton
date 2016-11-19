@@ -2,7 +2,6 @@ package com.github.willjgriff.skeleton.ui.people.data;
 
 import android.support.annotation.NonNull;
 
-import com.github.willjgriff.skeleton.data.utils.customtransformers.TakeUntilNetwork;
 import com.github.willjgriff.skeleton.data.models.Person;
 import com.github.willjgriff.skeleton.data.utils.response.ResponseHolder;
 import com.github.willjgriff.skeleton.ui.people.data.datasources.PeopleNetworkDataSource;
@@ -10,8 +9,10 @@ import com.github.willjgriff.skeleton.ui.people.data.datasources.PeopleStorageDa
 
 import java.util.List;
 
-import io.realm.Realm;
 import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
 /**
@@ -31,9 +32,11 @@ public class PeopleRepository {
 	}
 
 	public Observable<ResponseHolder<List<Person>>> getPeopleObservable(int countPeople) {
+		// Maybe a Concat is beater, not as efficient but prevents any NetworkError from preventing
+		// Cache loading...
 		return Observable
 			.merge(getPeopleFromNetworkTrigger(countPeople), mPeopleStorageDataSource.getPeopleFromStorage())
-			.compose(new TakeUntilNetwork<>())
+//			.compose(new TakeUntilNetwork<>())
 			.replay(1)
 			.autoConnect();
 	}
@@ -45,11 +48,24 @@ public class PeopleRepository {
 	}
 
 	private Observable<ResponseHolder<List<Person>>> getPeopleFromNetwork(int countPeople) {
-		return mPeopleNetworkDataSource.getPeopleFromNetwork(countPeople).doOnNext(listResponseHolder -> {
-				if (listResponseHolder.hasData()) {
-					mPeopleStorageDataSource.savePeopleToStorage(listResponseHolder.getData());
+//		return mPeopleNetworkDataSource.getPeopleFromNetwork(countPeople).doOnNext(listResponseHolder -> {
+//				if (listResponseHolder.hasData()) {
+//					mPeopleStorageDataSource.savePeopleToStorage(listResponseHolder.getData());
+//				}
+//			});
+		return Observable.create(new Observable.OnSubscribe<ResponseHolder<List<Person>>>() {
+			@Override
+			public void call(Subscriber<? super ResponseHolder<List<Person>>> subscriber) {
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
 				}
-			});
+				subscriber.onError(new Throwable());
+			}
+		})
+			.subscribeOn(Schedulers.newThread())
+			.observeOn(AndroidSchedulers.mainThread());
 	}
 
 	public void triggerNetworkUpdate() {

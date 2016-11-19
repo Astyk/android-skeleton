@@ -9,6 +9,9 @@ import com.github.willjgriff.skeleton.data.network.utils.Connectivity;
 
 import java.io.IOException;
 
+import io.realm.exceptions.RealmError;
+import io.realm.exceptions.RealmException;
+import io.realm.exceptions.RealmFileException;
 import retrofit2.adapter.rxjava.HttpException;
 
 /**
@@ -17,14 +20,18 @@ import retrofit2.adapter.rxjava.HttpException;
 // TODO: I could customise the error messages dependant on the screen / api request made
 public class ErrorDisplayer {
 
-	public static void displayNetworkError(View view, Throwable throwable) {
+	public static void displayError(View view, Throwable throwable) {
 		String errorText = getErrorMessage(view.getContext(), throwable);
-
 		Snackbar.make(view, errorText, Snackbar.LENGTH_LONG).show();
 	}
 
 	private static String getErrorMessage(Context context, Throwable throwable) {
-		if (!Connectivity.isConnected(context)) {
+		if (throwable instanceof RealmException
+			|| throwable instanceof RealmFileException
+			|| throwable instanceof RealmError) {
+			return context.getString(R.string.fragment_people_storage_error_string);
+
+		} else if (!Connectivity.isConnected(context)) {
 			return context.getString(R.string.network_error_no_internet_connection);
 
 		} else if (throwable instanceof IOException) {
@@ -36,9 +43,5 @@ public class ErrorDisplayer {
 			return context.getString(R.string.network_error_non_200_response_code);
 		}
 		return context.getString(R.string.network_error_unknown);
-	}
-
-	public static void displayStorageError(View view) {
-		Snackbar.make(view, R.string.fragment_people_storage_error_string, Snackbar.LENGTH_LONG).show();
 	}
 }

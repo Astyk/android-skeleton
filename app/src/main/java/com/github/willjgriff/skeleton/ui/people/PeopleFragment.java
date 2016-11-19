@@ -116,7 +116,7 @@ public class PeopleFragment extends BaseMvpFragment<PeopleView, PeoplePresenter>
 	}
 
 	@Override
-	public void hideStorageLoading() {
+	public void hideDataLoading() {
 		mProgressBar.setVisibility(View.INVISIBLE);
 	}
 
@@ -134,16 +134,6 @@ public class PeopleFragment extends BaseMvpFragment<PeopleView, PeoplePresenter>
 	}
 
 	@Override
-	public void showStorageError() {
-		ErrorDisplayer.displayStorageError(getView());
-	}
-
-	@Override
-	public void showNetworkError(Throwable throwable) {
-		ErrorDisplayer.displayNetworkError(getView(), throwable);
-	}
-
-	@Override
 	public void showStorageLoading() {
 		mProgressBar.setVisibility(View.VISIBLE);
 	}
@@ -151,6 +141,11 @@ public class PeopleFragment extends BaseMvpFragment<PeopleView, PeoplePresenter>
 	@Override
 	public void showNetworkLoading() {
 		mToolbarListener.showNetworkLoadingView();
+	}
+
+	@Override
+	public void handleError(Throwable throwable) {
+		ErrorDisplayer.displayError(getView(), throwable);
 	}
 
 	@Override
