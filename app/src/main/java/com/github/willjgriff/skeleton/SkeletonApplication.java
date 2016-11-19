@@ -6,6 +6,7 @@ import com.github.willjgriff.skeleton.di.app.AppInjector;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import timber.log.Timber;
 
 /**
  * Created by Will on 18/08/2016.
@@ -25,6 +26,10 @@ public class SkeletonApplication extends Application {
 	public void onCreate() {
 		super.onCreate();
 		sApplication = this;
+
+		if (BuildConfig.DEBUG) {
+			Timber.plant(new Timber.DebugTree());
+		}
 
 		Realm.init(this);
 
