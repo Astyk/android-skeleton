@@ -33,7 +33,9 @@ public class PeopleRepository {
 		return Observable
 			.merge(getPeopleFromNetworkTrigger(countPeople), mPeopleStorageDataSource.getPeopleFromStorage())
 			.compose(new TakeUntilNetwork<>())
-			.replay(1)
+			// This would ideally use replay(1). However if there is an error in the response, then
+			// only the error response would be emitted when resubscribing, hiding the data.
+			.replay()
 			.autoConnect();
 	}
 

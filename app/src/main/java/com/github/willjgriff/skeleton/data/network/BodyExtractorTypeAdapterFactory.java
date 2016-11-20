@@ -47,6 +47,6 @@ public class BodyExtractorTypeAdapterFactory implements TypeAdapterFactory {
 
 				return delegate.fromJsonTree(jsonElement);
 			}
-		};
+		}.nullSafe();
 	}
 }

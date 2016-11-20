@@ -8,7 +8,7 @@ public final class ApiRes {
 
 	public static final class Base {
 
-		public static final String RANDOM = "http://api.randomuser.me/";
+		public static final String RANDOM = "https://api.randomuser.me/";
 	}
 
 
