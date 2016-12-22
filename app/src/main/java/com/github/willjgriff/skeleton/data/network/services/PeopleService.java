@@ -1,6 +1,5 @@
 package com.github.willjgriff.skeleton.data.network.services;
 
-import com.github.willjgriff.skeleton.data.models.ApiResponse;
 import com.github.willjgriff.skeleton.data.models.Person;
 
 import java.util.List;

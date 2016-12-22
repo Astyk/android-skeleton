@@ -8,7 +8,7 @@
             android:checked="true"/>
         <item
             android:id="@+id/navigation_form_fragment"
-            android:title="@string/fragment_form_title"/>
+            android:title="@string/fragment_people_2_title"/>
     </group>
 
     <group android:id="@+id/menu_navigation_bottom_group" android:checkableBehavior="single">

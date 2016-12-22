@@ -1,4 +1,4 @@
-package com.github.willjgriff.skeleton.data.utils.customtransformers;
+package com.github.willjgriff.skeleton.data.utils.transformers;
 
 import com.github.willjgriff.skeleton.data.utils.response.ResponseHolder;
 

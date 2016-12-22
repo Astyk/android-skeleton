@@ -3,7 +3,7 @@ package com.github.willjgriff.skeleton.ui.people.data;
 import android.support.annotation.NonNull;
 
 import com.github.willjgriff.skeleton.data.models.Person;
-import com.github.willjgriff.skeleton.data.utils.customtransformers.TakeUntilNetwork;
+import com.github.willjgriff.skeleton.data.utils.transformers.TakeUntilNetwork;
 import com.github.willjgriff.skeleton.data.utils.response.ResponseHolder;
 import com.github.willjgriff.skeleton.ui.people.data.datasources.PeopleNetworkDataSource;
 import com.github.willjgriff.skeleton.ui.people.data.datasources.PeopleStorageDataSource;

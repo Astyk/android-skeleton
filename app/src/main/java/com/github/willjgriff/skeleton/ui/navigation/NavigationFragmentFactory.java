@@ -4,7 +4,7 @@ import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 
 import com.github.willjgriff.skeleton.R;
-import com.github.willjgriff.skeleton.ui.form.FormFragment;
+import com.github.willjgriff.skeleton.ui.people2.People2Fragment;
 import com.github.willjgriff.skeleton.ui.people.PeopleFragment;
 import com.github.willjgriff.skeleton.ui.settings.SettingsFragment;
 
@@ -22,7 +22,7 @@ public class NavigationFragmentFactory {
 				navigationFragment = new PeopleFragment();
 				break;
 			case R.id.navigation_form_fragment:
-				navigationFragment = new FormFragment();
+				navigationFragment = new People2Fragment();
 				break;
 			case R.id.navigation_settings:
 				navigationFragment = new SettingsFragment();

@@ -6,17 +6,17 @@
     <string name="activity_navigation_open">Open navigation drawer</string>
     <string name="activity_navigation_close">Close navigation drawer</string>
     <string name="fragment_people_title">People</string>
-    <string name="fragment_form_title">Form</string>
+    <string name="fragment_people_2_title">People 2</string>
     <string name="fragment_settings_title">Settings</string>
 
     <!--person details-->
     <string name="fragment_person_title">Person</string>
 
-    <!--people fragment-->
+    <!--error messages-->
     <string name="fragment_people_storage_error_string">Error loading from storage. Content may not be as expected</string>
-    <string name="network_error_no_internet_connection">Internet disconnected, the content was not updated</string>
-    <string name="network_error_io_exception">The service could be down, the content was not updated</string>
-    <string name="network_error_non_200_response_code">The service could not deal with this request, the content was not updated</string>
-    <string name="network_error_unknown">An unknown error occurred, the content was not updated</string>
+    <string name="error_storage">Error loading from storage, content may not be as expected</string>
+    <string name="error_internet_disconnected">Internet disconnected, the content was not updated</string>
+    <string name="error_network">Error fetching data, the content was not updated</string>
+    <string name="error_unknown">An unknown error occurred, the content may not be as expected</string>
 
 </resources>

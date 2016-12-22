@@ -9,36 +9,53 @@ import com.github.willjgriff.skeleton.data.network.utils.ConnectivityUtils;
 
 import java.io.IOException;
 
+import io.realm.exceptions.RealmError;
+import io.realm.exceptions.RealmException;
+import io.realm.exceptions.RealmFileException;
+import io.realm.exceptions.RealmMigrationNeededException;
+import io.realm.exceptions.RealmPrimaryKeyConstraintException;
 import retrofit2.adapter.rxjava.HttpException;
 
 /**
  * Created by williamgriffiths on 22/09/2016.
  */
-// TODO: The error messages could be customised dependant on the screen / api request made
 public class ErrorDisplayer {
 
-	public static void displayNetworkError(View view, Throwable throwable) {
-		String errorText = getErrorMessage(view.getContext(), throwable);
+	public static void displayStorageError(View view) {
+		Snackbar.make(view, R.string.fragment_people_storage_error_string, Snackbar.LENGTH_LONG).show();
+	}
 
+	public static void displayError(View view, Throwable throwable) {
+		String errorText = getErrorMessage(view.getContext(), throwable);
 		Snackbar.make(view, errorText, Snackbar.LENGTH_LONG).show();
 	}
 
 	private static String getErrorMessage(Context context, Throwable throwable) {
-		if (!ConnectivityUtils.isConnected(context)) {
-			return context.getString(R.string.network_error_no_internet_connection);
-
-		} else if (throwable instanceof IOException) {
-			// network error
-			return context.getString(R.string.network_error_io_exception);
-
-		} else if (throwable instanceof HttpException) {
-			// non-200 response code in http request
-			return context.getString(R.string.network_error_non_200_response_code);
+		if (isStorageError(throwable)) {
+			return context.getString(R.string.error_storage);
+		} else if (internetDisconnected(context)) {
+			return context.getString(R.string.error_internet_disconnected);
+		} else if (isNetworkError(throwable)) {
+			return context.getString(R.string.error_network);
+		} else {
+			return context.getString(R.string.error_unknown);
 		}
-		return context.getString(R.string.network_error_unknown);
 	}
 
-	public static void displayStorageError(View view) {
-		Snackbar.make(view, R.string.fragment_people_storage_error_string, Snackbar.LENGTH_LONG).show();
+	private static boolean isStorageError(Throwable throwable) {
+		return throwable instanceof RealmError ||
+			throwable instanceof RealmException ||
+			throwable instanceof RealmFileException ||
+			throwable instanceof RealmMigrationNeededException ||
+			throwable instanceof RealmPrimaryKeyConstraintException;
+	}
+
+	private static boolean internetDisconnected(Context context) {
+		return !ConnectivityUtils.isConnected(context);
+	}
+
+	private static boolean isNetworkError(Throwable throwable) {
+		return throwable instanceof HttpException ||
+			throwable instanceof IOException;
 	}
 }
