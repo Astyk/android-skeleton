@@ -32,6 +32,7 @@ public class AllRealmFetcher<RETURNTYPE extends RealmModel> extends RealmFetcher
 		return select(realm).findAllAsync()
 			.asObservable()
 			// This SubscribeOn ObserveOn may not be necessary
+			// TODO: I think the below renders this not async.
 			.subscribeOn(AndroidSchedulers.mainThread())
 			.observeOn(AndroidSchedulers.mainThread())
 			// Ensure data is valid and available

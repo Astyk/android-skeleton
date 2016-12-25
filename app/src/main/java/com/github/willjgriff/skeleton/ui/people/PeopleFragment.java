@@ -51,6 +51,12 @@ public class PeopleFragment extends BaseMvpFragment<PeopleView, PeoplePresenter>
 		mDetailFragmentListener = (DetailFragmentListener) context;
 	}
 
+	@Nullable
+	@Override
+	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.fragment_people, container, false);
+	}
+
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
@@ -79,6 +85,12 @@ public class PeopleFragment extends BaseMvpFragment<PeopleView, PeoplePresenter>
 	}
 
 	@Override
+	public void onDestroyView() {
+		mToolbarListener.hideNetworkLoadingView();
+		super.onDestroyView();
+	}
+
+	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		DaggerPeopleComponent.builder()
@@ -86,18 +98,6 @@ public class PeopleFragment extends BaseMvpFragment<PeopleView, PeoplePresenter>
 			.peopleModule(new PeopleModule())
 			.build()
 			.inject(this);
-	}
-
-	@Nullable
-	@Override
-	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_people, container, false);
-	}
-
-	@Override
-	public void onDestroyView() {
-		mToolbarListener.hideNetworkLoadingView();
-		super.onDestroyView();
 	}
 
 	@Override
@@ -140,7 +140,7 @@ public class PeopleFragment extends BaseMvpFragment<PeopleView, PeoplePresenter>
 
 	@Override
 	public void showNetworkError(Throwable throwable) {
-		ErrorDisplayer.displayNetworkError(getView(), throwable);
+		ErrorDisplayer.displayError(getView(), throwable);
 	}
 
 	@Override

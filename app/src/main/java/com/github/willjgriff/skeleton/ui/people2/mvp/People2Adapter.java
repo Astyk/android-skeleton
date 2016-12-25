@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 import com.github.willjgriff.skeleton.R;
 import com.github.willjgriff.skeleton.data.models.Person;
 import com.github.willjgriff.skeleton.mvp.listmvp.ListMvpAdapter;
-import com.github.willjgriff.skeleton.mvp.listmvp.ListMvpViewHolder;
 
 /**
  * Created by Will on 22/12/2016.

@@ -27,7 +27,7 @@ import rx.subscriptions.CompositeSubscription;
  * Created by Will on 28/09/2016.
  */
 
-public abstract class ListMvpFragment<TYPE extends RealmModel, VIEW extends ListMvpView<TYPE>, PRESENTER extends ListMvpPresenter<TYPE, VIEW>, VIEWHOLDER extends ListMvpViewHolder<TYPE>>
+public abstract class ListMvpFragment<TYPE extends RealmModel, VIEW extends ListMvpView<TYPE>, PRESENTER extends ListMvpPresenter<TYPE, VIEW, QUERY>, VIEWHOLDER extends ListMvpViewHolder<TYPE>, QUERY>
 	extends BaseMvpFragment<VIEW, PRESENTER>
 	implements ListMvpView<TYPE>, ListItemListener<TYPE> {
 
@@ -78,7 +78,7 @@ public abstract class ListMvpFragment<TYPE extends RealmModel, VIEW extends List
 		swipeRefreshObservable
 			.filter(aVoid -> ConnectivityUtils.isConnected(getContext()))
 			.subscribe(aVoid -> {
-				getPresenter().refreshNews();
+				getPresenter().refreshData();
 			});
 
 		swipeRefreshObservable

@@ -1,6 +1,6 @@
 package com.github.willjgriff.skeleton.di.app;
 
-import com.github.willjgriff.skeleton.data.network.ApiRes;
+import com.github.willjgriff.skeleton.data.network.ApiResources;
 import com.github.willjgriff.skeleton.data.network.services.PeopleService;
 import com.github.willjgriff.skeleton.data.network.BodyExtractorTypeAdapterFactory;
 import com.google.gson.GsonBuilder;
@@ -33,7 +33,7 @@ public class NetworkModule {
 	@Singleton
 	Retrofit providesRetrofit(GsonConverterFactory gsonConverterFactory) {
 		return new Retrofit.Builder()
-			.baseUrl(ApiRes.Base.RANDOM)
+			.baseUrl(ApiResources.Base.RANDOM)
 			.addConverterFactory(gsonConverterFactory)
 			.addCallAdapterFactory(RxJavaCallAdapterFactory.create())
 			.build();
