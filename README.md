@@ -9,4 +9,6 @@ There aren't any Unit Tests yet. I keep altering the basic functionality but onc
 
 It uses the RandomUser endpoint to get a set of random people and displays their emails in a RecylcerView which can be clicked to open a detail view.
 
-I expect I'll copy and build on it but it's primarily for personal development.
+The People2 screen uses some generic base classes and currently omits the detail screen and therefore the multi-pane list-detail view.
+
+This is primarily for personal development. I'm likely to copy elements for further projects.
