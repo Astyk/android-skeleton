@@ -58,12 +58,6 @@ public abstract class ListMvpFragment<TYPE extends RealmModel, VIEW extends List
 	}
 
 	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
-		setLayoutManager(newConfig.orientation);
-	}
-
-	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
 		mViewComposite.clear();
