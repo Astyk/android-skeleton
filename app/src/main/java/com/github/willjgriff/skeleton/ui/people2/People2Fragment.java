@@ -15,6 +15,7 @@ import com.github.willjgriff.skeleton.mvp.listmvp.ListMvpAdapter;
 import com.github.willjgriff.skeleton.mvp.listmvp.ListMvpFragment;
 import com.github.willjgriff.skeleton.mvp.listmvp.ListMvpViewHolder;
 import com.github.willjgriff.skeleton.mvp.listmvp.ListMvpViewHolder.ListItemListener;
+import com.github.willjgriff.skeleton.ui.people.di.FragmentScope;
 import com.github.willjgriff.skeleton.ui.people2.di.DaggerPeople2Component;
 import com.github.willjgriff.skeleton.ui.people2.di.People2Component;
 import com.github.willjgriff.skeleton.ui.people2.di.People2Module;
@@ -30,7 +31,8 @@ import javax.inject.Inject;
  * Created by Will on 28/09/2016.
  */
 
-public class People2Fragment extends ListMvpFragment<Person, People2View, People2Presenter, People2ViewHolder, PeopleQuery>
+public class People2Fragment
+	extends ListMvpFragment<Person, People2View, People2Presenter, People2ViewHolder, PeopleQuery>
 	implements People2View {
 
 	@Inject

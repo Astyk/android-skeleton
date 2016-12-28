@@ -13,7 +13,8 @@
         android:theme="@style/AppTheme"
         android:name="com.github.willjgriff.skeleton.SkeletonApplication">
 
-        <activity android:name=".ui.navigation.NavigationActivity">
+        <activity android:name=".ui.navigation.NavigationActivity"
+                  android:configChanges="orientation|keyboardHidden|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

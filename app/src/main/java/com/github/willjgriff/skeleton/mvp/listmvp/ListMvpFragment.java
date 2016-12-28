@@ -1,8 +1,10 @@
 package com.github.willjgriff.skeleton.mvp.listmvp;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,6 +17,7 @@ import com.github.willjgriff.skeleton.data.network.utils.ConnectivityUtils;
 import com.github.willjgriff.skeleton.mvp.BaseMvpFragment;
 import com.github.willjgriff.skeleton.mvp.listmvp.ListMvpViewHolder.ListItemListener;
 import com.github.willjgriff.skeleton.ui.utils.ErrorDisplayer;
+import com.github.willjgriff.skeleton.ui.utils.list.MarginGridDecorator;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 
 import java.util.List;
@@ -31,6 +34,7 @@ public abstract class ListMvpFragment<TYPE extends RealmModel, VIEW extends List
 	extends BaseMvpFragment<VIEW, PRESENTER>
 	implements ListMvpView<TYPE>, ListItemListener<TYPE> {
 
+	private static final int ITEM_MARGIN_DP = 8;
 	private RecyclerView mRecyclerView;
 	private ListMvpAdapter<TYPE, VIEWHOLDER> mAdapter;
 	private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -54,9 +58,20 @@ public abstract class ListMvpFragment<TYPE extends RealmModel, VIEW extends List
 	}
 
 	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		setLayoutManager(newConfig.orientation);
+	}
+
+	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
 		mViewComposite.clear();
+	}
+
+	private void setLayoutManager(int orientation) {
+		int numberOfColumns = orientation == Configuration.ORIENTATION_LANDSCAPE ? 2 : 1;
+		mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), numberOfColumns));
 	}
 
 	private void setupAdapter() {
@@ -66,8 +81,9 @@ public abstract class ListMvpFragment<TYPE extends RealmModel, VIEW extends List
 
 	private void setupRecyclerView(View view) {
 		mRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_list_recycler_view);
-		mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+		setLayoutManager(getResources().getConfiguration().orientation);
 		mRecyclerView.setAdapter(mAdapter);
+		mRecyclerView.addItemDecoration(new MarginGridDecorator(ITEM_MARGIN_DP));
 	}
 
 	private void setupSwipeRefreshLayout(View view) {

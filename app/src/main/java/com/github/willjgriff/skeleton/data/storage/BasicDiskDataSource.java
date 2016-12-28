@@ -1,8 +1,5 @@
 package com.github.willjgriff.skeleton.data.storage;
 
-import com.github.willjgriff.skeleton.data.PeopleQuery;
-import com.github.willjgriff.skeleton.data.models.Person;
-import com.github.willjgriff.skeleton.data.storage.ListDiskDataSource;
 import com.github.willjgriff.skeleton.data.storage.fetchers.AllRealmFetcher;
 import com.github.willjgriff.skeleton.data.storage.updaters.BasicAsyncRealmUpdater;
 import com.github.willjgriff.skeleton.data.storage.updaters.RealmUpdater;
@@ -20,7 +17,8 @@ import rx.Observable;
  * Created by Will on 23/12/2016.
  */
 
-public class BasicDiskDataSource<TYPE extends RealmModel, QUERY> implements ListDiskDataSource<TYPE, QUERY> {
+public class BasicDiskDataSource<TYPE extends RealmModel, QUERY>
+	implements ListDiskDataSource<TYPE, QUERY> {
 
 	private Realm mRealm;
 	private AllRealmFetcher<TYPE> mPersonAllRealmFetcher;

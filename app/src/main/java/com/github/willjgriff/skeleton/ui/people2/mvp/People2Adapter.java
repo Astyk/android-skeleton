@@ -16,7 +16,7 @@ public class People2Adapter extends ListMvpAdapter<Person, People2ViewHolder> {
 	@Override
 	public People2ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		return new People2ViewHolder(
-			LayoutInflater.from(parent.getContext()).inflate(R.layout.view_people_item, parent, false),
+			LayoutInflater.from(parent.getContext()).inflate(R.layout.view_generic_list_item, parent, false),
 			mListItemListener);
 	}
 }

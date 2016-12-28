@@ -22,7 +22,7 @@ public class People2Presenter extends ListMvpPresenter<Person, People2View, Peop
 	private ListCacheRepository<Person, PeopleQuery> mPersonListCacheRepository;
 
 	@Inject
-	public People2Presenter(ListCacheRepository<Person, PeopleQuery> personListCacheRepository) {
+	People2Presenter(ListCacheRepository<Person, PeopleQuery> personListCacheRepository) {
 		mPersonListCacheRepository = personListCacheRepository;
 	}
 

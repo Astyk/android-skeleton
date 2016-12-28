@@ -19,7 +19,7 @@ public class People2ViewHolder extends ListMvpViewHolder<Person> {
 
 	public People2ViewHolder(View itemView, ListItemListener<Person> peopleListener) {
 		super(itemView, peopleListener);
-		mPersonEmail = (TextView) itemView.findViewById(R.id.view_people_item_email);
+		mPersonEmail = (TextView) itemView.findViewById(R.id.view_generic_list_item_text);
 	}
 
 	public void bindData(Person person) {

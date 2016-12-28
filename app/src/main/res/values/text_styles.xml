@@ -4,6 +4,11 @@
     <style name="Text">
     </style>
 
+    <style name="Text.Body">
+        <item name="android:textSize">@dimen/body</item>
+        <item name="android:textColor">@color/secondary_text</item>
+    </style>
+
     <style name="Text.Title">
         <item name="android:textSize">@dimen/title</item>
         <item name="android:textColor">@color/primary_text</item>
