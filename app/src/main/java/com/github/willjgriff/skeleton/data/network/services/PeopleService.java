@@ -1,6 +1,7 @@
 package com.github.willjgriff.skeleton.data.network.services;
 
 import com.github.willjgriff.skeleton.data.models.Person;
+import com.github.willjgriff.skeleton.data.models.person2.NetworkPerson2;
 
 import java.util.List;
 
@@ -16,4 +17,7 @@ public interface PeopleService {
 
 	@GET("./")
 	Observable<List<Person>> getPeople(@Query("results") int amount);
+
+	@GET("./")
+	Observable<List<NetworkPerson2>> getPeople2(@Query("results") int amount);
 }

@@ -2,7 +2,9 @@ package com.github.willjgriff.skeleton.ui.people2.di;
 
 import com.github.willjgriff.skeleton.data.ListCacheRepository;
 import com.github.willjgriff.skeleton.data.PeopleQuery;
-import com.github.willjgriff.skeleton.data.models.Person;
+import com.github.willjgriff.skeleton.data.models.converters.PersonStorageConverter;
+import com.github.willjgriff.skeleton.data.models.person2.Person2;
+import com.github.willjgriff.skeleton.data.models.person2.StoragePerson2;
 import com.github.willjgriff.skeleton.data.network.services.PeopleService;
 import com.github.willjgriff.skeleton.data.storage.BasicDiskDataSource;
 import com.github.willjgriff.skeleton.ui.people.di.FragmentScope;
@@ -29,8 +31,8 @@ public class People2Module {
 
 	@Provides
 	@FragmentScope
-	BasicDiskDataSource<Person, PeopleQuery> providesDiskDataSource(@Named("people2_realm") Realm realm) {
-		return new BasicDiskDataSource<>(realm, Person.class);
+	BasicDiskDataSource<Person2, StoragePerson2, PeopleQuery> providesDiskDataSource(@Named("people2_realm") Realm realm) {
+		return new BasicDiskDataSource<>(realm, StoragePerson2.class, new PersonStorageConverter());
 	}
 
 	@Provides
@@ -41,7 +43,7 @@ public class People2Module {
 
 	@Provides
 	@FragmentScope
-	ListCacheRepository<Person, PeopleQuery> providesRepository(BasicDiskDataSource<Person, PeopleQuery> people2DiskDataSource, People2NetworkDataSource people2NetworkDataSource) {
+	ListCacheRepository<Person2, PeopleQuery> providesRepository(BasicDiskDataSource<Person2, StoragePerson2, PeopleQuery> people2DiskDataSource, People2NetworkDataSource people2NetworkDataSource) {
 		return new ListCacheRepository<>(people2NetworkDataSource, people2DiskDataSource);
 	}
 }

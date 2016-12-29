@@ -16,7 +16,6 @@ public class BasicScheduleTransformer<TYPE> implements Observable.Transformer<TY
 	public Observable<TYPE> call(Observable<TYPE> typeObservable) {
 		return typeObservable
 			.subscribeOn(Schedulers.io())
-			.observeOn(AndroidSchedulers.mainThread())
-			.filter(data -> data != null);
+			.observeOn(AndroidSchedulers.mainThread());
 	}
 }

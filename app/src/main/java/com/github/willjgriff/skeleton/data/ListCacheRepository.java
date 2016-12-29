@@ -13,7 +13,7 @@ import rx.subjects.PublishSubject;
  * Created by Will on 21/11/2016.
  */
 
-public class ListCacheRepository<TYPE extends RealmModel, QUERY> {
+public class ListCacheRepository<TYPE, QUERY> {
 
 	private ListNetworkDataSource<TYPE, QUERY> mListNetworkDataSource;
 	private ListDiskDataSource<TYPE, QUERY> mListDiskDataSource;

@@ -1,5 +1,6 @@
 package com.github.willjgriff.skeleton.data.storage;
 
+import com.github.willjgriff.skeleton.data.models.converters.StorageConverter;
 import com.github.willjgriff.skeleton.data.storage.fetchers.AllRealmFetcher;
 import com.github.willjgriff.skeleton.data.storage.updaters.BasicAsyncRealmUpdater;
 import com.github.willjgriff.skeleton.data.storage.updaters.RealmUpdater;
@@ -10,34 +11,41 @@ import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmModel;
-import io.realm.RealmResults;
 import rx.Observable;
 
 /**
  * Created by Will on 23/12/2016.
  */
 
-public class BasicDiskDataSource<TYPE extends RealmModel, QUERY>
-	implements ListDiskDataSource<TYPE, QUERY> {
+public class BasicDiskDataSource<DOMAINTYPE, STORAGETYPE extends RealmModel, QUERY>
+	implements ListDiskDataSource<DOMAINTYPE, QUERY> {
 
 	private Realm mRealm;
-	private AllRealmFetcher<TYPE> mPersonAllRealmFetcher;
+	private AllRealmFetcher<STORAGETYPE> mPersonAllRealmFetcher;
+	private StorageConverter<STORAGETYPE, DOMAINTYPE> mStorageConverter;
 
-	public BasicDiskDataSource(Realm realm, Class<TYPE> classType) {
+	public BasicDiskDataSource(Realm realm, Class<STORAGETYPE> classType,
+	                           StorageConverter<STORAGETYPE, DOMAINTYPE> storageConverter) {
 		mRealm = realm;
 		mPersonAllRealmFetcher = new AllRealmFetcher<>(classType);
+		mStorageConverter = storageConverter;
 	}
 
 	@Override
-	public Observable<RealmResults<TYPE>> getFromStorage(QUERY peopleQuery) {
-		return mPersonAllRealmFetcher.getAsyncObservable(mRealm).first();
+	public Observable<List<DOMAINTYPE>> getFromStorage(QUERY peopleQuery) {
+		return mPersonAllRealmFetcher.getAsyncObservable(mRealm)
+			.first()
+			.map(mStorageConverter.getConvertToDomainFunc());
 	}
 
 	@Override
-	public void saveToStorage(List<TYPE> newsList) {
-		RealmUpdateMethod<List<TYPE>> realmUpdateMethod = new ReplaceListRealmUpdateMethod<>(mPersonAllRealmFetcher);
-		RealmUpdater<List<TYPE>> realmUpdater = new BasicAsyncRealmUpdater<>(mRealm, realmUpdateMethod);
-		realmUpdater.update(newsList);
+	public void saveToStorage(List<DOMAINTYPE> domainList) {
+		List<STORAGETYPE> storageList = mStorageConverter.getConvertFromDomainFunc().call(domainList);
+
+		RealmUpdateMethod<List<STORAGETYPE>> realmUpdateMethod = new ReplaceListRealmUpdateMethod<>(mPersonAllRealmFetcher);
+		RealmUpdater<List<STORAGETYPE>> realmUpdater = new BasicAsyncRealmUpdater<>(mRealm, realmUpdateMethod);
+
+		realmUpdater.update(storageList);
 	}
 
 	@Override

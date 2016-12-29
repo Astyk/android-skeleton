@@ -4,14 +4,14 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.github.willjgriff.skeleton.R;
-import com.github.willjgriff.skeleton.data.models.Person;
+import com.github.willjgriff.skeleton.data.models.person2.Person2;
 import com.github.willjgriff.skeleton.mvp.listmvp.ListMvpAdapter;
 
 /**
  * Created by Will on 22/12/2016.
  */
 
-public class People2Adapter extends ListMvpAdapter<Person, People2ViewHolder> {
+public class People2Adapter extends ListMvpAdapter<Person2, People2ViewHolder> {
 
 	@Override
 	public People2ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

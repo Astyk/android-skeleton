@@ -10,9 +10,9 @@ import rx.Observable;
  * Created by Will on 26/11/2016.
  */
 
-public interface ListDiskDataSource<TYPE extends RealmModel, QUERY> {
+public interface ListDiskDataSource<TYPE, QUERY> {
 
-	Observable<RealmResults<TYPE>> getFromStorage(QUERY query);
+	Observable<List<TYPE>> getFromStorage(QUERY query);
 
 	void saveToStorage(List<TYPE> newsList);
 

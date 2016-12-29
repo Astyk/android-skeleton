@@ -46,6 +46,9 @@ ext {
 //    rxAndroid   = '2.0.0'
     rxBindings  = '0.4.0'
     timber      = '4.3.1'
+    autovalue   = '1.4-rc1'
+    autoparcel  = '0.2.5'
+    autogson    = '0.4.5'
 
     junit       = '4.12'
 
@@ -77,8 +80,15 @@ dependencies {
 
     // Dependencies for Dagger2
     compile "com.google.dagger:dagger:${dagger}"
-    apt "com.google.dagger:dagger-compiler:${dagger}"
     provided "javax.annotation:jsr250-api:${javax}"
+    apt "com.google.dagger:dagger-compiler:${dagger}"
+
+    // AutoValue components, could add AutoValueGson to reduce reflection in API requests.
+    provided "com.google.auto.value:auto-value:${autovalue}"
+    apt "com.google.auto.value:auto-value:${autovalue}"
+    apt "com.ryanharter.auto.value:auto-value-parcel:${autoparcel}"
+    provided "com.ryanharter.auto.value:auto-value-gson:${autogson}"
+    apt "com.ryanharter.auto.value:auto-value-gson:${autogson}"
 
     testCompile "junit:junit:${junit}"
 

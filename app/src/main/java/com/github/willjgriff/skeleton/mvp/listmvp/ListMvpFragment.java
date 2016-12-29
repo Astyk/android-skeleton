@@ -30,7 +30,7 @@ import rx.subscriptions.CompositeSubscription;
  * Created by Will on 28/09/2016.
  */
 
-public abstract class ListMvpFragment<TYPE extends RealmModel, VIEW extends ListMvpView<TYPE>, PRESENTER extends ListMvpPresenter<TYPE, VIEW, QUERY>, VIEWHOLDER extends ListMvpViewHolder<TYPE>, QUERY>
+public abstract class ListMvpFragment<TYPE, VIEW extends ListMvpView<TYPE>, PRESENTER extends ListMvpPresenter<TYPE, VIEW, QUERY>, VIEWHOLDER extends ListMvpViewHolder<TYPE>, QUERY>
 	extends BaseMvpFragment<VIEW, PRESENTER>
 	implements ListMvpView<TYPE>, ListItemListener<TYPE> {
 
@@ -39,12 +39,10 @@ public abstract class ListMvpFragment<TYPE extends RealmModel, VIEW extends List
 	private ListMvpAdapter<TYPE, VIEWHOLDER> mAdapter;
 	private SwipeRefreshLayout mSwipeRefreshLayout;
 	private ProgressBar mProgressBar;
-	private CompositeSubscription mViewComposite;
 
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		mViewComposite = new CompositeSubscription();
 		return inflater.inflate(R.layout.fragment_list, container, false);
 	}
 
@@ -55,12 +53,6 @@ public abstract class ListMvpFragment<TYPE extends RealmModel, VIEW extends List
 		setupRecyclerView(view);
 		setupSwipeRefreshLayout(view);
 		mProgressBar = (ProgressBar) view.findViewById(R.id.fragment_list_progress_bar);
-	}
-
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		mViewComposite.clear();
 	}
 
 	private void setLayoutManager(int orientation) {

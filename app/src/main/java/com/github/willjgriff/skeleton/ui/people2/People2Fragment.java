@@ -3,21 +3,14 @@ package com.github.willjgriff.skeleton.ui.people2;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.ViewGroup;
 
 import com.github.willjgriff.skeleton.R;
-import com.github.willjgriff.skeleton.data.ListCacheRepository;
 import com.github.willjgriff.skeleton.data.PeopleQuery;
-import com.github.willjgriff.skeleton.data.models.Person;
+import com.github.willjgriff.skeleton.data.models.person2.Person2;
 import com.github.willjgriff.skeleton.di.app.AppInjector;
-import com.github.willjgriff.skeleton.mvp.BaseMvpFragment;
 import com.github.willjgriff.skeleton.mvp.listmvp.ListMvpAdapter;
 import com.github.willjgriff.skeleton.mvp.listmvp.ListMvpFragment;
-import com.github.willjgriff.skeleton.mvp.listmvp.ListMvpViewHolder;
-import com.github.willjgriff.skeleton.mvp.listmvp.ListMvpViewHolder.ListItemListener;
-import com.github.willjgriff.skeleton.ui.people.di.FragmentScope;
 import com.github.willjgriff.skeleton.ui.people2.di.DaggerPeople2Component;
-import com.github.willjgriff.skeleton.ui.people2.di.People2Component;
 import com.github.willjgriff.skeleton.ui.people2.di.People2Module;
 import com.github.willjgriff.skeleton.ui.people2.mvp.People2Adapter;
 import com.github.willjgriff.skeleton.ui.people2.mvp.People2Presenter;
@@ -32,7 +25,7 @@ import javax.inject.Inject;
  */
 
 public class People2Fragment
-	extends ListMvpFragment<Person, People2View, People2Presenter, People2ViewHolder, PeopleQuery>
+	extends ListMvpFragment<Person2, People2View, People2Presenter, People2ViewHolder, PeopleQuery>
 	implements People2View {
 
 	@Inject
@@ -62,7 +55,7 @@ public class People2Fragment
 	}
 
 	@Override
-	protected ListMvpAdapter<Person, People2ViewHolder> createAdapter() {
+	protected ListMvpAdapter<Person2, People2ViewHolder> createAdapter() {
 		return new People2Adapter();
 	}
 
@@ -77,7 +70,7 @@ public class People2Fragment
 	}
 
 	@Override
-	public void onItemClick(Person data) {
+	public void onItemClick(Person2 data) {
 
 	}
 }

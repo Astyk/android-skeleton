@@ -18,6 +18,8 @@ import retrofit2.adapter.rxjava.HttpException;
 
 /**
  * Created by williamgriffiths on 22/09/2016.
+ *
+ * This should probably be injected using Dagger and not be static.
  */
 public class ErrorDisplayer {
 

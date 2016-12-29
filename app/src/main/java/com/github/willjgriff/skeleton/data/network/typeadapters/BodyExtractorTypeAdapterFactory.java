@@ -1,4 +1,4 @@
-package com.github.willjgriff.skeleton.data.network;
+package com.github.willjgriff.skeleton.data.network.typeadapters;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -14,7 +14,7 @@ import java.io.IOException;
 /**
  * Created by Will on 19/11/2016.
  *
- * We could also use a custom deserializer, although that's efficient than a TypeAdapter.
+ * We could also use a custom deserializer, although that's less efficient than a TypeAdapter.
  * See here for why: http://stackoverflow.com/questions/30631004/gson-type-adapter-vs-custom-deseralizer
  *
  * This implementation was copied from here:

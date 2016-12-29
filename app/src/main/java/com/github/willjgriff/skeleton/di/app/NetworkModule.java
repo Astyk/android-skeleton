@@ -2,7 +2,8 @@ package com.github.willjgriff.skeleton.di.app;
 
 import com.github.willjgriff.skeleton.data.network.ApiResources;
 import com.github.willjgriff.skeleton.data.network.services.PeopleService;
-import com.github.willjgriff.skeleton.data.network.BodyExtractorTypeAdapterFactory;
+import com.github.willjgriff.skeleton.data.network.typeadapters.AutoValueAdapterFactory;
+import com.github.willjgriff.skeleton.data.network.typeadapters.BodyExtractorTypeAdapterFactory;
 import com.google.gson.GsonBuilder;
 
 import javax.inject.Singleton;
@@ -23,9 +24,8 @@ public class NetworkModule {
 	@Singleton
 	GsonConverterFactory providesGsonConverterFactory() {
 		GsonBuilder gsonBuilder = new GsonBuilder();
-		// TODO: If we have to use this, consider a cleaner approach to structuring models.
-		gsonBuilder.excludeFieldsWithoutExposeAnnotation();
 		gsonBuilder.registerTypeAdapterFactory(new BodyExtractorTypeAdapterFactory());
+		gsonBuilder.registerTypeAdapterFactory(AutoValueAdapterFactory.create());
 		return GsonConverterFactory.create(gsonBuilder.create());
 	}
 

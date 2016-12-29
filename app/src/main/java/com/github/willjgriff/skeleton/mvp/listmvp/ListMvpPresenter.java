@@ -12,7 +12,7 @@ import timber.log.Timber;
 /**
  * Created by Will on 12/11/2016.
  */
-public abstract class ListMvpPresenter<TYPE extends RealmModel, VIEW extends ListMvpView<TYPE>, QUERY>
+public abstract class ListMvpPresenter<TYPE, VIEW extends ListMvpView<TYPE>, QUERY>
 	extends BaseMvpPresenter<VIEW> {
 
 	public void refreshData() {
