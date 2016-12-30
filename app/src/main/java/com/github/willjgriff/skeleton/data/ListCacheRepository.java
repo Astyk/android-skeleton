@@ -37,6 +37,7 @@ public class ListCacheRepository<TYPE, QUERY> {
 				.concat(mListDiskDataSource.getFromStorage(query), getDataFromNetworkTrigger(query))
 				.replay(1)
 				.autoConnect()
+				.filter(dataList -> dataList != null)
 				.filter(dataList -> dataList.size() > 0)
 				.doOnNext(data -> {
 					if (mListCacheListener != null) {

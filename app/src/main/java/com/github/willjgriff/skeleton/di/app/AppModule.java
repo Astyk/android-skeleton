@@ -14,17 +14,15 @@ import dagger.Provides;
 @Module
 public class AppModule {
 
-	Context mApplication;
+	private Context mApplication;
 
-	public AppModule(Context application) {
+	AppModule(Context application) {
 		mApplication = application;
 	}
 
-	// TODO: I don't actually need this yet. Remove if remains unused.
-	// Note Dagger knows this and marks this modules construction as deprecated.
 	@Provides
 	@Singleton
-	public Context providesApplication() {
+	Context providesApplication() {
 		return mApplication;
 	}
 }

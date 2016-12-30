@@ -1,4 +1,4 @@
-package com.github.willjgriff.skeleton.data.storage.fetchers;
+package com.github.willjgriff.skeleton.data.storage.realmfetchers;
 
 import io.realm.Realm;
 import io.realm.RealmModel;

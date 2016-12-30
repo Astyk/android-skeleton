@@ -1,6 +1,7 @@
 package com.github.willjgriff.skeleton.di.app;
 
 import com.github.willjgriff.skeleton.data.network.services.PeopleService;
+import com.github.willjgriff.skeleton.data.storage.sharedprefs.SharedPreferencesManager;
 
 import javax.inject.Singleton;
 
@@ -17,4 +18,6 @@ public interface AppComponent {
 	Realm providesRealm();
 
 	PeopleService providesPeopleService();
+
+	SharedPreferencesManager providesSharedPrefsManager();
 }

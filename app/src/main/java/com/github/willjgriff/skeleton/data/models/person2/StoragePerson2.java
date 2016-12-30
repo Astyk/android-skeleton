@@ -28,12 +28,4 @@ public class StoragePerson2 extends RealmObject {
 		this.email = email;
 	}
 
-	public static class ConvertToDomain implements Func1<StoragePerson2, Person2> {
-		@Override
-		public Person2 call(StoragePerson2 storagePerson2) {
-			return Person2.builder()
-				.setEmail(storagePerson2.getEmail())
-				.build();
-		}
-	}
 }

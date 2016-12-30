@@ -1,6 +1,6 @@
-package com.github.willjgriff.skeleton.data.storage.updaters.methods;
+package com.github.willjgriff.skeleton.data.storage.realmupdaters.methods;
 
-import com.github.willjgriff.skeleton.data.storage.fetchers.RealmFetcher;
+import com.github.willjgriff.skeleton.data.storage.realmfetchers.RealmFetcher;
 
 import io.realm.Realm;
 import io.realm.RealmModel;

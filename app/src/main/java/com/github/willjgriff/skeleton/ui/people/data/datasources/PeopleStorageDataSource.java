@@ -3,12 +3,12 @@ package com.github.willjgriff.skeleton.ui.people.data.datasources;
 import android.support.annotation.NonNull;
 
 import com.github.willjgriff.skeleton.data.models.Person;
-import com.github.willjgriff.skeleton.data.storage.fetchers.AllRealmFetcher;
-import com.github.willjgriff.skeleton.data.storage.fetchers.RealmFetcher;
-import com.github.willjgriff.skeleton.data.storage.updaters.BasicAsyncRealmUpdater;
-import com.github.willjgriff.skeleton.data.storage.updaters.RealmUpdater;
-import com.github.willjgriff.skeleton.data.storage.updaters.methods.RealmUpdateMethod;
-import com.github.willjgriff.skeleton.data.storage.updaters.methods.ReplaceListRealmUpdateMethod;
+import com.github.willjgriff.skeleton.data.storage.realmfetchers.AllRealmFetcher;
+import com.github.willjgriff.skeleton.data.storage.realmfetchers.RealmFetcher;
+import com.github.willjgriff.skeleton.data.storage.realmupdaters.BasicAsyncRealmUpdater;
+import com.github.willjgriff.skeleton.data.storage.realmupdaters.RealmUpdater;
+import com.github.willjgriff.skeleton.data.storage.realmupdaters.methods.RealmUpdateMethod;
+import com.github.willjgriff.skeleton.data.storage.realmupdaters.methods.ReplaceListRealmUpdateMethod;
 import com.github.willjgriff.skeleton.data.utils.response.RealmResponseTransformer;
 import com.github.willjgriff.skeleton.data.utils.response.ResponseHolder;
 

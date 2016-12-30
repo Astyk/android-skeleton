@@ -4,6 +4,7 @@ import com.github.willjgriff.skeleton.data.network.ApiResources;
 import com.github.willjgriff.skeleton.data.network.services.PeopleService;
 import com.github.willjgriff.skeleton.data.network.typeadapters.AutoValueAdapterFactory;
 import com.github.willjgriff.skeleton.data.network.typeadapters.BodyExtractorTypeAdapterFactory;
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import javax.inject.Singleton;

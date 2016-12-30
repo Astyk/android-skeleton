@@ -13,7 +13,7 @@ import rx.functions.Func1;
  *
  * Adding the static typeAdapter() function call makes AutoValue create a TypeAdapter for this class.
  * We can register this TypeAdapter with Gson so it doesn't have to use as much reflection when
- * creating this class from JSON.
+ * de/serializing this class from/to JSON.
  */
 @AutoValue
 public abstract class NetworkPerson2 {

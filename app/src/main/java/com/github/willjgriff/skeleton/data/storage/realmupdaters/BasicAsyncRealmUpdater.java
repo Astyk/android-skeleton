@@ -1,6 +1,6 @@
-package com.github.willjgriff.skeleton.data.storage.updaters;
+package com.github.willjgriff.skeleton.data.storage.realmupdaters;
 
-import com.github.willjgriff.skeleton.data.storage.updaters.methods.RealmUpdateMethod;
+import com.github.willjgriff.skeleton.data.storage.realmupdaters.methods.RealmUpdateMethod;
 
 import io.realm.Realm;
 import io.realm.RealmAsyncTask;
