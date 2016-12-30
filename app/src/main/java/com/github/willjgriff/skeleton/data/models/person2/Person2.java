@@ -14,6 +14,8 @@ import com.google.gson.annotations.SerializedName;
  * structure for a domain model. This helps when the Network, Storage or other models differ. Ofcourse
  * this takes longer to update or create. I would generally stick to a Domain and Storage model,
  * merging the Network model into the Domain model.
+ *
+ * TODO: Should probably merge NetworkPerson2 into this model
  */
 @AutoValue
 public abstract class Person2 implements Parcelable {

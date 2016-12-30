@@ -20,7 +20,7 @@ import io.realm.Realm;
 
 /**
  * Created by Will on 23/12/2016.
- * 
+ *
  * Below highlights how easy it is to swap between Realm and SharedPreferences for the local storage datasource.
  */
 @Module

@@ -34,6 +34,8 @@ public class StorageModule {
 		return PreferenceManager.getDefaultSharedPreferences(context);
 	}
 
+	// TODO: Can we get the same instance of the AutoValueAdapterFactory?
+	// Maybe even Gson instance that Retrofit requires?
 	@Provides
 	@Singleton
 	Gson providesGson() {
