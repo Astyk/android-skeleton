@@ -17,14 +17,14 @@ import rx.Observable;
  * Created by Will on 23/12/2016.
  */
 
-public class BasicDiskDataSource<DOMAINTYPE, STORAGETYPE extends RealmModel, QUERY>
+public class RealmDiskDataSource<DOMAINTYPE, STORAGETYPE extends RealmModel, QUERY>
 	implements ListDiskDataSource<DOMAINTYPE, QUERY> {
 
 	private Realm mRealm;
 	private AllRealmFetcher<STORAGETYPE> mPersonAllRealmFetcher;
 	private StorageConverter<STORAGETYPE, DOMAINTYPE> mStorageConverter;
 
-	public BasicDiskDataSource(Realm realm, Class<STORAGETYPE> classType,
+	public RealmDiskDataSource(Realm realm, Class<STORAGETYPE> classType,
 	                           StorageConverter<STORAGETYPE, DOMAINTYPE> storageConverter) {
 		mRealm = realm;
 		mPersonAllRealmFetcher = new AllRealmFetcher<>(classType);

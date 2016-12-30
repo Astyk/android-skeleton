@@ -16,6 +16,7 @@ public interface ListDiskDataSource<TYPE, QUERY> {
 
 	void saveToStorage(List<TYPE> newsList);
 
+	// TODO: Remove this somehow. 
 	void close();
 
 }

@@ -2,11 +2,8 @@ package com.github.willjgriff.skeleton.ui.people2.di;
 
 import com.github.willjgriff.skeleton.data.ListCacheRepository;
 import com.github.willjgriff.skeleton.data.PeopleQuery;
-import com.github.willjgriff.skeleton.data.models.converters.PersonStorageConverter;
 import com.github.willjgriff.skeleton.data.models.person2.Person2;
-import com.github.willjgriff.skeleton.data.models.person2.StoragePerson2;
 import com.github.willjgriff.skeleton.data.network.services.PeopleService;
-import com.github.willjgriff.skeleton.data.storage.BasicDiskDataSource;
 import com.github.willjgriff.skeleton.data.storage.sharedprefs.SharedPreferencesManager;
 import com.github.willjgriff.skeleton.ui.people.di.FragmentScope;
 import com.github.willjgriff.skeleton.ui.people2.data.People2NetworkDataSource;
