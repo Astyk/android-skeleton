@@ -9,6 +9,6 @@ There aren't any Unit Tests yet. I keep altering the basic functionality but onc
 
 It uses the RandomUser endpoint to get a set of random people and displays their emails in a RecyclerrView which can be clicked to open a detail view.
 
-The People2 screen uses some generic base classes and currently omits the detail screen and multi-pane list-detail view.
+The People2 screen uses some generic base classes and currently omits the detail screen and multi-pane list-detail view. It uses AutoValue to create the Person2 model.
 
 This is primarily for personal development. I'm likely to copy elements for further projects.
