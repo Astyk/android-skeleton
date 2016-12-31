@@ -9,8 +9,9 @@ import java.util.List;
 /**
  * Created by Will on 03/10/2016.
  *
- * TODO: Remove if unused. Maintaining and invalidating components is probably unnecessary optimisation.
- * The alternative being to not keep components in a Singleton at all and let them be GC'd.
+ * TODO: Remove if unused. This would be used if we want to cache Presenters using Dagger
+ * during orientation change and back stack processing. Then invalidating them when we move
+ * navigation entries.
  */
 public class ComponentsInvalidator {
 

@@ -1,7 +1,8 @@
 package com.github.willjgriff.skeleton.ui.people2.mvp;
 
 import com.github.willjgriff.skeleton.data.ListCacheRepository;
-import com.github.willjgriff.skeleton.data.PeopleQuery;
+import com.github.willjgriff.skeleton.data.RefreshableRepository;
+import com.github.willjgriff.skeleton.data.query.PeopleQuery;
 import com.github.willjgriff.skeleton.data.models.person2.Person2;
 import com.github.willjgriff.skeleton.mvp.listmvp.ListMvpPresenter;
 import com.github.willjgriff.skeleton.ui.people.di.FragmentScope;
@@ -27,7 +28,7 @@ public class People2Presenter extends ListMvpPresenter<Person2, People2View, Peo
 	}
 
 	@Override
-	protected ListCacheRepository<Person2, PeopleQuery> getRepository() {
+	protected RefreshableRepository getRepository() {
 		return mPersonListCacheRepository;
 	}
 

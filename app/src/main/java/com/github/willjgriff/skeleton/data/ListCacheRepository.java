@@ -13,22 +13,16 @@ import rx.subjects.PublishSubject;
  * Created by Will on 21/11/2016.
  */
 
-public class ListCacheRepository<TYPE, QUERY> {
+public class ListCacheRepository<TYPE, QUERY> implements RefreshableRepository {
 
 	private ListNetworkDataSource<TYPE, QUERY> mListNetworkDataSource;
 	private ListDiskDataSource<TYPE, QUERY> mListDiskDataSource;
-	private PublishSubject<Void> mRefreshTrigger;
+	private Observable<Void> mRefreshTrigger;
 	private Observable<List<TYPE>> mReplayObservable;
-	private ListCacheListener<TYPE> mListCacheListener;
 
 	public ListCacheRepository(ListNetworkDataSource<TYPE, QUERY> listNetworkDataSource, ListDiskDataSource<TYPE, QUERY> listDiskDataSource) {
 		mListNetworkDataSource = listNetworkDataSource;
 		mListDiskDataSource = listDiskDataSource;
-		mRefreshTrigger = PublishSubject.create();
-	}
-
-	public void setListCacheListener(ListCacheListener<TYPE> listCacheListener) {
-		mListCacheListener = listCacheListener;
 	}
 
 	public Observable<List<TYPE>> getData(QUERY query) {
@@ -37,13 +31,7 @@ public class ListCacheRepository<TYPE, QUERY> {
 				.concat(mListDiskDataSource.getFromStorage(query), getDataFromNetworkTrigger(query))
 				.replay(1)
 				.autoConnect()
-				.filter(dataList -> dataList != null)
-				.filter(dataList -> dataList.size() > 0)
-				.doOnNext(data -> {
-					if (mListCacheListener != null) {
-						mListCacheListener.dataLoaded(data);
-					}
-				});
+				.filter(dataList -> dataList != null && dataList.size() > 0);
 		}
 		return mReplayObservable;
 	}
@@ -62,16 +50,8 @@ public class ListCacheRepository<TYPE, QUERY> {
 		});
 	}
 
-	public void refreshData() {
-		mRefreshTrigger.onNext(null);
-	}
-
-	public void close() {
-		mListDiskDataSource.close();
-	}
-
-	public interface ListCacheListener<TYPE> {
-
-		void dataLoaded(List<TYPE> types);
+	@Override
+	public void setRefreshTrigger(Observable<Void> refreshTrigger) {
+		mRefreshTrigger = refreshTrigger;
 	}
 }

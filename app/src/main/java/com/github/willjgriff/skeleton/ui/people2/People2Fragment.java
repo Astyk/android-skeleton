@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.github.willjgriff.skeleton.R;
-import com.github.willjgriff.skeleton.data.PeopleQuery;
+import com.github.willjgriff.skeleton.data.query.PeopleQuery;
 import com.github.willjgriff.skeleton.data.models.person2.Person2;
 import com.github.willjgriff.skeleton.di.app.AppInjector;
 import com.github.willjgriff.skeleton.mvp.listmvp.ListMvpAdapter;

@@ -21,7 +21,7 @@ public class ReplaceListRealmUpdateMethod<UPDATETYPE extends RealmModel> impleme
 
 	@Override
 	public void updateRealm(Realm realm, List<UPDATETYPE> updatedData) {
-		RealmResults<UPDATETYPE> results = mRealmFetcher.fetchCurrentData(realm);
+		RealmResults<UPDATETYPE> results = mRealmFetcher.getData(realm);
 
 		results.deleteAllFromRealm();
 

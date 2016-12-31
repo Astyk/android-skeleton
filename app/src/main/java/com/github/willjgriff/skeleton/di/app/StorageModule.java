@@ -23,6 +23,8 @@ public class StorageModule {
 
 	// No @Singleton annotation as the DataManager will close the Realm instance
 	// once it's done with it. Requiring a new one to be created for other DataManager's.
+	// This is the behaviour in People, People2 doesn't require the Realm dependency
+	// it creates it when it needs it.
 	@Provides
 	Realm providesRealm() {
 		return Realm.getDefaultInstance();
@@ -34,8 +36,6 @@ public class StorageModule {
 		return PreferenceManager.getDefaultSharedPreferences(context);
 	}
 
-	// TODO: Can we get the same instance of the AutoValueAdapterFactory?
-	// Maybe even Gson instance that Retrofit requires?
 	@Provides
 	@Singleton
 	Gson providesGson() {

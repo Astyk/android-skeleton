@@ -8,15 +8,15 @@ import rx.functions.Func1;
  * Created by Will on 13/11/2016.
  */
 
-public class StoragePerson2 extends RealmObject {
+public class RealmPerson2 extends RealmObject {
 
 	@PrimaryKey
 	private String email;
 
-	public StoragePerson2() {
+	public RealmPerson2() {
 	}
 
-	public StoragePerson2(Person2 person) {
+	public RealmPerson2(Person2 person) {
 		email = person.getEmail();
 	}
 

@@ -11,8 +11,9 @@ import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by Will on 06/09/2016.
+ *
+ * See Person2 for the newer approach.
  */
-// TODO: Consider using models in person2
 public class Person extends RealmObject implements Parcelable {
 
 	@PrimaryKey

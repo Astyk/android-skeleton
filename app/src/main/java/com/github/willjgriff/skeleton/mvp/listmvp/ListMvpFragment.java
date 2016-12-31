@@ -77,11 +77,8 @@ public abstract class ListMvpFragment<TYPE, VIEW extends ListMvpView<TYPE>, PRES
 		mSwipeRefreshLayout.setColorSchemeResources(R.color.accent);
 		Observable<Void> swipeRefreshObservable = RxSwipeRefreshLayout.refreshes(mSwipeRefreshLayout).share();
 
-		swipeRefreshObservable
-			.filter(aVoid -> ConnectivityUtils.isConnected(getContext()))
-			.subscribe(aVoid -> {
-				getPresenter().refreshData();
-			});
+		getPresenter().setRefreshTrigger(swipeRefreshObservable
+			.filter(aVoid -> ConnectivityUtils.isConnected(getContext())));
 
 		swipeRefreshObservable
 			.filter(aVoid -> !ConnectivityUtils.isConnected(getContext()))

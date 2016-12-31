@@ -10,12 +10,8 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by Will on 13/11/2016.
  *
- * This, along with the other classes in this package, are a potential representation of a clean
- * structure for a domain model. This helps when the Network, Storage or other models differ. Ofcourse
- * this takes longer to update or create. I would generally stick to a Domain and Storage model,
- * merging the Network model into the Domain model.
- *
- * TODO: Should probably merge NetworkPerson2 into this model
+ * If the network response model is likely to be different to the domain model then I
+ * would create a network model class with converters. Like RealmPerson2 has.
  */
 @AutoValue
 public abstract class Person2 implements Parcelable {

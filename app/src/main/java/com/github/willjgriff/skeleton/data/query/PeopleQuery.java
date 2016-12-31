@@ -1,6 +1,4 @@
-package com.github.willjgriff.skeleton.data;
-
-import android.provider.Contacts;
+package com.github.willjgriff.skeleton.data.query;
 
 /**
  * Created by Will on 23/12/2016.

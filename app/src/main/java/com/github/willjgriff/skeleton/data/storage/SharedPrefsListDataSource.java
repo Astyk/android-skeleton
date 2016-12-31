@@ -30,11 +30,6 @@ public abstract class SharedPrefsListDataSource<TYPE, QUERY> implements ListDisk
 		mSharedPreferencesManager.writeObjectToPreferences(getKey(), newsList);
 	}
 
-	@Override
-	public void close() {
-
-	}
-
 	protected abstract String getKey();
 
 	protected abstract TypeToken<List<TYPE>> getTypeToken();

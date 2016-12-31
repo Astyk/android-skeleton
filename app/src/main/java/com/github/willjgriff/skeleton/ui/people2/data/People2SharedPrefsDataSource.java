@@ -1,6 +1,6 @@
 package com.github.willjgriff.skeleton.ui.people2.data;
 
-import com.github.willjgriff.skeleton.data.PeopleQuery;
+import com.github.willjgriff.skeleton.data.query.PeopleQuery;
 import com.github.willjgriff.skeleton.data.models.person2.Person2;
 import com.github.willjgriff.skeleton.data.storage.SharedPrefsListDataSource;
 import com.github.willjgriff.skeleton.data.storage.sharedprefs.SharedPreferencesManager;

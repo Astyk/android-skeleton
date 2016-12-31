@@ -19,7 +19,7 @@ public class ReplaceItemRealmUpdateMethod<UPDATETYPE extends RealmModel> impleme
 
 	@Override
 	public void updateRealm(Realm realm, UPDATETYPE updatedData) {
-		mRealmFetcher.fetchCurrentData(realm).deleteAllFromRealm();
+		mRealmFetcher.getData(realm).deleteAllFromRealm();
 		realm.copyToRealmOrUpdate(updatedData);
 	}
 }

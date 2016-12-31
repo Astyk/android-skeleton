@@ -8,9 +8,9 @@ import io.realm.Realm;
  * Created by Will on 11/09/2016.
  */
 
-public class RealmSyncUpdater<UPDATETYPE> extends RealmUpdater<UPDATETYPE> {
+public class SyncRealmUpdater<UPDATETYPE> extends RealmUpdater<UPDATETYPE> {
 
-	public RealmSyncUpdater(Realm realm, RealmUpdateMethod<UPDATETYPE> realmUpdateMethod) {
+	public SyncRealmUpdater(Realm realm, RealmUpdateMethod<UPDATETYPE> realmUpdateMethod) {
 		super(realm, realmUpdateMethod);
 	}
 

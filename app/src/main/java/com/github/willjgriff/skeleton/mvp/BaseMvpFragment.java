@@ -21,6 +21,11 @@ public abstract class BaseMvpFragment<VIEW, PRESENTER extends MvpPresenter<VIEW>
 		// It could effect a Fragments lifecycle callbacks when it is in the BackStack, specifically
 		// savedInstanceState may not be passed to onCreateView() upon recreation eg on orientation
 		// change. I should keep an eye on this approach and review it when the SDK is updated.
+
+		// This is primarily done so we know when the user is leaving the screen permanently, as
+		// opposed to going into the backstack or orientation change. Then we can close the Realm
+		// instance the Presenter uses. It also saves the Presenter. Ideally we would use Dagger to
+		// store the Presenter until the user navigates away from this screen. Realm makes that difficult.
 		setRetainInstance(true);
 
 		super.onCreate(savedInstanceState);
