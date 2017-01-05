@@ -24,13 +24,13 @@ import rx.Observable;
  * However, here we get the Realm each time we wish to use it and close it straight after.
  * Not easy to test and less efficient but omits the need to use setRetainInstance(true) in the MvpFragment.
  */
-public class CacheRealmDiskDataSource<DOMAINTYPE, STORAGETYPE extends RealmModel, QUERY>
+public class RealmCacheDiskDataSource<DOMAINTYPE, STORAGETYPE extends RealmModel, QUERY>
 	implements ListDiskDataSource<DOMAINTYPE, QUERY> {
 
 	private AllRealmFetcher<STORAGETYPE> mAllRealmFetcher;
 	private StorageDataConverter<STORAGETYPE, DOMAINTYPE> mStorageDataConverter;
 
-	public CacheRealmDiskDataSource(Class<STORAGETYPE> classType,
+	public RealmCacheDiskDataSource(Class<STORAGETYPE> classType,
 	                                StorageDataConverter<STORAGETYPE, DOMAINTYPE> storageDataConverter) {
 		mAllRealmFetcher = new AllRealmFetcher<>(classType);
 		mStorageDataConverter = storageDataConverter;

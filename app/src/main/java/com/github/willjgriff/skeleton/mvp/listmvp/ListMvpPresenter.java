@@ -36,7 +36,7 @@ public abstract class ListMvpPresenter<TYPE, VIEW extends ListMvpView<TYPE>, QUE
 	}
 
 	/**
-	 * Override if we want to do more than just set the data on list once it's loaded.
+	 * Override if we want to do more than just set the data on the list once it's loaded.
 	 */
 	protected void dataLoaded(List<TYPE> dataList) {
 	}
