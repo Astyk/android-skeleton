@@ -25,6 +25,11 @@ public class ListCacheRepository<TYPE, QUERY> implements RefreshableRepository {
 		mListDiskDataSource = listDiskDataSource;
 	}
 
+	@Override
+	public void setRefreshTrigger(Observable<Void> refreshTrigger) {
+		mRefreshTrigger = refreshTrigger;
+	}
+
 	public Observable<List<TYPE>> getData(QUERY query) {
 		if (mReplayObservable == null) {
 			mReplayObservable = Observable
@@ -48,10 +53,5 @@ public class ListCacheRepository<TYPE, QUERY> implements RefreshableRepository {
 				mListDiskDataSource.saveToStorage(dataList);
 			}
 		});
-	}
-
-	@Override
-	public void setRefreshTrigger(Observable<Void> refreshTrigger) {
-		mRefreshTrigger = refreshTrigger;
 	}
 }

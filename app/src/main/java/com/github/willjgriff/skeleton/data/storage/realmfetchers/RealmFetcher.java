@@ -16,6 +16,8 @@ public abstract class RealmFetcher<RETURNTYPE extends RealmModel> {
 
 	public abstract RealmResults<RETURNTYPE> getData(Realm realm);
 
+	public abstract RealmResults<RETURNTYPE> getDataAsync(Realm realm);
+
 	public abstract Observable<RealmResults<RETURNTYPE>> getDataAsyncObservable(Realm realm);
 
 }

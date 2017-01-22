@@ -29,6 +29,11 @@ public class AllRealmFetcher<RETURNTYPE extends RealmModel> extends RealmFetcher
 	}
 
 	@Override
+	public RealmResults<RETURNTYPE> getDataAsync(Realm realm) {
+		return select(realm).findAllAsync();
+	}
+
+	@Override
 	public Observable<RealmResults<RETURNTYPE>> getDataAsyncObservable(Realm realm) {
 		return select(realm).findAllAsync()
 			.asObservable()

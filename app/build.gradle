@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'realm-android'
 apply plugin: 'me.tatarka.retrolambda'
@@ -51,7 +52,6 @@ ext {
     autogson    = '0.4.5'
 
     junit       = '4.12'
-
     espresso    = '2.2.2'
 }
 
@@ -83,7 +83,7 @@ dependencies {
     provided "javax.annotation:jsr250-api:${javax}"
     apt "com.google.dagger:dagger-compiler:${dagger}"
 
-    // AutoValue components, could add AutoValueGson to reduce reflection in API requests.
+    // AutoValue components
     provided "com.google.auto.value:auto-value:${autovalue}"
     apt "com.google.auto.value:auto-value:${autovalue}"
     apt "com.ryanharter.auto.value:auto-value-parcel:${autoparcel}"
@@ -95,4 +95,5 @@ dependencies {
     androidTestCompile("com.android.support.test.espresso:espresso-core:${espresso}", {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
