@@ -26,6 +26,10 @@ public abstract class BaseMvpFragment<VIEW, PRESENTER extends MvpPresenter<VIEW>
 		// opposed to going into the backstack or orientation change. Then we can close the Realm
 		// instance the Presenter uses. It also saves the Presenter. Ideally we would use Dagger to
 		// store the Presenter until the user navigates away from this screen. Realm makes that difficult.
+
+		// NOTE: I've thought of an alternative approach that doesn't require this. I should not need to
+		// use setRetainInstance(true) in the future. It may have stopped working as expected too as we
+		// seem to be re-instantiating Fragments when returning to them.
 		setRetainInstance(true);
 
 		super.onCreate(savedInstanceState);

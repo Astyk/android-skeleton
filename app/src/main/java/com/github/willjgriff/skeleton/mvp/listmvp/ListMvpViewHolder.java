@@ -11,7 +11,7 @@ public abstract class ListMvpViewHolder<TYPE> extends RecyclerView.ViewHolder {
 
 	private ListItemListener<TYPE> mListItemListener;
 
-	public ListMvpViewHolder(View itemView, ListItemListener listItemListener) {
+	public ListMvpViewHolder(View itemView, ListItemListener<TYPE> listItemListener) {
 		super(itemView);
 		mListItemListener = listItemListener;
 	}

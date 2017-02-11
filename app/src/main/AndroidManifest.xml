@@ -22,8 +22,7 @@
         </activity>
 
         <activity
-            android:name=".ui.people.PersonDetailsActivity"
-            android:parentActivityName=".ui.navigation.NavigationActivity"/>
+            android:name=".ui.people.PersonDetailsActivity"/>
 
     </application>
 
