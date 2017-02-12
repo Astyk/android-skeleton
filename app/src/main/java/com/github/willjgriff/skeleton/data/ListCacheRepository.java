@@ -48,10 +48,7 @@ public class ListCacheRepository<TYPE, QUERY> implements RefreshableRepository {
 	}
 
 	private Observable<List<TYPE>> getDataFromNetwork(QUERY query) {
-		return mListNetworkDataSource.getDataFromNetwork(query).doOnNext(dataList -> {
-			if (dataList != null) {
-				mListDiskDataSource.saveToStorage(dataList);
-			}
-		});
+		return mListNetworkDataSource.getDataFromNetwork(query)
+			.flatMap(dataList -> mListDiskDataSource.saveToStorage(dataList));
 	}
 }

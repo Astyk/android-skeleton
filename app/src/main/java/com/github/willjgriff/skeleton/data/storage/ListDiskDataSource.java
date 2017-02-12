@@ -14,7 +14,7 @@ public interface ListDiskDataSource<TYPE, QUERY> {
 
 	Observable<List<TYPE>> getFromStorage(QUERY query);
 
-	void saveToStorage(List<TYPE> newsList);
+	Observable<List<TYPE>> saveToStorage(List<TYPE> newsList);
 
 
 }

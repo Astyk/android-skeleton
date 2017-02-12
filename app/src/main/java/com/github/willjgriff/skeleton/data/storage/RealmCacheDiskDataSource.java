@@ -4,6 +4,7 @@ import com.github.willjgriff.skeleton.data.models.converters.StorageDataConverte
 import com.github.willjgriff.skeleton.data.storage.realmfetchers.AllRealmFetcher;
 import com.github.willjgriff.skeleton.data.storage.realmupdaters.AsyncRealmUpdater;
 import com.github.willjgriff.skeleton.data.storage.realmupdaters.RealmUpdater;
+import com.github.willjgriff.skeleton.data.storage.realmupdaters.SyncRealmUpdater;
 import com.github.willjgriff.skeleton.data.storage.realmupdaters.methods.RealmUpdateMethod;
 import com.github.willjgriff.skeleton.data.storage.realmupdaters.methods.ReplaceListRealmUpdateMethod;
 import com.github.willjgriff.skeleton.data.utils.transformers.BasicScheduleTransformer;
@@ -14,6 +15,7 @@ import io.realm.Realm;
 import io.realm.RealmModel;
 import io.realm.RealmResults;
 import rx.Observable;
+import rx.Subscriber;
 
 /**
  * Created by Will on 23/12/2016.
@@ -55,15 +57,26 @@ public class RealmCacheDiskDataSource<DOMAINTYPE, STORAGETYPE extends RealmModel
 	}
 
 	@Override
-	public void saveToStorage(List<DOMAINTYPE> domainList) {
-		Realm realm = Realm.getDefaultInstance();
-		List<STORAGETYPE> storageList = mStorageDataConverter.getConvertFromDomainFunc().call(domainList);
+	public Observable<List<DOMAINTYPE>> saveToStorage(List<DOMAINTYPE> domainList) {
+		return Observable
+			.create((Observable.OnSubscribe<List<DOMAINTYPE>>) subscriber -> {
+				Realm realm = Realm.getDefaultInstance();
+				try {
+					List<STORAGETYPE> storageList = mStorageDataConverter.getConvertFromDomainFunc().call(domainList);
 
-		RealmUpdateMethod<List<STORAGETYPE>> realmUpdateMethod = new ReplaceListRealmUpdateMethod<>(mAllRealmFetcher);
-		RealmUpdater<List<STORAGETYPE>> realmUpdater = new AsyncRealmUpdater<>(realm, realmUpdateMethod);
+					RealmUpdateMethod<List<STORAGETYPE>> realmUpdateMethod = new ReplaceListRealmUpdateMethod<>(mAllRealmFetcher);
+					RealmUpdater<List<STORAGETYPE>> realmUpdater = new SyncRealmUpdater<>(realm, realmUpdateMethod);
 
-		realmUpdater.update(storageList);
-		realm.close();
+					realmUpdater.update(storageList);
+					subscriber.onNext(domainList);
+					subscriber.onCompleted();
+
+				} catch (Exception exception) {
+					subscriber.onError(exception);
+				} finally {
+					realm.close();
+				}
+			}).compose(new BasicScheduleTransformer<>());
 	}
 
 }

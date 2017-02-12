@@ -13,6 +13,7 @@ import android.view.inputmethod.InputMethodManager;
 public class UiUtils {
 
 	// TODO: This should be sourced somewhere more common and kept in sync with the two pane layout width
+	// if used at all.
 	private static final int TWO_PANE_SCREEN_WIDTH_DP = 600;
 
 	public static float convertDpToPixel(float dp, Context context) {

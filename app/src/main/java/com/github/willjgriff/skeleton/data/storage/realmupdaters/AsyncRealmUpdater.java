@@ -19,6 +19,6 @@ public class AsyncRealmUpdater<UPDATETYPE> extends RealmUpdater<UPDATETYPE> {
 	public void update(final UPDATETYPE updatedData) {
 		mRealm.executeTransactionAsync(
 			realm -> mRealmUpdateMethod.updateRealm(realm, updatedData),
-			error -> Timber.e(error, "Error updating Realm"));
+			error -> Timber.e(error, "Error updating Realm with: " + updatedData.toString()));
 	}
 }
