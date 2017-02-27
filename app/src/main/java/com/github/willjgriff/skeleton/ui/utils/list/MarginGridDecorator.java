@@ -25,7 +25,7 @@ public class MarginGridDecorator extends RecyclerView.ItemDecoration {
 	public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
 		super.getItemOffsets(outRect, view, parent, state);
 
-		int pixelSpacing = (int) UiUtilsKt.convertDpToPixel(mDpSpacing, view.getContext());
+		int pixelSpacing = (int) UiUtils.convertDpToPixel(mDpSpacing, view.getContext());
 		int adapterPosition = parent.getChildAdapterPosition(view);
 
 		// Not happy about this casting.
